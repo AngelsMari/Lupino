@@ -13,6 +13,7 @@ import { CampagneComponent } from './components/CampagneComponents/campagne/camp
 import { CampagneDetailComponent } from './components/CampagneComponents/campagne-detail/campagne-detail.component';
 import { MentionsLegalesComponent } from './components/pages/mentions-legales/mentions-legales.component';
 import { ConfidentialiteComponent } from './components/pages/confidentialite/confidentialite.component';
+import { LoreComponent } from './components/pages/lore/lore.component';
 
 const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -30,7 +31,10 @@ const routes: Routes = [
     { path: 'campagnes', component: CampagneComponent},
     { path: 'campagne/:id', component: CampagneDetailComponent},
     { path: 'mentions-legales', component: MentionsLegalesComponent },
-    { path: 'politique-confidentialite', component: ConfidentialiteComponent }
+    { path: 'politique-confidentialite', component: ConfidentialiteComponent },
+    { path: 'lore', component: LoreComponent },
+    { path: 'explorer', component: LoreComponent }
+
 ];
 
 @NgModule({

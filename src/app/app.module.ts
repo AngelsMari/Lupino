@@ -36,6 +36,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { FooterComponent } from './components/footer/footer.component';
 import { ConfidentialiteComponent } from './components/pages/confidentialite/confidentialite.component';
 import { MentionsLegalesComponent } from './components/pages/mentions-legales/mentions-legales.component';
+import { LoreComponent } from './components/pages/lore/lore.component';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -66,7 +67,8 @@ registerLocaleData(localeFr, 'fr');
     AddNoteModalComponent,
     FooterComponent,
     ConfidentialiteComponent,
-    MentionsLegalesComponent
+    MentionsLegalesComponent,
+    LoreComponent
   ],
   imports: [
     BrowserModule,
