@@ -1,0 +1,12 @@
+<div class="modal-header">
+    <h5 class="modal-title">Confirmer la suppression</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="onCancel()"></button>
+  </div>
+  <div class="modal-body">
+    Êtes-vous sûr de vouloir supprimer {{ character?.name }} ?
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="onCancel()">Annuler</button>
+    <button type="button" class="btn btn-danger" (click)="onDelete()">Supprimer</button>
+  </div>
+  

@@ -1,0 +1,328 @@
+<!-- Onglets -->
+ <div class="container">
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link active" id="armes-tab" data-bs-toggle="tab" href="#armes" role="tab" aria-controls="armes" aria-selected="true">Les armes</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="armures-tab" data-bs-toggle="tab" href="#armures" role="tab" aria-controls="armures" aria-selected="false">Les armures</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="potion-tab" data-bs-toggle="tab" href="#potion" role="tab" aria-controls="potion" aria-selected="false">Les potions</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="poison-tab" data-bs-toggle="tab" href="#poison" role="tab" aria-controls="poison" aria-selected="false">Les poisons</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="utilitaire-tab" data-bs-toggle="tab" href="#utilitaire" role="tab" aria-controls="utilitaire" aria-selected="false">Les objets de soins et utilitaires</a>
+    </li>
+    
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="bazar-tab" data-bs-toggle="tab" href="#bazar" role="tab" aria-controls="bazar" aria-selected="false">Le bazar</a>
+    </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="armes" role="armes" aria-labelledby="armes-tab">
+        <!-- Barre de recherche -->
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Rechercher une arme..." [(ngModel)]="searchText">
+            <div *ngIf="isAdmin"><button class="add-button" (click)="openCreateArmeModal()"><i class="bi bi-sign-intersection-fill"></i>
+                Ajouter une arme</button>
+            </div>
+        </div>
+        <!-- Armes corps à corps -->
+        <h2 *ngIf="filteredArmesCac.length > 0">Armes corps à corps</h2>
+        <table class="table" *ngIf="filteredArmesCac.length > 0">
+            <thead>
+                <tr>
+                    <th>Armes</th>
+                    <th>Type</th>
+                    <th>Effets</th>
+                    <th>Dégats</th>
+                    <th>Prix</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of filteredArmesCac">
+                    <td>{{item.nom}}</td>
+                    <td>{{item.type}}</td>
+                    <td>{{item.effet}}</td>
+                    <td>{{item.degats}}</td>
+                    <td>{{item.prix}}</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- Armes distances -->
+        <h2 *ngIf="filteredDistance.length > 0">Armes distances</h2>
+        <table class="table" *ngIf="filteredDistance.length > 0">
+            <thead>
+                <tr>
+                    <th>Armes</th>
+                    <th>Type</th>
+                    <th>Effets</th>
+                    <th>Portée</th>
+                    <th>Dégats</th>
+                    <th>Prix</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of filteredDistance">
+                    <td>{{item.nom}}</td>
+                    <td>{{item.type}}</td>
+                    <td>{{item.effet}}</td>
+                    <td>{{item.portee}}</td>
+                    <td>{{item.degats}}</td>
+                    <td>{{item.prix}}</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- Explosifs -->
+        <h2 *ngIf="filteredExplosif.length > 0">Explosifs</h2>
+        <table class="table" *ngIf="filteredExplosif.length > 0">
+            <thead>
+                <tr>
+                    <th>Armes</th>
+                    <th>Effets</th>
+                    <th>Rayon</th>
+                    <th>Dégats</th>
+                    <th>Prix</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of filteredExplosif">
+                    <td>{{item.nom}}</td>
+                    <td>{{item.effet}}</td>
+                    <td>{{item.portee}}</td>
+                    <td>{{item.degats}}</td>
+                    <td>{{item.prix}}</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- Armes de siège -->
+        <h2 *ngIf="filteredSiege.length > 0">Armes de siège</h2>
+        <table class="table" *ngIf="filteredSiege.length > 0">
+            <thead>
+                <tr>
+                    <th>Armes</th>
+                    <th>Effets</th>
+                    <th>Portée</th>
+                    <th>Dégats</th>
+                    <th>Prix</th>
+                    <th>Munitions</th>
+                    <th>Prix des munitions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of filteredSiege">
+                    <td>{{item.nom}}</td>
+                    <td>{{item.effet}}</td>
+                    <td>{{item.portee}}</td>
+                    <td>{{item.degats}}</td>
+                    <td>{{item.prix}}</td>
+                    <td>{{item.munitions}}</td>
+                    <td>{{item.prixMunitions}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="tab-pane fade" id="armures" role="armures" aria-labelledby="armures-tab">
+        <!-- Barre de recherche -->
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Rechercher une armure..." [(ngModel)]="searchText">
+            <div *ngIf="isAdmin"><button class="add-button" (click)="openCreateArmureModal()"><i class="bi bi-sign-intersection-fill"></i>
+                Ajouter une armure</button>
+            </div>
+        </div>
+        <!-- Armures -->
+        <h2 *ngIf="filteredArmuresLeg.length > 0">Armures légère</h2>
+        <table class="table" *ngIf="filteredArmuresLeg.length > 0">
+            <thead>
+                <tr>
+                    <th>Armures</th>
+                    <th>Description</th>
+                    <th>Statistique</th>
+                    <th>Prix</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of filteredArmuresLeg">
+                    <td>{{item.nom}}</td>
+                    <td>{{item.description}}</td>
+                    <td>{{item.statistiques}}</td>
+                    <td>{{item.prix}}</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h2 *ngIf="filteredArmuresInter.length > 0">Armures intermédiaire</h2>
+        <table class="table" *ngIf="filteredArmuresInter.length > 0">
+            <thead>
+                <tr>
+                    <th>Armures</th>
+                    <th>Description</th>
+                    <th>Statistique</th>
+                    <th>Prix</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of filteredArmuresInter">
+                    <td>{{item.nom}}</td>
+                    <td>{{item.description}}</td>
+                    <td>{{item.statistiques}}</td>
+                    <td>{{item.prix}}</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h2 *ngIf="filteredArmuresLourdes.length > 0">Armures lourde</h2>
+        <table class="table" *ngIf="filteredArmuresLourdes.length > 0">
+            <thead>
+                <tr>
+                    <th>Armures</th>
+                    <th>Description</th>
+                    <th>Statistique</th>
+                    <th>Prix</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of filteredArmuresLourdes">
+                    <td>{{item.nom}}</td>
+                    <td>{{item.description}}</td>
+                    <td>{{item.statistiques}}</td>
+                    <td>{{item.prix}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane fade" id="potion" role="potion" aria-labelledby="potion-tab">
+        <!-- Barre de recherche -->
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Rechercher une potion..." [(ngModel)]="searchText">
+            <div *ngIf="isAdmin"><button class="add-button" (click)="openCreatePotionModal()"><i class="bi bi-sign-intersection-fill"></i>
+                Ajouter une potion</button>
+            </div>
+        </div>
+        <!-- Potions -->
+        <h2 *ngIf="filteredPotions.length > 0">Potions</h2>
+        <table class="table" *ngIf="filteredPotions.length > 0">
+            <thead>
+                <tr>
+                    <th>Potions</th>
+                    <th>Effets</th>
+                    <th>Prix</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of filteredPotions">
+                    <td>{{item.nom}}</td>
+                    <td>{{item.effet}}</td>
+                    <td>{{item.prix}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane fade" id="poison" role="poison" aria-labelledby="poison-tab">
+        <!-- Barre de recherche -->
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Rechercher un poison..." [(ngModel)]="searchText">
+            <div *ngIf="isAdmin"><button class="add-button" (click)="openCreatePoisonModal()"><i class="bi bi-sign-intersection-fill"></i>
+                Ajouter un poison</button>
+            </div>
+        </div>
+        <!-- Poisons -->
+        <h2 *ngIf="filteredPoisons.length > 0">Poisons</h2>
+        <table class="table" *ngIf="filteredPoisons.length > 0">
+            <thead>
+                <tr>
+                    <th>Poisons</th>
+                    <th>Effets</th>
+                    <th>Prix</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of filteredPoisons">
+                    <td>{{item.nom}}</td>
+                    <td>{{item.effet}}</td>
+                    <td>{{item.prix}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane fade" id="utilitaire" role="utilitaire" aria-labelledby="utilitaire-tab">
+        <!-- Barre de recherche -->
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Rechercher un objet utilitaire..." [(ngModel)]="searchText">
+            <div *ngIf="isAdmin">
+                <button class="add-button" (click)="openCreateUtilitaireModal()"><i class="bi bi-sign-intersection-fill"></i>
+                Ajouter un objet utilitaire</button>
+                <button class="add-button" (click)="openCreateContenantModal()"><i class="bi bi-sign-intersection-fill"></i>
+                    Ajouter un contenant</button>
+            </div>
+            
+        </div>
+        <h2 *ngIf="filteredUtilitaires.length > 0">Objet de soin</h2>
+        <table class="table" *ngIf="filteredUtilitaires.length > 0">
+            <thead>
+                <tr>
+                    <th>Objets utilitaires</th>
+                    <th>Effets</th>
+                    <th>Prix</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of filteredUtilitaires">
+                    <td>{{item.nom}}</td>
+                    <td>{{item.effet}}</td>
+                    <td>{{item.prix}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 *ngIf="filteredContenants.length > 0">Les contenants</h2>
+        <table class="table" *ngIf="filteredContenants.length > 0">
+            <thead>
+                <tr>
+                    <th>Objets</th>
+                    <th>Contenance</th>
+                    <th>Prix</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of filteredContenants">
+                    <td>{{item.nom}}</td>
+                    <td>{{item.contenance}}</td>
+                    <td>{{item.prix}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane fade" id="bazar" role="bazar" aria-labelledby="bazar-tab">
+        <!-- Barre de recherche -->
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Rechercher un objet du bazar..." [(ngModel)]="searchText">
+            <div *ngIf="isAdmin"><button class="add-button" (click)="openCreateBazarModal()"><i class="bi bi-sign-intersection-fill"></i>
+                Ajouter un objet du bazar</button>
+            </div>
+        </div>
+        <!-- Bazars -->
+        <h2 *ngIf="filteredBazars.length > 0">Objets du bazar</h2>
+        <table class="table" *ngIf="filteredBazars.length > 0">
+            <thead>
+                <tr>
+                    <th>Objets</th>
+                    <th>Prix</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of filteredBazars">
+                    <td>{{item.nom}}</td>
+                    <td>{{item.prix}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>

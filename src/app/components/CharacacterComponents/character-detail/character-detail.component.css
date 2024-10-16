@@ -1,0 +1,94 @@
+.table-striped-vertical td:nth-child(even) {
+    background-color: #621503; /* Couleur de fond pour les colonnes paires */
+    color:#FFCA8C;
+}
+
+.table-striped-vertical td, .table-striped-vertical th {
+    text-align: center; /* Centrage du texte dans les cellules */
+}
+
+#statistique tr:nth-child(2) td{
+    font-size: 10px; /* Taille de la police pour la ligne 2 */
+    background-color: inherit; /* Couleur de fond pour la ligne 2 */
+    border-bottom: inherit; /* Bordure basse pour la ligne 2 */
+    color: black !important;
+}
+
+#competence td:nth-child(1){
+  text-align: left; /* Alignement du texte à gauche pour la première colonne */
+}
+
+.list-inline-item {
+    background-color: #621503;
+    color:#FFCA8C;
+    margin-bottom: 5px;
+    padding: 5px;
+}
+/* Style de la barre de navigation */
+.nav-tabs {
+    border-bottom: 2px solid #ddd;
+    background-color: #621503;
+    padding: 10px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Style pour chaque onglet */
+.nav-tabs .nav-link {
+    color: #FFB65F;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+/* Onglet actif */
+.nav-tabs .nav-link.active {
+    background-color: #FFB65F;
+    color: #621503;
+    border-color: #6c757d;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Survol des onglets */
+.nav-tabs .nav-link:hover {
+    background-color: #FFB65F;
+    border-color: #ddd;
+    color: #621503;
+}
+
+/* Changement de couleur au clic */
+.nav-tabs .nav-link:focus {
+    background-color: #FFB65F;
+    outline: none;
+    color: #621503;
+}
+
+/* Responsive - Adaptation sur petit écran */
+@media (max-width: 768px) {
+    .nav-tabs {
+        flex-wrap: wrap;
+    }
+    
+    .nav-tabs .nav-link {
+        margin-bottom: 5px;
+        flex: 1 0 100%;
+        text-align: center;
+    }
+}
+.infoPrincipal{
+    columns: 3;
+}
+
+.session-controls{
+    display: inline-block;
+}
+
+.img-fluid{
+    width: 100%;
+    object-fit: contain;
+    max-height: 300px;
+}
+

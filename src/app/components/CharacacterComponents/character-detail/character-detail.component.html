@@ -1,0 +1,238 @@
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-12" *ngIf="user_id == character?.owner?._id">
+            <!-- Bouton pour Modifier Bouton pour jouer -->
+            <a routerLink="/create-character/{{ character?._id }}/" *ngIf="!sessionActive" class="btn btn-primary">Modifier</a>
+            <div class="session-controls">
+                <button class="btn btn-success" *ngIf="!sessionActive" (click)="startSession()">Lancer une session</button>
+                <button class="btn btn-danger" *ngIf="sessionActive" (click)="endSession()">Fin de session</button>
+            </div>
+
+            <!-- Bouton pour rendre public ou privé -->
+            <button class="btn" [ngClass]="character?.isPublic ? 'btn-warning' : 'btn-secondary'" (click)="toggleVisibility()">
+                {{ character?.isPublic ? 'Rendre Privé' : 'Rendre Public' }}
+            </button>
+        </div>
+        <div class="col-md-4">
+            <img src="{{ character?.imageUrl }}" alt="{{ character?.name }}" class="img-fluid">
+        </div>
+        <div class="col-md-8">
+            <h1>{{ character?.name }}</h1>
+            <div class="health-mana-section" *ngIf="sessionActive">
+                <div class="health-mana-controls">
+                  <!-- Points de vie (HP) -->
+                  <div class="hp-section">
+                    <label>Points de vie actuels :</label>
+                    <div class="input-group">
+                      <input type="number" class="form-control" [formControl]="$any(characterForm).controls['current_hp']" readonly>
+                      <span class="input-group-text" id="basic-addon2">/ {{ character?.max_hp}}</span>
+                      <div class="input-group-append" *ngIf="sessionActive">
+                        <button class="btn btn-outline-success" (click)="modifyHp('max')">
+                            <i class="bi bi-suit-heart-fill"></i> Full
+                          </button>
+                        <button class="btn btn-outline-success" (click)="modifyHp(10)">
+                            <i class="bi bi-suit-heart-fill"></i> +10
+                          </button>
+                          <button class="btn btn-outline-success" (click)="modifyHp(5)">
+                            <i class="bi bi-suit-heart-fill"></i> +5
+                          </button>
+                        <button class="btn btn-outline-success" (click)="modifyHp(1)">
+                            <i class="bi bi-suit-heart-fill"></i> +1
+                        </button>
+                        <button class="btn btn-outline-danger" (click)="modifyHp(-1)">
+                            <i class="bi bi-suit-heart"></i>
+                            -1
+                        </button>
+                        <button class="btn btn-outline-danger" (click)="modifyHp(-5)">
+                            <i class="bi bi-suit-heart"></i>
+                            -5
+                        </button>
+                        <button class="btn btn-outline-danger" (click)="modifyHp(-10)">
+                            <i class="bi bi-suit-heart"></i>
+                            -10
+                          </button>
+                      </div>
+                    </div>
+                  </div>
+            
+                  <!-- Mana -->
+                  <div class="mana-section">
+                    <label>Mana actuel :</label>
+                    <div class="input-group">
+                      <input type="number" class="form-control" [formControl]="$any(characterForm).controls['current_mana']" readonly>
+                      <span class="input-group-text" id="basic-addon2">/ {{ character?.max_mana}}</span>
+
+                      <div class="input-group-append" *ngIf="sessionActive">
+                        <button class="btn btn-outline-primary" (click)="modifyMana('max')">
+                            <i class="bi bi-star-fill"></i>
+                            Full
+                        </button>
+                        <button class="btn btn-outline-primary" (click)="modifyMana(10)">
+                            <i class="bi bi-star-fill"></i>
+                            +10
+                        </button>
+                        <button class="btn btn-outline-primary" (click)="modifyMana(5)">
+                            <i class="bi bi-star-fill"></i>
+                            +5
+                        </button>
+                        <button class="btn btn-outline-primary" (click)="modifyMana(1)">
+                            <i class="bi bi-star-fill"></i>
+                            +1
+                        </button>
+                        <button class="btn btn-outline-secondary" (click)="modifyMana(-1)">
+                            <i class="bi bi-star"></i>
+                            -1
+                        </button>
+                        <button class="btn btn-outline-secondary" (click)="modifyMana(-5)">
+                            <i class="bi bi-star"></i>
+                            -5
+                        </button>
+                        <button class="btn btn-outline-secondary" (click)="modifyMana(-10)">
+                            <i class="bi bi-star"></i>
+                            -10
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <div class="infoPrincipal">
+                <p><strong>Level :</strong> {{ character?.level }}</p>
+                <p><strong>Race :</strong> {{ character?.race }}</p>
+                <p *ngIf='!sessionActive'><strong>HP :</strong> {{ character?.current_hp }} / {{ character?.max_hp }}</p>
+                <p *ngIf='!sessionActive'><strong>Mana :</strong> {{ character?.current_mana }} / {{ character?.max_mana }}</p>
+                <p><strong>Sexe :</strong> {{ character?.sexe }}</p>
+                <p><strong>Yeux :</strong> {{ character?.eyes }}</p>
+                <p><strong>Cheveux :</strong> {{ character?.hair }}</p>
+                <p><strong>Âge :</strong> {{ character?.age }}</p>
+                <p><strong>Couleur de peau :</strong> {{ character?.skincolor }}</p>
+                <p><strong>Taille :</strong> {{ character?.height }}</p>
+                <p><strong>Poids :</strong> {{ character?.weight }}</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Onglets -->
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="stats-tab" data-bs-toggle="tab" href="#stats" role="tab" aria-controls="stats" aria-selected="true">Statistiques</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="traits-tab" data-bs-toggle="tab" href="#traits" role="tab" aria-controls="traits" aria-selected="false">Traits</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="masteries-tab" data-bs-toggle="tab" href="#masteries" role="tab" aria-controls="masteries" aria-selected="false">Maîtrises et Langues</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="skills-tab" data-bs-toggle="tab" href="#skills" role="tab" aria-controls="skills" aria-selected="false">Compétences</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="equipment-tab" data-bs-toggle="tab" href="#equipment" role="tab" aria-controls="equipment" aria-selected="false">Équipement</a>
+        </li>
+    </ul>
+
+    <!-- Contenu des Onglets -->
+    <div class="tab-content" id="myTabContent">
+        <!-- Onglet Statistiques -->
+        <div class="tab-pane fade show active" id="stats" role="tabpanel" aria-labelledby="stats-tab">
+            <table class="table table-striped-vertical" id="statistique">
+                <thead>
+                    <tr>
+                        <th>Force</th>
+                        <th>Agilité</th>
+                        <th>Endurance</th>
+                        <th>Social</th>
+                        <th>Mental</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ character?.strength }} <small>({{ bonuses['strength'] }})</small></td>
+                        <td>{{ character?.agility }} <small>({{ bonuses['agility'] }})</small></td>
+                        <td>{{ character?.endurance }} <small>({{ bonuses['endurance'] }})</small></td>
+                        <td>{{ character?.social }} <small>({{ bonuses['social'] }})</small></td>
+                        <td>{{ character?.mental }} <small>({{ bonuses['mental'] }})</small></td>
+                    </tr>
+                   
+                </tbody>
+            </table>
+
+            <table class="table table-striped-vertical">
+                <thead>
+                    <tr>
+                        <th>Constitution</th>
+                        <th>Résilience</th>
+                        <th>Réflexe</th>
+                        <th>Charisme</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ secondaryStats?.constitution }}</td>
+                        <td>{{ secondaryStats?.resilience }}</td>
+                        <td>{{ secondaryStats?.reflex }}</td>
+                        <td>{{ secondaryStats?.charisma }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Onglet Traits -->
+        <div class="tab-pane fade" id="traits" role="tabpanel" aria-labelledby="traits-tab">
+            <div class="row">
+                <div class="col-md-6" ><h2>Trait positif</h2>
+                <p [innerHTML]="formatText(character?.positive_trait)"></p></div>
+                <div class="col-md-6" ><h2>Trait négatif</h2><p [innerHTML]="formatText(character?.negative_trait)"></p></div>
+            </div>
+        </div>
+
+        <!-- Onglet Maîtrises et Langues -->
+        <div class="tab-pane fade" id="masteries" role="tabpanel" aria-labelledby="masteries-tab">
+            <div class="row">
+                <div class="col-md-7">
+                    <h4>Maîtrises</h4>
+                    <ul class="list-inline">
+                        <li class="list-inline-item" *ngFor="let mastery of character?.masteries">{{ mastery }}</li>
+                    </ul>
+                </div>
+                <div class="col-md-5">
+                    <h4>Langues</h4>
+                    <ul class="list-inline">
+                        <li class="list-inline-item" *ngFor="let language of character?.languages">{{ language }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Onglet Compétences -->
+        <div class="tab-pane fade" id="skills" role="tabpanel" aria-labelledby="skills-tab">
+            <table class="table " id="competence">
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Effet</th>
+                        <th>Coût</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let skill of character?.skills">
+                        <td><strong>{{ skill.name }}</strong> <br/> {{ skill.description }}</td>
+                        <td>{{ skill.effects }}</td>
+                        <td>{{ skill.cost }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Onglet Équipement -->
+        <div class="tab-pane fade" id="equipment" role="tabpanel" aria-labelledby="equipment-tab">
+            <p><strong>Pièce d'or :</strong> {{ character?.gold }} </p>
+            <p [innerHTML]="character?.inventory"></p>
+        </div>
+    </div>
+
+    <a routerLink="/characters" class="btn btn-secondary mt-3" *ngIf="!sessionActive">Retour à la liste</a>
+</div>
+
+ 

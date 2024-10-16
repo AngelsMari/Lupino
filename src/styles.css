@@ -1,0 +1,56 @@
+/* You can add global styles to this file, and also import other style files */
+body{
+    background-color: #f3d8b9 !important;
+}
+
+.table thead th, .table tbody td{
+    background-color: #f3d8b9 ;
+    border-color:#621503 !important;
+}
+.table thead th{
+    color: #621503 !important;
+}
+
+/* Style général pour le formulaire */
+form {
+    margin: 20px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Style des labels */
+label {
+    font-weight: bold;
+    margin-bottom: 8px;
+    display: block;
+}
+
+/* Style général pour les inputs */
+input.form-control, .form-control {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    box-sizing: border-box;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.3s ease-in-out;
+}
+
+input.form-control:focus, .form-control:focus {
+    border-color: #80bdff;
+    outline: none;
+}
+
+/* Style pour le champ Quill editor */
+quill-editor {
+    border-radius: 4px;
+    
+    padding: 10px;
+}
+
+.ql-editor.ql-blank{
+    min-height: 200px;
+}

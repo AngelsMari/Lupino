@@ -1,0 +1,38 @@
+
+
+.footer {
+
+    width: 100%; /* Prendre toute la largeur */
+    background-color: #621503; /* Couleur de fond */
+    color: #ffffff; /* Couleur du texte */
+    padding: 20px; /* Espacement intérieur */
+    text-align: center; /* Centrer le texte */
+}
+
+.footer-content {
+    display: flex; /* Utilisation de Flexbox pour le contenu */
+    flex-direction: column; /* Direction de la colonne */
+    align-items: center; /* Centre les éléments */
+}
+
+.footer p {
+    margin: 0; /* Suppression des marges */
+    padding-bottom: 10px; /* Espacement entre le texte et les liens */
+}
+
+.footer-link {
+    color: #FFCA8C; /* Couleur des liens */
+    text-decoration: none; /* Supprime le soulignement */
+    padding: 5px 10px; /* Espacement interne */
+    transition: color 0.3s ease; /* Transition pour le changement de couleur */
+}
+
+.footer-link:hover {
+    color: #FFB65F; /* Couleur des liens au survol */
+    text-decoration: underline; /* Sous-ligne au survol pour effet visuel */
+}
+
+.footer span {
+    margin: 0 5px; /* Espacement entre les liens */
+    color: #FFCA8C; /* Couleur du séparateur */
+}

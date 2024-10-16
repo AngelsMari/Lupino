@@ -1,0 +1,59 @@
+<div *ngIf="campagne" class="campagne-detail">
+    <div  class="campagne-actions">
+        <button *ngIf="connectedUser == campagne.mj._id" class="btn btn-primary" (click)="editCampagne()">Éditer</button>
+        <button *ngIf="connectedUser == campagne.mj._id" class="btn btn-danger" (click)="deleteCampagne()">Supprimer</button>
+        <button *ngIf="connectedUser == campagne.mj._id" class="btn btn-secondary" (click)="addPnjToCampagne()">Ajouter un PNJ</button>
+        <button class="btn btn-info" (click)="addNoteToCampagne()">Ajouter une note</button>
+    </div>
+    <h1>{{ campagne.name }}</h1>
+    <p><strong>Maître du Jeu :</strong> {{ campagne.mj.name }}</p>
+    
+    <!-- Section pour l'état et les dates de la campagne -->
+    <div class="campagne-info">
+        <p><strong>État :</strong> {{ campagne.etat }}</p>
+        <p><strong>Date de début :</strong> {{ campagne.dateDebut | date:'longDate':'Europe/Paris' }}</p>
+        <p *ngIf="campagne.dateFin"><strong>Date de fin :</strong> {{ campagne.dateFin | date:'longDate':'Europe/Paris' }}</p>
+    </div>
+    
+    <!-- Section pour les personnages joueurs -->
+    <div class="personnages-joueurs">
+        <h2>Personnages Joueurs</h2>
+        <ul>
+            <li *ngFor="let pj of campagne.personnagesJoueurs">
+                {{ pj.name }}
+            </li>
+        </ul>
+    </div>
+    
+    <!-- Section pour les PNJs -->
+    <div class="pnjs">
+        <h2>PNJs</h2>
+        <ul>
+            <li *ngFor="let pnj of campagne.pnjs">
+                {{ pnj }} <span *ngIf="pnj">(Visible)</span>
+            </li>
+        </ul>
+    </div>
+    
+    <!-- Speech de la campagne -->
+    <div class="campagne-speech">
+        <h2>Speech</h2>
+        <p [innerHTML]="campagne.speech"></p>
+    </div>
+    <div class="notes-container">
+        <h2>Notes</h2>
+        
+        <ng-container *ngFor="let note of campagne.notes">
+            <div *ngIf="canSeeNote(note)" class="note-card">
+                <div class="note-header">
+                    <strong>{{ note.auteur.name }}</strong> 
+                    <span class="badge" [ngClass]="{'badge-public': note.type === 'public', 'badge-restricted': note.type === 'restreint', 'badge-private': note.type === 'prive'}">
+                        {{ note.type }}
+                    </span>
+                </div>
+                <p [innerHTML]="note.texte"></p>
+            </div>
+        </ng-container>
+    </div>
+</div>
+

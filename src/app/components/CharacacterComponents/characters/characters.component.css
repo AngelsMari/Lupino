@@ -1,0 +1,86 @@
+/* Styles pour le conteneur principal */
+.container {
+    margin-top: 20px; /* Marge supérieure pour espacer le contenu */
+}
+
+/* Bouton de création de personnage */
+.btn-success {
+    background-color: #FFB65F; /* Couleur d'arrière-plan du bouton */
+    color: #621503; /* Couleur du texte */
+    border: none; /* Pas de bordure */
+    transition: background-color 0.3s, color 0.3s; /* Transition pour effet de survol */
+}
+
+.btn-success:hover {
+    background-color: #f0a35a; /* Couleur d'arrière-plan sur survol */
+    color: #ffffff; /* Changer la couleur du texte au survol */
+}
+
+/* Styles pour les cartes de personnage */
+.character-card {
+    background-color: #fff; /* Couleur de fond blanche pour les cartes */
+    border: 1px solid #ddd; /* Bordure légère */
+    border-radius: 10px; /* Bordures arrondies */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Ombre pour effet de profondeur */
+    margin-bottom: 20px; /* Espacement entre les cartes */
+    transition: transform 0.3s; /* Transition pour effet de zoom */
+}
+
+.character-card:hover {
+    transform: scale(1.05); /* Agrandir légèrement la carte sur survol */
+}
+
+/* Styles pour l'image de la carte */
+.card-img img {
+    border-top-left-radius: 10px; /* Arrondi pour le coin supérieur gauche */
+    border-top-right-radius: 10px; /* Arrondi pour le coin supérieur droit */
+    max-height: 200px; /* Hauteur maximale de l'image */
+    object-fit: cover; /* Ajustement de l'image */
+}
+
+/* Styles pour le corps de la carte */
+.card-body {
+    padding: 15px; /* Espacement intérieur */
+}
+
+/* Styles pour le bouton d'action */
+.btn-primary {
+    background-color: #621503; /* Couleur d'arrière-plan principale */
+    border: none; /* Pas de bordure */
+}
+
+.btn-danger {
+    background-color: #f44336; /* Couleur d'arrière-plan rouge */
+    border: none; /* Pas de bordure */
+}
+
+.btn-danger:hover {
+    background-color: #e53935; /* Couleur d'arrière-plan sur survol */
+}
+
+/* Styles pour le texte de chargement */
+.loading-text {
+    color: #621503; /* Couleur principale pour le texte de chargement */
+    text-align: center; /* Centrer le texte */
+    margin-top: 20px; /* Marge supérieure */
+    font-size: 1.2em; /* Taille de la police */
+}
+
+.loading-message {
+    font-size: 18px; /* Taille de la police */
+    color: #FFB65F; /* Couleur du texte */
+    text-align: center; /* Centrer le texte */
+    margin: 20px 0; /* Marge pour espacer le message */
+    font-weight: bold; /* Gras pour le texte */
+}
+
+.no-character-message {
+    font-size: 20px; /* Taille de la police pour le message d'absence */
+    color: #FFCA8C; /* Couleur du texte */
+    text-align: center; /* Centrer le texte */
+    margin: 20px 0; /* Marge pour espacer le message */
+    font-weight: bold; /* Gras pour le texte */
+    background-color: #621503; /* Fond pour le message */
+    padding: 15px; /* Padding pour espacer le texte du bord */
+    border-radius: 8px; /* Coins arrondis */
+}

@@ -1,0 +1,249 @@
+<div class="container" [formGroup]="characterForm">
+    
+    <!-- Étape 1: Informations de base -->
+    <div *ngIf="step === 1">
+        <button class="btn btn-primary" (click)="nextStep()">Suivant</button>
+        
+        <h2>Étape 1: Informations de base</h2>
+        <div class="row">
+            <div class="col-md-8">
+                <label for="name">Prénom nom</label>
+                <input id="name" type="text" class="form-control" formControlName="name" placeholder="Prénom Nom">
+            </div>
+            
+            <div class="col-md-2">
+                <label for="name">Âge</label>
+                <input id="age" type="text" class="form-control" formControlName="age" placeholder="">
+            </div>
+            
+            <div class="col-md-2">
+                <label for="level">Niveau</label>
+                <input id="level" type="number" class="form-control" formControlName="level" (change)="updateCharacter()" value="1">
+            </div>
+            <div class="col-md-2">
+                <label for="skincolor">Couleur de peau</label>
+                <input id="skincolor" type="text" class="form-control" formControlName="skincolor">
+            </div>
+            <div class="col-md-2">
+                
+                <label for="height">Taille</label>
+                <input id="height" type="text" class="form-control" formControlName="height">
+            </div>
+            <div class="col-md-2">
+                <label for="weight">Poids</label>
+                <input id="weight" type="text" class="form-control" formControlName="weight">
+            </div>
+            <div class="col-md-2">
+                <label for="sexe">Genre</label>
+                <input id="sexe" type="text" class="form-control" formControlName="sexe">
+            </div>
+            <div class="col-md-2">
+                <label for="eyes">Yeux</label>
+                <input id="eyes" type="text" class="form-control" formControlName="eyes">
+            </div>
+            <div class="col-md-2">
+                <label for="hair">Cheveux</label>
+                <input id="hair" type="text" class="form-control" formControlName="hair">
+            </div>
+            <div class="col-md-6">
+                <label for="positive_trait">Trait positif</label>
+                <textarea id="positive_trait" type="text" class="form-control" formControlName="positive_trait"></textarea>
+            </div>
+            <div class="col-md-6">
+                <label for="negative_trait">Trait négatif</label>
+                <textarea id="negative_trait" type="text" class="form-control" formControlName="negative_trait"></textarea>
+            </div>
+        </div>
+        
+        <button class="btn btn-primary" (click)="nextStep()">Suivant</button>
+        
+        
+        
+    </div>
+    
+    
+    <div *ngIf="step === 2">
+        <button class="btn btn-secondary" (click)="previousStep()">Précédent</button>
+        <button class="btn btn-primary" (click)="nextStep()">Suivant</button>
+        <h2>Étape 2 : Sélection de la race</h2>
+        
+        
+        <!-- Sélection des races sous forme de cartes -->
+        <div class="form-group">
+            <!-- Section pour les races communes -->
+<h3>Races Communes</h3>
+<div class="row mb-4">
+    <div class="col-md-3" *ngFor="let race of commonRaces">
+        <div class="card race-card mb-3" [ngClass]="{'selected': selectedRace === race.name}" (click)="selectRace(race.name)">
+            <img class="card-img-top" src="{{race.image}}" alt="{{ race.name }}">
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">{{ race.name }}</h5>
+                <p class="card-text trait">{{ race.trait }}</p>
+                <button class="btn btn-primary mt-auto" [disabled]="selectedRace !== race.name">Choisir</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Section pour les races exotiques -->
+<h3>Races Exotiques</h3>
+<div class="row mb-4">
+    <div class="col-md-3" *ngFor="let race of exoticRaces">
+        <div class="card race-card mb-3" [ngClass]="{'selected': selectedRace === race.name}" (click)="selectRace(race.name)" >
+            <img class="card-img-top" src="" alt="{{ race.name }}">
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">{{ race.name }}</h5>
+                <p class="card-text trait" >{{ race.trait }}</p>
+                <button class="btn btn-primary mt-auto" [disabled]="selectedRace !== race.name">Choisir</button>
+            </div>
+        </div>
+    </div>
+</div>
+        </div>
+        <button class="btn btn-secondary" (click)="previousStep()">Précédent</button>
+        <button class="btn btn-primary" (click)="nextStep()">Suivant</button>
+    </div>
+    
+    <!-- Étape 2: Statistiques -->
+    <div *ngIf="step === 3">
+        <button class="btn btn-secondary" (click)="previousStep()">Précédent</button>
+        <button class="btn btn-primary" (click)="nextStep()">Suivant</button>
+        <h2>Étape 3: Statistiques</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Force</th>
+                    <th>Agilité</th>
+                    <th>Endurance</th>
+                    <th>Social</th>
+                    <th>Mental</th>
+                    <th>Restant</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="number" class="form-control" formControlName="strength" value="30" min="30" max="85" (change)="updateCharacter()"></td>
+                    <td><input type="number"  class="form-control" formControlName="agility" value="30" min="30" max="85" (change)="updateCharacter()"></td>
+                    <td><input type="number" class="form-control" formControlName="endurance" value="30" min="30" max="85" (change)="updateCharacter()"></td>
+                    <td><input type="number"  class="form-control" formControlName="social" value="30" min="30" max="85" (change)="updateCharacter()"></td>
+                    <td><input type="number" class="form-control" formControlName="mental" value="30" min="30" max="85" (change)="updateCharacter()"></td>
+                    <td>{{ RemainingPoints }}</td>
+                    <td>{{ MaximumPoints }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-striped-vertical">
+            <thead>
+                <tr>
+                    <th>Constitution</th>
+                    <th>Résilience</th>
+                    <th>Réflexe</th>
+                    <th>Charisme</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ secondaryStats?.constitution }}</td>
+                    <td>{{ secondaryStats?.resilience }}</td>
+                    <td>{{ secondaryStats?.reflex }}</td>
+                    <td>{{ secondaryStats?.charisma }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="alert alert-danger" *ngIf="RemainingPoints < 0">Vous avez dépassé le nombre maximum de points.</div>
+        <div class="alert alert-danger" *ngIf="RemainingPoints > 0">Vous devez dépenser tous vos points.</div>
+        <div class="alert alert-success" *ngIf="RemainingPoints === 0">Vous avez dépensé tous vos points.</div>
+        <button class="btn btn-secondary" (click)="previousStep()">Précédent</button>
+        <button class="btn btn-primary" (click)="nextStep()">Suivant</button>
+        
+    </div>
+    
+    <!-- Étape 3: Détails supplémentaires -->
+    <div *ngIf="step === 4">
+        <div class="row">
+            <h2>Étape 4: Maîtrises et Langues</h2>
+            
+            <div class="col-md-6" style="border-right:1px solid black">
+                <h4>Maîtrises</h4>
+                <div formArrayName="masteries" class="row">
+                    <div *ngFor="let mastery of masteries.controls; let i = index" class="form-group col-md-4">
+                        <label for="mastery-{{i}}"></label>
+                        <input id="mastery-{{i}}" type="text" class="form-control" formControlName="{{i}}" placeholder="Maîtrise">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <h4>Langues</h4>
+                <div formArrayName="languages" class="row">
+                    <div *ngFor="let language of languages.controls; let i = index" class="form-group col-md-4">
+                        <label for="language-{{i}}"></label>
+                        
+                        <input id="language-{{i}}" type="text" class="form-control" formControlName="{{i}}" placeholder="Langue">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="btn btn-secondary" (click)="previousStep()">Précédent</button>
+        <button class="btn btn-success" (click)="nextStep()">Suivant</button>
+    </div>
+    <div *ngIf="step === 5">
+        <button class="btn btn-secondary" (click)="previousStep()">Précédent</button>
+        <button class="btn btn-success" (click)="nextStep()">Suivant</button>
+        <div class="row mt-4">
+            <div class="col-12">
+                <h2>Étape 5 : Compétences</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Compétence</th>
+                            <th>Effet</th>
+                            <th>Coût</th>
+                        </tr>
+                    </thead>
+                    <tbody formArrayName="skills">
+                        <tr *ngFor="let skill of skills.controls; let i = index" [formGroupName]="i">
+                            <td>
+                                <div class="form-group">
+                                    <input type="text" class="form-control mb-2" placeholder="Titre" formControlName="name">
+                                    <textarea class="form-control" rows="2" placeholder="Description" formControlName="description"></textarea>
+                                </div>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" placeholder="Effet" formControlName="effects">
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" placeholder="Coût" formControlName="cost">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <button class="btn btn-secondary" (click)="previousStep()">Précédent</button>
+        <button class="btn btn-success" (click)="nextStep()">Suivant</button>
+        
+    </div>
+    <div *ngIf="step === 6">
+        <button class="btn btn-secondary" (click)="previousStep()">Précédent</button>
+        <button class="btn btn-success" (click)="onSubmit()">Créer le personnage</button>
+        <div class="row mt-4">
+            <div class="col-12">
+                <h2>Étape 6 : L'inventaire</h2>
+                <!-- Champs pour l'or -->
+                <div class="form-group">
+                    <label for="gold">Or :</label>
+                    <input type="number" class="form-control" id="gold" formControlName="gold">
+                </div>
+                
+                <!-- Champs pour l'inventaire -->
+                <div class="form-group">
+                    <label for="inventory">Inventaire :</label>
+                    <quill-editor formControlName="inventory" id="inventory" class="quill-editor"></quill-editor>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>

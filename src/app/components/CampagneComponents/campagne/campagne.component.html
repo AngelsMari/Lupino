@@ -1,0 +1,30 @@
+<div class="container">
+    <!-- Affichage du bouton si `userId` est défini, en haut à droite -->
+    <div *ngIf="UserId" class="d-flex justify-content-end mb-3">
+        <button class="btn btn-success" (click)="createNewCampagne()">Créer une nouvelle Campagne</button>
+    </div>
+    <div *ngIf="campagnes.length > 0; else loading"  class="row">
+        <div *ngFor="let campagne of campagnes" class="mx-1 col-lg-3 col-md-4 col-sm-2">
+            <div class="character-card card">
+                <img class="card-img-top" src="{{ campagne.imageUrl }}" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">{{ campagne.name }} - {{campagne.etat}}</h5>
+                    <p class="card-text"><strong>MJ:</strong> {{ campagne.mj.name}} <br>
+                        <strong>Nombre de joueurs :</strong> {{ campagne.personnagesJoueurs.length }} <br>
+                        <br><br>{{ campagne.speech }}
+                    </p>
+                    
+                    <a [routerLink]="['/campagne', campagne._id]" class="btn btn-primary">Voir la fiche</a> <button *ngIf="UserId" class="btn btn-danger ml-2" (click)="openDeleteModal(campagne)">
+                        X
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    
+</div>
+<ng-template #loading>
+    <p>Loading campagne data...</p>
+</ng-template>

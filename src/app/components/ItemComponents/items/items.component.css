@@ -1,0 +1,107 @@
+.search-input {
+    width: 100%;
+    max-width: 400px; /* Largeur maximale */
+    padding: 10px 20px; /* Espacement interne */
+    margin: 20px 20px 20px 0; /* Espacement externe */
+    font-size: 16px; /* Taille du texte */
+    border: 2px solid #ccc; /* Bordure */
+    border-radius: 25px; /* Bords arrondis */
+    outline: none; /* Enlève le contour par défaut */
+    transition: all 0.3s ease; /* Animation lors de l'interaction */
+    background-color: #f5ede5; /* Fond en accord avec ta palette */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Légère ombre pour effet 3D */
+}
+
+.search-input:focus {
+    border-color: #e3a477; /* Change la couleur de la bordure au focus */
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2); /* Accentue l'ombre au focus */
+}
+
+.search-input::placeholder {
+    color: #888; /* Couleur du texte placeholder */
+    font-style: italic; /* Style en italique pour le placeholder */
+}
+.search-container {
+    display: flex;
+    justify-content: space-between; /* Aligne l'input et le bouton à gauche et à droite */
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.add-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #621503; /* Couleur de fond en harmonie avec ta palette */
+    color: #FFB65F;
+    border: none;
+    border-radius: 25px; /* Bords arrondis pour correspondre à l'input */
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Transition douce */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Ombre pour effet de relief */
+}
+
+.add-button:hover {
+    background-color: #FFB65F; /* Couleur plus sombre au survol */
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2); /* Ombre renforcée au survol */
+    color: #621503 ;
+}
+
+.add-button:focus {
+    outline: none;
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2); /* Renforcement de l'effet focus */
+}
+
+/* Style de la barre de navigation */
+.nav-tabs {
+    border-bottom: 2px solid #ddd;
+    background-color: #621503;
+    padding: 10px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Style pour chaque onglet */
+.nav-tabs .nav-link {
+    color: #FFB65F;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+/* Onglet actif */
+.nav-tabs .nav-link.active {
+    background-color: #FFB65F;
+    color: #621503;
+    border-color: #6c757d;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Survol des onglets */
+.nav-tabs .nav-link:hover {
+    background-color: #e9ecef;
+    border-color: #ddd;
+    color: #343a40;
+}
+
+/* Changement de couleur au clic */
+.nav-tabs .nav-link:focus {
+    background-color: #adb5bd;
+    outline: none;
+    color: white;
+}
+
+/* Responsive - Adaptation sur petit écran */
+@media (max-width: 768px) {
+    .nav-tabs {
+        flex-wrap: wrap;
+    }
+    
+    .nav-tabs .nav-link {
+        margin-bottom: 5px;
+        flex: 1 0 100%;
+        text-align: center;
+    }
+}

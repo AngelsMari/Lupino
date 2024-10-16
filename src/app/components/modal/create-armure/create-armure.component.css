@@ -1,0 +1,69 @@
+
+  
+  .modal-header {
+    background-color: #f3d8b9;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .modal-title {
+    font-size: 20px;
+  }
+  
+  .btn-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  input, select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 5px;
+  }
+  
+  button {
+    margin-top: 20px;
+  }
+  .modal-dialog{
+    margin: 0;
+    width: 500px;
+}
+
+/* Style du conteneur select */
+select.form-control {
+    appearance: none; /* Retire le style par défaut du select */
+    -webkit-appearance: none; /* Pour Safari et Chrome */
+    -moz-appearance: none; /* Pour Firefox */
+    border: 1px solid #ced4da; /* Bordure légère */
+    padding: 10px; /* Espace intérieur du select */
+    font-size: 16px; /* Taille de la police */
+    border-radius: 5px; /* Coins arrondis */
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1); /* Ombre à l'intérieur */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Transition douce */
+  }
+  
+  /* Style au survol */
+  select.form-control:hover {
+    border-color: #80bdff; /* Bordure bleue au survol */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.25); /* Ombre extérieure au survol */
+  }
+  
+  /* Icône de la flèche pour le select */
+  select.form-control {
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNCIgaGVpZ2h0PSIxNCIgdmlld0JveD0iMCAwIDE0IDE0Ij48cGF0aCBkPSJNNC42NzMgNS41NjdsMi45OTkgMi45OTkgMi45OTktMi45OTEuNzE3LjcxNy00LjE3OCA0LjE3My00LjE3My00LjE3IDQuMTc1LTQuMTc3eiIvPjwvc3ZnPg==");
+    background-position: right 10px center; /* Position de la flèche */
+    background-repeat: no-repeat; /* Pas de répétition de l'image */
+  }
+  
+  /* Remove arrow for Firefox (optional) */
+  select.form-control::-moz-focus-inner {
+    border: 0;
+  }

@@ -1,0 +1,27 @@
+<div class="modal-header">
+    <h5 class="modal-title">Créer une nouvelle potion</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"><i class="bi bi-x-circle-fill"></i></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="poisonForm" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label for="nom" class="form-label">Nom du poison</label>
+        <input type="text" id="nom" class="form-control" formControlName="nom" required>
+      </div>
+  
+      <div class="mb-3">
+        <label for="effet" class="form-label">Effet</label>
+        <textarea id="effet" class="form-control" formControlName="effet" required></textarea>
+      </div>
+  
+      <div class="mb-3">
+        <label for="prix" class="form-label">Prix</label>
+        <input type="number" id="prix" class="form-control" formControlName="prix" required>
+      </div>
+  
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        <button type="submit" class="btn btn-primary" [disabled]="poisonForm.invalid">Créer</button>
+      </div>
+    </form>
+  </div>

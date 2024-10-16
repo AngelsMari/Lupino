@@ -1,0 +1,68 @@
+/* Autocomplétion : Liste déroulante */
+.autocomplete-list {
+    list-style-type: none;
+    padding: 0;
+    margin: -10px 0 5px 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    max-height: 200px;
+    overflow-y: auto;
+    min-width: 200px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    position: absolute;
+    z-index: 1000;
+}
+
+.autocomplete-list li {
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.autocomplete-list li:hover {
+    background-color: #f3d8b9;
+}
+
+/* Barre des éléments sélectionnés */
+.selected-list {
+    margin-top: 10px;
+}
+
+.selected-list .badge {
+    display: inline-block;
+    margin: 5px;
+    padding: 10px 15px;
+    border-radius: 15px;
+    font-size: 14px;
+}
+
+/* Badge pour les personnages joueurs (PJ) */
+.badge-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.badge-primary button {
+    background: none;
+    border: none;
+    font-size: 14px;
+    color: white;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+/* Badge pour les PNJs */
+.badge-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.badge-danger button {
+    background: none;
+    border: none;
+    font-size: 14px;
+    color: white;
+    cursor: pointer;
+    margin-left: 5px;
+}

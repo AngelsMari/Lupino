@@ -1,0 +1,50 @@
+<div class="modal-header">
+    <h5 class="modal-title">Créer une nouvelle armure</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"><i class="bi bi-x-circle-fill"></i></button>
+
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="armureForm" (ngSubmit)="createArmure()">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label for="nom" class="form-label">Nom de l'armure</label>
+            <input type="text" id="nom" class="form-control" formControlName="nom" required>
+          </div>
+        </div>
+  
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label for="categorie" class="form-label">Catégorie</label>
+            <select id="categorie" class="form-control" formControlName="categorie" required>
+              <option value="" disabled selected>Sélectionner une catégorie</option>
+              <option value="légère">Légère</option>
+              <option value="intermédiaire">Intermédiaire</option>
+              <option value="lourde">Lourde</option>
+            </select>
+          </div>
+        </div>
+      </div>
+  
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea id="description" class="form-control" formControlName="description" required></textarea>
+      </div>
+  
+      <div class="mb-3">
+        <label for="statistiques" class="form-label">Statistiques</label>
+        <textarea type="text" id="statistiques" class="form-control" formControlName="statistiques" required></textarea>
+      </div>
+  
+      <div class="mb-3">
+        <label for="prix" class="form-label">Prix</label>
+        <input type="number" id="prix" class="form-control" formControlName="prix" required>
+      </div>
+  
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        <button type="submit" class="btn btn-primary" [disabled]="armureForm.invalid">Créer</button>
+      </div>
+    </form>
+  </div>
+  

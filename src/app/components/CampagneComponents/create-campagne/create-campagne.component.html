@@ -1,0 +1,58 @@
+<form [formGroup]="campagneForm" (ngSubmit)="onSubmit()">
+    <div *ngIf="errors" class="alert alert-danger">{{ errors }}</div>
+    <!-- Champ pour le nom de la campagne -->
+    <div class="form-group">
+        <label for="nom">Nom de la campagne</label>
+        <input formControlName="nom" id="nom" class="form-control">
+    </div>
+    
+    
+    <div class="form-group">
+        <label for="personnagesJoueurs">Personnages Joueurs</label>
+        <input type="text" class="form-control" id="personnagesJoueurs" 
+               [(ngModel)]="searchPJ"
+               (input)="onSearchPJ($event)" placeholder="Rechercher un personnage joueur...">
+        
+        <ul *ngIf="filteredPJ.length > 0" class="autocomplete-list">
+          <li *ngFor="let pj of filteredPJ" (click)="addPJ(pj)">
+            {{ pj.name }}
+          </li>
+        </ul>
+    
+        <!-- Barre des personnages joueurs sélectionnés -->
+        <div class="selected-list">
+          <span *ngFor="let pj of selectedPJs" class="badge badge-pill badge-primary">
+            {{ pj.name }} <button type="button" (click)="removePJ(pj)">×</button>
+          </span>
+        </div>
+      </div>
+    
+      <!-- Autocomplétion pour les PNJs -->
+      <div class="form-group">
+        <label for="pnjs">PNJs</label>
+        <input type="text" class="form-control" id="pnjs" 
+               [(ngModel)]="searchPNJ"
+               (input)="onSearchPNJ($event)" placeholder="Rechercher un PNJ...">
+        
+        <ul *ngIf="filteredPNJ.length > 0" class="autocomplete-list">
+          <li *ngFor="let pnj of filteredPNJ" (click)="addPNJ(pnj)">
+            {{ pnj.name }}
+          </li>
+        </ul>
+    
+        <!-- Barre des PNJs sélectionnés -->
+        <div class="selected-list">
+          <span *ngFor="let pnj of selectedPNJs" class="badge badge-pill badge-danger">
+            {{ pnj.name }} <button type="button" (click)="removePNJ(pnj)">×</button>
+          </span>
+        </div>
+      </div>
+    
+    <!-- Speech de la campagne -->
+    <div class="form-group">
+        <label for="speech">Speech</label>
+        <quill-editor formControlName="speech" id="speech" name="speech"></quill-editor>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
+</form>

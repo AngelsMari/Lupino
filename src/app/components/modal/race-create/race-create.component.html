@@ -1,0 +1,33 @@
+<div class="modal-header">
+    <h5 class="modal-title">Créer une nouvelle race</h5>
+    <button type="button" class="close" aria-label="Close" (click)="cancel()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <form [formGroup]="raceForm">
+        <div class="form-group">
+            <label for="name">Nom de la race</label>
+            <input type="text" id="name" class="form-control" formControlName="name" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="type">Type (commune / inhabituelle)</label>
+            <select id="type" class="form-control" formControlName="type" required>
+                <option value="commune">Commune</option>
+                <option value="inhabituelle">Inhabituelle</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="trait">Trait</label>
+            <textarea id="trait" class="form-control" formControlName="trait" required></textarea>
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-secondary" (click)="cancel()">Annuler</button>
+    <button class="btn btn-primary" (click)="submit()">Créer</button>
+</div>
