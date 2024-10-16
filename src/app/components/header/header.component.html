@@ -35,6 +35,7 @@
             <a class="dropdown-item" routerLink="/register">Inscription</a>
           </li>
           <li *ngIf="isLoggedIn$ | async">
+            <a class="dropdown-item" routerLink="/profil">Mon profil</a>
             <a class="dropdown-item" routerLink="/mycharacters">Mes personnages</a>
             <a class="dropdown-item disabled-link" onclick="event.preventDefault();" [routerLink]="['/campagnes',1]">Mes campagnes</a>
             <div class="dropdown-divider"></div>
