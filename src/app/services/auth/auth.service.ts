@@ -62,7 +62,7 @@ export class AuthService {
     deleteAccount(): Observable<any> {
         const headers= new HttpHeaders({'Authorization': `Bearer ${sessionStorage.getItem('token')}`, 'Accept': 'application/json'});
 
-        return this.http.post(`${this.apiUrl}/delete`,  id, {'headers' : headers});
+        return this.http.post(`${this.apiUrl}/delete`, {}, {'headers' : headers});
     }
 
     isUsernameTaken(username: string): Observable<any> {
