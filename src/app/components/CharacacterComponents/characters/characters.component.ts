@@ -13,16 +13,15 @@ import { DeleteCharacterModalComponent } from '../../modal/delete-character/dele
 export class CharactersComponent {
     
     characters: Character[] = [];
-    UserId: any;
     selectedCharacter: any; // Personnage sélectionné pour suppression
+    UserId: string = sessionStorage.getItem('user_id') || "";
     
     
     constructor(private characterService: CharacterService,private modalService: NgbModal,  private router: Router, private route:ActivatedRoute) {}
     
     ngOnInit(): void {
-        this.UserId = this.route.snapshot.paramMap.get('id');
-        
-        if (this.UserId) {
+        console.log(this.router.url);
+        if (this.router.url == "/mycharacters") {
             this.getCharacters(this.UserId);
         }else{
             this.getCharacters(false);

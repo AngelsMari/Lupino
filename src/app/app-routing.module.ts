@@ -19,7 +19,7 @@ const routes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
     { path: 'characters', component: CharactersComponent },
-    { path: 'mycharacters/:id', component: CharactersComponent },
+    { path: 'mycharacters', component: CharactersComponent },
     { path: 'character/:id', component: CharacterDetailComponent }, // Route pour la fiche de personnage
     { path: 'create-character', component: CreateCharacterComponent },
     { path: 'create-character/:id', component: CreateCharacterComponent },

@@ -18,13 +18,20 @@ h1, h2 {
 
 .hero {
     position: relative;
-    height: 100vh;
+    height:  calc(100vh - 66px);
     background: url('/still-life-map-with-dices.jpg') center/cover no-repeat;
-    display: flex;
+    display: flex !important;
     align-items: center;
     justify-content: center;
     text-align: center;
     color: white;
+}
+
+/* reduce Hero height on small devices */
+@media (max-width: 768px) {
+    .hero {
+        height: 35vh;
+    }
 }
 
 .hero .overlay {
@@ -38,6 +45,10 @@ h1, h2 {
 
 .hero .content {
     z-index: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .hero h1 {
@@ -79,11 +90,12 @@ h1, h2 {
     padding: 4rem 2rem;
     background-color: #fff;
 }
-
 .features .feature {
     text-align: center;
-    max-width: 300px;
 }
+
+
+
 
 .features .feature h2 {
     font-size: 1.5rem;
