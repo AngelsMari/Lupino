@@ -105,3 +105,43 @@
         text-align: center;
     }
 }
+
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; /* Espacement égal entre les cartes */
+    margin: 1rem 0; /* Marge autour de la carte */
+}
+
+.card {
+    flex: 1 1 calc(50% - 1rem); /* 2 cartes par ligne */
+    margin: 0.5rem; /* Espacement entre les cartes */
+    border: 1px solid #ccc; /* Bordure gris clair */
+    border-radius: 0.5rem; /* Coins arrondis */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2), inset 0 1px 5px rgba(255, 255, 255, 0.5); /* Ombre externe et interne */
+    transition: transform 0.2s; /* Animation pour l'effet de survol */
+}
+
+.card:hover {
+    transform: scale(1.05); /* Agrandissement au survol */
+}
+
+.card-body {
+    padding: 1rem; /* Espacement interne */
+}
+
+.card-title {
+    font-size: 1.25rem; /* Taille de la police du titre */
+    font-weight: bold; /* Gras pour le titre */
+    margin-bottom: 0.5rem; /* Marge en bas du titre */
+}
+
+.card-text {
+    font-size: 0.9rem; /* Taille de la police pour le texte */
+    margin-bottom: 0.5rem; /* Marge en bas du texte */
+}
+
+.card-text strong {
+    color: #333; /* Couleur pour le texte fort */
+}
