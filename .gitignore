@@ -46,4 +46,3 @@ src/environments/environements.ts
 src/app/environments/environements.ts
 
 proxy.conf.json
-angular.json

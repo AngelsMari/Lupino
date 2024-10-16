@@ -30,7 +30,7 @@ h1, h2 {
 /* reduce Hero height on small devices */
 @media (max-width: 768px) {
     .hero {
-        height: 35vh;
+        height: 50vh;
     }
 }
 
