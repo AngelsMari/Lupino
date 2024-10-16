@@ -1,9 +1,9 @@
 export interface User {
-    _id : String,
-    name: String;
-    password: String;
-    jwt: String;
-    mail: String;
-    isAdmin: Boolean;
-    fcmtoken: String;
+    _id : string,
+    name: string;
+    password: string;
+    jwt: string;
+    mail: string;
+    isAdmin: boolean;
+    fcmtoken: string;
 }

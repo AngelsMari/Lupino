@@ -37,6 +37,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { ConfidentialiteComponent } from './components/pages/confidentialite/confidentialite.component';
 import { MentionsLegalesComponent } from './components/pages/mentions-legales/mentions-legales.component';
 import { LoreComponent } from './components/pages/lore/lore.component';
+import { ProfilComponent } from './components/UserGestion/profil/profil.component';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -68,7 +69,8 @@ registerLocaleData(localeFr, 'fr');
     FooterComponent,
     ConfidentialiteComponent,
     MentionsLegalesComponent,
-    LoreComponent
+    LoreComponent,
+    ProfilComponent
   ],
   imports: [
     BrowserModule,

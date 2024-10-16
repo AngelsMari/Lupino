@@ -14,6 +14,7 @@ import { CampagneDetailComponent } from './components/CampagneComponents/campagn
 import { MentionsLegalesComponent } from './components/pages/mentions-legales/mentions-legales.component';
 import { ConfidentialiteComponent } from './components/pages/confidentialite/confidentialite.component';
 import { LoreComponent } from './components/pages/lore/lore.component';
+import { ProfilComponent } from './components/UserGestion/profil/profil.component';
 
 const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -33,7 +34,8 @@ const routes: Routes = [
     { path: 'mentions-legales', component: MentionsLegalesComponent },
     { path: 'politique-confidentialite', component: ConfidentialiteComponent },
     { path: 'lore', component: LoreComponent },
-    { path: 'explorer', component: LoreComponent }
+    { path: 'explorer', component: LoreComponent },
+    { path: 'profil', component: ProfilComponent },
 
 ];
 
