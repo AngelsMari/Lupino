@@ -458,7 +458,7 @@ export class CreateCharacterComponent {
                         // Handle error
                     }else{
                         // Handle success
-                        this.router.navigate(['/mycharacters', sessionStorage.getItem('user_id')]);
+                        this.router.navigate(['/character', this.characterId]);
                     }
                 });
             } else {
