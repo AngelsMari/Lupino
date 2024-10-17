@@ -61,8 +61,8 @@ export class CharacterDetailComponent {
         console.log(data);
       }else{
         //On vérifie si on a le droit de voir le personnage
-
-        if (this.user_id != Object(data)["items"][0]["object"]?.owner._id && !this.character?.isPublic){
+        
+        if (this.user_id != Object(data)["items"][0]["object"]?.owner._id && !Object(data)["items"][0]["object"]?.isPublic){
           //Notification toastr pas d'accès
           this.toastr.error("Vous n'avez pas accès à ce personnage");
           this.r.navigate(['/characters']);
