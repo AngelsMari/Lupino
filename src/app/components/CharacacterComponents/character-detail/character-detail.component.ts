@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { Character } from '../../../models/character';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CharacterService } from '../../../services/LupinoApi/character.service';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService } from 'app/services/auth/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-character-detail',
@@ -24,7 +25,7 @@ export class CharacterDetailComponent {
   
   constructor(
     private route: ActivatedRoute,
-    private characterService: CharacterService, private fb: FormBuilder, private authService: AuthService
+    private characterService: CharacterService, private fb: FormBuilder, private authService: AuthService, private toastr: ToastrService, private r: Router
   ) { }
   
   ngOnInit(): void {
@@ -59,8 +60,15 @@ export class CharacterDetailComponent {
       if (Object(data)["result"] == "ERROR"){
         console.log(data);
       }else{
+        //On vérifie si on a le droit de voir le personnage
+
+        if (this.user_id != Object(data)["items"][0]["object"]?.owner._id && !this.character?.isPublic){
+          //Notification toastr pas d'accès
+          this.toastr.error("Vous n'avez pas accès à ce personnage");
+          this.r.navigate(['/characters']);
+        }
         this.character = Object(data)["items"][0]["object"];
-        
+
         
         this.calculateSecondaryStats();
         this.calculateBonuses();
