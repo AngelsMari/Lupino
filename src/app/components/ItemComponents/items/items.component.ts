@@ -23,6 +23,7 @@ import { CreateBazarComponent } from '../../modal/create-bazar/create-bazar.comp
 import { BazarService } from '../../../services/LupinoApi/items/bazar.service';
 import { Bazar } from '../../../models/items/bazar';
 import { AuthService } from 'app/services/auth/auth.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -45,6 +46,7 @@ export class ItemsComponent {
 	bazars: Bazar[] = [];
 	isAdmin: boolean = false; // Par défaut, pas admin
 	searchText: string = ''; // Texte de recherche
+	isInCharacterCreation: boolean = false;
 	
 	
 	constructor( 
@@ -56,7 +58,8 @@ export class ItemsComponent {
 		private poisonService: PoisonService,
 		private utilitaireService: UtilitaireService,
 		private contenantService: ContenantService,
-		private bazarService: BazarService
+		private bazarService: BazarService,
+		private router: Router
 	
 	) { }
 	
@@ -69,6 +72,12 @@ export class ItemsComponent {
 		this.loadContenants();
 		this.loadBazars();
 		this.checkIfAdmin();
+
+
+		if (this.router.url.startsWith('/create-character')) {
+			this.isInCharacterCreation = true;
+		}
+		
 	}
 	
 	loadArmes(): void {

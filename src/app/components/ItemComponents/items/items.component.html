@@ -28,7 +28,7 @@
             <!-- Barre de recherche -->
             <div class="search-container">
                 <input type="text" class="search-input" placeholder="Rechercher une arme..." [(ngModel)]="searchText">
-                <div *ngIf="isAdmin">
+                <div *ngIf="isAdmin && !isInCharacterCreation">
                     <button class="add-button" (click)="openCreateArmeModal()">
                         <i class="bi bi-sign-intersection-fill"></i> Ajouter une arme
                     </button>
@@ -212,7 +212,7 @@
 
             <div class="search-container">
                 <input type="text" class="search-input" placeholder="Rechercher une armure..." [(ngModel)]="searchText">
-                <div *ngIf="isAdmin"><button class="add-button" (click)="openCreateArmureModal()"><i class="bi bi-sign-intersection-fill"></i>
+                <div *ngIf="isAdmin && !isInCharacterCreation"><button class="add-button" (click)="openCreateArmureModal()"><i class="bi bi-sign-intersection-fill"></i>
                     Ajouter une armure</button>
                 </div>
             </div>
@@ -257,7 +257,7 @@
         <div class="tab-pane fade" id="potion" role="potion" aria-labelledby="potion-tab">
             <div class="search-container">
                 <input type="text" class="search-input" placeholder="Rechercher une potion..." [(ngModel)]="searchText">
-                <div *ngIf="isAdmin"><button class="add-button" (click)="openCreatePotionModal()"><i class="bi bi-sign-intersection-fill"></i>
+                <div *ngIf="isAdmin && !isInCharacterCreation"><button class="add-button" (click)="openCreatePotionModal()"><i class="bi bi-sign-intersection-fill"></i>
                     Ajouter une potion</button>
                 </div>
             </div>
@@ -299,7 +299,7 @@
         <div class="tab-pane fade" id="poison" role="poison" aria-labelledby="poison-tab">
             <div class="search-container">
                 <input type="text" class="search-input" placeholder="Rechercher un poison..." [(ngModel)]="searchText">
-                <div *ngIf="isAdmin"><button class="add-button" (click)="openCreatePoisonModal()"><i class="bi bi-sign-intersection-fill"></i>
+                <div *ngIf="isAdmin && !isInCharacterCreation"><button class="add-button" (click)="openCreatePoisonModal()"><i class="bi bi-sign-intersection-fill"></i>
                     Ajouter un poison</button>
                 </div>
             </div>
@@ -341,7 +341,7 @@
         <div class="tab-pane fade" id="utilitaire" role="utilitaire" aria-labelledby="utilitaire-tab">
             <div class="search-container">
                 <input type="text" class="search-input" placeholder="Rechercher un objet utilitaire..." [(ngModel)]="searchText">
-                <div *ngIf="isAdmin">
+                <div *ngIf="isAdmin && !isInCharacterCreation">
                     <button class="add-button" (click)="openCreateUtilitaireModal()"><i class="bi bi-sign-intersection-fill"></i>
                     Ajouter un objet utilitaire</button>
                     <button class="add-button" (click)="openCreateContenantModal()"><i class="bi bi-sign-intersection-fill"></i>
@@ -387,7 +387,7 @@
         <div class="tab-pane fade" id="bazar" role="bazar" aria-labelledby="bazar-tab">
             <div class="search-container">
                 <input type="text" class="search-input" placeholder="Rechercher un objet du bazar..." [(ngModel)]="searchText">
-                <div *ngIf="isAdmin"><button class="add-button" (click)="openCreateBazarModal()"><i class="bi bi-sign-intersection-fill"></i>
+                <div *ngIf="isAdmin && !isInCharacterCreation"><button class="add-button" (click)="openCreateBazarModal()"><i class="bi bi-sign-intersection-fill"></i>
                     Ajouter un objet du bazar</button>
                 </div>
             </div>

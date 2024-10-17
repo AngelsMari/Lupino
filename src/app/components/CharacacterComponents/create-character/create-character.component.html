@@ -1,14 +1,30 @@
 <div class="container" [formGroup]="characterForm">
     
+    <button *ngIf="step > 1" class="btn btn-secondary" (click)="previousStep()">Précédent</button>
+
+    <button *ngIf="step <6"class="btn btn-primary" (click)="nextStep()">Suivant</button>
+    
+    <button *ngIf="!characterId" class="btn btn-success" (click)="onSubmit()">Créer le personnage</button>
+    <button *ngIf="characterId" class="btn btn-success" (click)="onSubmit()">Mettre à jour</button>
     <!-- Étape 1: Informations de base -->
     <div *ngIf="step === 1">
-        <button class="btn btn-primary" (click)="nextStep()">Suivant</button>
+        
+
         
         <h2>Étape 1: Informations de base</h2>
+        <p>
+            Remplissez les informations de base de votre personnage. Les champs obligatoires sont marqués d'un astérisque.
+        </p>
         <div class="row">
             <div class="col-md-8">
-                <label for="name">Prénom nom</label>
-                <input id="name" type="text" class="form-control" formControlName="name" placeholder="Prénom Nom">
+                <label for="name">Prénom nom*</label>
+                <input id="name" type="text" class="form-control" formControlName="name" placeholder="Prénom Nom" 
+                       [ngClass]="{'is-invalid': characterForm.get('name')?.invalid && characterForm.get('name')?.touched}">
+                
+                <!-- Message d'erreur si le champ est requis et non rempli -->
+                <div *ngIf="characterForm.get('name')?.invalid && characterForm.get('name')?.touched" class="invalid-feedback">
+                    Ce champ est obligatoire.
+                </div>
             </div>
             
             <div class="col-md-2">
@@ -17,7 +33,7 @@
             </div>
             
             <div class="col-md-2">
-                <label for="level">Niveau</label>
+                <label for="level">Niveau*</label>
                 <input id="level" type="number" class="form-control" formControlName="level" (change)="updateCharacter()" value="1">
             </div>
             <div class="col-md-2">
@@ -46,35 +62,37 @@
                 <input id="hair" type="text" class="form-control" formControlName="hair">
             </div>
             <div class="col-md-6">
-                <label for="positive_trait">Trait positif</label>
-                <textarea id="positive_trait" type="text" class="form-control" formControlName="positive_trait"></textarea>
+                <label for="positive_trait">Trait positif*</label>
+                <textarea id="positive_trait" type="text" class="form-control" formControlName="positive_trait"  [ngClass]="{'is-invalid': characterForm.get('positive_trait')?.invalid && characterForm.get('positive_trait')?.touched}"></textarea>
+                <div *ngIf="characterForm.get('positive_trait')?.invalid && characterForm.get('positive_trait')?.touched" class="invalid-feedback">
+                    Ce champ est obligatoire.
+                </div>
             </div>
             <div class="col-md-6">
-                <label for="negative_trait">Trait négatif</label>
-                <textarea id="negative_trait" type="text" class="form-control" formControlName="negative_trait"></textarea>
+                <label for="negative_trait">Trait négatif*</label>
+                <textarea id="negative_trait" type="text" class="form-control" formControlName="negative_trait" [ngClass]="{'is-invalid': characterForm.get('negative_trait')?.invalid && characterForm.get('negative_trait')?.touched}"></textarea>
+                <div *ngIf="characterForm.get('negative_trait')?.invalid && characterForm.get('negative_trait')?.touched" class="invalid-feedback">
+                    Ce champ est obligatoire.
+                </div>
             </div>
 
             <div class="col-md-8">
                 <label for="imageUrl">Téléchargez votre image</label>
-                <input type="file" (change)="onFileSelected($event)" class="form-control" formControlName="imageUrl" placeholder="Télécharger une image" accept="image/*">
+                <input type="file" (change)="onFileSelected($event)" class="form-control" placeholder="Télécharger une image" accept="image/*">
                 <div *ngIf="characterForm.get('imageUrl')?.value">
                     <h3>Image prévisualisée :</h3>
                     <img [src]="characterForm.get('imageUrl')?.value" alt="Image prévisualisée" style="max-width: 200px; max-height: 200px;">
                 </div>
             </div>
             
-        </div>
-        
-        <button class="btn btn-primary" (click)="nextStep()">Suivant</button>
-        
+        </div>        
         
         
     </div>
     
     
     <div *ngIf="step === 2">
-        <button class="btn btn-secondary" (click)="previousStep()">Précédent</button>
-        <button class="btn btn-primary" (click)="nextStep()">Suivant</button>
+
         <h2>Étape 2 : Sélection de la race</h2>
         
         
@@ -95,7 +113,13 @@
                 </div>
             </div>
         
+            <button class="toggle-exotic-btn" (click)="toggleExoticVisibility()">
+                <span *ngIf="!isExoticVisible">Afficher les Races Exotiques</span>
+                <span *ngIf="isExoticVisible">Masquer les Races Exotiques</span>
+            </button>
             <!-- Section pour les races exotiques -->
+            <div class="row exotic-races" [ngClass]="{'hidden': !isExoticVisible}">
+
             <h3>Races Exotiques</h3>
             <div class="row mb-4">
                 <div class="col-md-4 mb-3" *ngFor="let race of exoticRaces">
@@ -109,17 +133,17 @@
                     </div>
                 </div>
             </div>
-        
-            <button class="btn btn-secondary" (click)="previousStep()">Précédent</button>
-            <button class="btn btn-primary" (click)="nextStep()">Suivant</button>
+            </div>
         </div>
     </div>
     
     <!-- Étape 2: Statistiques -->
     <div *ngIf="step === 3">
-        <button class="btn btn-secondary" (click)="previousStep()">Précédent</button>
-        <button class="btn btn-primary" (click)="nextStep()">Suivant</button>
+
         <h2>Étape 3: Statistiques</h2>
+        <p>
+            Les statistiques sont limitées entre 30 et 85 points.
+        </p>
         <table class="table">
             <thead>
                 <tr>
@@ -165,14 +189,13 @@
         <div class="alert alert-danger" *ngIf="RemainingPoints < 0">Vous avez dépassé le nombre maximum de points.</div>
         <div class="alert alert-danger" *ngIf="RemainingPoints > 0">Vous devez dépenser tous vos points.</div>
         <div class="alert alert-success" *ngIf="RemainingPoints === 0">Vous avez dépensé tous vos points.</div>
-        <button class="btn btn-secondary" (click)="previousStep()">Précédent</button>
-        <button class="btn btn-primary" (click)="nextStep()">Suivant</button>
         
     </div>
     
     <!-- Étape 3: Détails supplémentaires -->
     <div *ngIf="step === 4">
         <div class="row">
+
             <h2>Étape 4: Maîtrises et Langues</h2>
             
             <div class="col-md-6" style="border-right:1px solid black">
@@ -196,12 +219,9 @@
                 </div>
             </div>
         </div>
-        <button class="btn btn-secondary" (click)="previousStep()">Précédent</button>
-        <button class="btn btn-success" (click)="nextStep()">Suivant</button>
     </div>
     <div *ngIf="step === 5">
-        <button class="btn btn-secondary" (click)="previousStep()">Précédent</button>
-        <button class="btn btn-success" (click)="nextStep()">Suivant</button>
+
         <div class="row mt-4">
             <div class="col-12">
                 <h2>Étape 5 : Compétences</h2>
@@ -232,13 +252,9 @@
                 </table>
             </div>
         </div>
-        <button class="btn btn-secondary" (click)="previousStep()">Précédent</button>
-        <button class="btn btn-success" (click)="nextStep()">Suivant</button>
         
     </div>
     <div *ngIf="step === 6">
-        <button class="btn btn-secondary" (click)="previousStep()">Précédent</button>
-        <button class="btn btn-success" (click)="onSubmit()">Créer le personnage</button>
         <div class="row mt-4">
             <div class="col-12">
                 <h2>Étape 6 : L'inventaire</h2>
@@ -253,8 +269,15 @@
                     <label for="inventory">Inventaire :</label>
                     <quill-editor formControlName="inventory" id="inventory" class="quill-editor"></quill-editor>
                 </div>
+
+                <app-items></app-items>
             </div>
         </div>
         
     </div>
+
+    <button *ngIf="step > 1" class="btn btn-secondary" (click)="previousStep()">Précédent</button>
+    <button *ngIf="step <6"class="btn btn-primary" (click)="nextStep()">Suivant</button>
+    <button *ngIf="!characterId" class="btn btn-success" (click)="onSubmit()">Créer le personnage</button>
+    <button *ngIf="characterId" class="btn btn-success" (click)="onSubmit()">Mettre à jour</button>
 </div>

@@ -128,3 +128,21 @@
     transform: scale(1.05);
     border: 2px solid #007bff; /* Optionnel : une bordure pour plus de visibilité */
 }
+
+.toggle-exotic-btn {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: #f3d8b9 ;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 20px 0;
+    position: relative;
+    left: 50%; /* Positionnement */
+    transform: translateX(-50%);
+  }
+  
+  .toggle-exotic-btn:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+  
