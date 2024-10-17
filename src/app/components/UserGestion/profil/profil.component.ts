@@ -66,6 +66,12 @@ export class ProfilComponent implements OnInit {
             alert('Les mots de passe ne correspondent pas.');
             return;
         }
+
+        // length de 6 minimum
+        if (this.newPassword.length < 6) {
+            alert('Le mot de passe doit contenir au moins 6 caractères.');
+            return;
+        }
         
         this.authService.changePassword(this.currentPassword, this.newPassword).subscribe(response => {
             if (response.result == "OK") {
