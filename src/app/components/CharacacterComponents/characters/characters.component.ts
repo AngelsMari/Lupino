@@ -21,7 +21,6 @@ export class CharactersComponent {
     constructor(private characterService: CharacterService,private modalService: NgbModal,  private router: Router, private route:ActivatedRoute) {}
     
     ngOnInit(): void {
-        console.log(this.router.url);
         if (this.router.url == "/mycharacters") {
             this.isSelfCharacter = true;
             this.getCharacters(this.UserId);

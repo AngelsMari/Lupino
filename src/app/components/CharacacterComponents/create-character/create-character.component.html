@@ -71,37 +71,38 @@
         <!-- Sélection des races sous forme de cartes -->
         <div class="form-group">
             <!-- Section pour les races communes -->
-<h3>Races Communes</h3>
-<div class="row mb-4">
-    <div class="col-md-3" *ngFor="let race of commonRaces">
-        <div class="card race-card mb-3" [ngClass]="{'selected': selectedRace === race.name}" (click)="selectRace(race.name)">
-            <img class="card-img-top" src="{{race.image}}" alt="{{ race.name }}">
-            <div class="card-body d-flex flex-column">
-                <h5 class="card-title">{{ race.name }}</h5>
-                <p class="card-text trait">{{ race.trait }}</p>
-                <button class="btn btn-primary mt-auto" [disabled]="selectedRace !== race.name">Choisir</button>
+            <h3>Races Communes</h3>
+            <div class="row mb-4">
+                <div class="col-md-4 mb-3" *ngFor="let race of commonRaces">
+                    <div class="card race-card" 
+                         [ngClass]="{'selected-race': selectedRace === race.name}" 
+                         (click)="selectRace(race.name)">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ race.name }}</h5>
+                            <p class="card-text hidden-info">{{ race.trait }}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-</div>
-
-<!-- Section pour les races exotiques -->
-<h3>Races Exotiques</h3>
-<div class="row mb-4">
-    <div class="col-md-3" *ngFor="let race of exoticRaces">
-        <div class="card race-card mb-3" [ngClass]="{'selected': selectedRace === race.name}" (click)="selectRace(race.name)" >
-            <img class="card-img-top" src="" alt="{{ race.name }}">
-            <div class="card-body d-flex flex-column">
-                <h5 class="card-title">{{ race.name }}</h5>
-                <p class="card-text trait" >{{ race.trait }}</p>
-                <button class="btn btn-primary mt-auto" [disabled]="selectedRace !== race.name">Choisir</button>
+        
+            <!-- Section pour les races exotiques -->
+            <h3>Races Exotiques</h3>
+            <div class="row mb-4">
+                <div class="col-md-4 mb-3" *ngFor="let race of exoticRaces">
+                    <div class="card race-card" 
+                         [ngClass]="{'selected-race': selectedRace === race.name}" 
+                         (click)="selectRace(race.name)">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ race.name }}</h5>
+                            <p class="card-text hidden-info">{{ race.trait }}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
+        
+            <button class="btn btn-secondary" (click)="previousStep()">Précédent</button>
+            <button class="btn btn-primary" (click)="nextStep()">Suivant</button>
         </div>
-    </div>
-</div>
-        </div>
-        <button class="btn btn-secondary" (click)="previousStep()">Précédent</button>
-        <button class="btn btn-primary" (click)="nextStep()">Suivant</button>
     </div>
     
     <!-- Étape 2: Statistiques -->
