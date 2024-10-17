@@ -15,6 +15,7 @@ export class CharactersComponent {
     characters: Character[] = [];
     selectedCharacter: any; // Personnage sélectionné pour suppression
     UserId: string = sessionStorage.getItem('user_id') || "";
+    isSelfCharacter: boolean = false;
     
     
     constructor(private characterService: CharacterService,private modalService: NgbModal,  private router: Router, private route:ActivatedRoute) {}
@@ -22,6 +23,7 @@ export class CharactersComponent {
     ngOnInit(): void {
         console.log(this.router.url);
         if (this.router.url == "/mycharacters") {
+            this.isSelfCharacter = true;
             this.getCharacters(this.UserId);
         }else{
             this.getCharacters(false);
