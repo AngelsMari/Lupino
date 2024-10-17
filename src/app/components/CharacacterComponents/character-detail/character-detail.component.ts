@@ -32,13 +32,18 @@ export class CharacterDetailComponent {
     const id = this.route.snapshot.paramMap.get('id');
 
     //get Current User
-    this.authService.getCurrentUser().subscribe((data: any) => {
-      if (data.result == "OK") {
-          this.user_id = data.items[0].object._id;
-      }
-    });
     if (id) {
-      this.loadCharacter(id);
+      this.authService.getCurrentUser().subscribe((data: any) => {
+        if (data.result == "OK") {
+            console.log(data);
+            this.user_id = data.items[0].object._id;
+            this.loadCharacter(id);
+
+        }else{
+          this.loadCharacter(id);
+        }
+      });
+
     }
   }
   // Méthode pour commencer la session
