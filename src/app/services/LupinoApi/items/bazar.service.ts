@@ -23,7 +23,7 @@ const headers = new HttpHeaders({'Accept': 'application/json'});
   }
 
   create(bazar: Bazar): Observable<Bazar> {
-    const headers = new HttpHeaders({ 'Authorization': `Bearer ${sessionStorage.getItem('token')}`,'Accept': 'application/json'});
+    const headers = new HttpHeaders({ 'Accept': 'application/json'});
 
     return this.http.post<Bazar>(this.apiUrl+'/create', {bazar}, {'headers' : headers});
   }

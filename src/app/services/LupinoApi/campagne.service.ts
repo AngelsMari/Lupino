@@ -24,23 +24,23 @@ export class CampagneService {
 	}
 
 	getCampagnesByUser(id:any) : Observable<Campagne[]> {
-		const headers= new HttpHeaders({'Authorization': `Bearer ${sessionStorage.getItem('token')}`,'Accept': 'application/json'});
+		const headers= new HttpHeaders({'Accept': 'application/json'});
 		return this.http.post<Campagne[]>(`${this.apiUrl}/list`,{id},{'headers' : headers});
 	}
 
 	deleteCampagne(id: string): Observable<Campagne> {
-		const headers = new HttpHeaders({'Authorization': `Bearer ${sessionStorage.getItem('token')}`, 'Accept': 'application/json'});
+		const headers = new HttpHeaders({ 'Accept': 'application/json'});
 		return this.http.post<Campagne>(this.apiUrl+'/delete', {id}, {'headers' : headers});
 	}
 	
 	create(campagne: Campagne): Observable<Campagne> {
 		console.log(campagne);
-		const headers = new HttpHeaders({'Authorization': `Bearer ${sessionStorage.getItem('token')}`, 'Accept': 'application/json'});
+		const headers = new HttpHeaders({ 'Accept': 'application/json'});
 		return this.http.post<Campagne>(this.apiUrl+'/create', campagne, {'headers' : headers});
 	}
 
 	addNoteToCampagne(campagneId: string, note: Note): Observable<Campagne> {
-		const headers = new HttpHeaders({'Authorization': `Bearer ${sessionStorage.getItem('token')}`, 'Accept': 'application/json'});
+		const headers = new HttpHeaders({ 'Accept': 'application/json'});
 		return this.http.post<Campagne>(this.apiUrl+'/addnote', {id: campagneId, note: note}, {'headers' : headers});
 	}
 }

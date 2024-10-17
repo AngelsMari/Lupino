@@ -38,8 +38,12 @@ import { ConfidentialiteComponent } from './components/pages/confidentialite/con
 import { MentionsLegalesComponent } from './components/pages/mentions-legales/mentions-legales.component';
 import { LoreComponent } from './components/pages/lore/lore.component';
 import { ProfilComponent } from './components/UserGestion/profil/profil.component';
-
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './auth.interceptor';
 registerLocaleData(localeFr, 'fr');
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+
 
 @NgModule({
   declarations: [
@@ -74,6 +78,8 @@ registerLocaleData(localeFr, 'fr');
   ],
   imports: [
     BrowserModule,
+    MatButtonModule,
+    MatInputModule,
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
@@ -83,8 +89,9 @@ registerLocaleData(localeFr, 'fr');
       timeOut: 3000, // Temps avant que la notification disparaisse (en ms)
       preventDuplicates: true, // Prévenir les notifications dupliquées
       }),
+      
   ],
-  providers: [AuthGuard, AuthService, { provide: LOCALE_ID, useValue: 'fr' } 
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },AuthGuard, AuthService, { provide: LOCALE_ID, useValue: 'fr' }
   ],
   bootstrap: [AppComponent]
 })

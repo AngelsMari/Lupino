@@ -4,6 +4,8 @@ import { CharacterService } from '../../../services/LupinoApi/character.service'
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DeleteCharacterModalComponent } from '../../modal/delete-character/delete-character.component';
+import { AuthService } from 'app/services/auth/auth.service';
+import { User } from 'app/models/user';
 
 @Component({
     selector: 'app-characters',
@@ -14,23 +16,32 @@ export class CharactersComponent {
     
     characters: Character[] = [];
     selectedCharacter: any; // Personnage sélectionné pour suppression
-    UserId: string = sessionStorage.getItem('user_id') || "";
     isSelfCharacter: boolean = false;
+    currentUser: User = { _id: '', name: '', mail: '', password:'', isAdmin: false};
     
-    
-    constructor(private characterService: CharacterService,private modalService: NgbModal,  private router: Router, private route:ActivatedRoute) {}
+    constructor(private characterService: CharacterService,private modalService: NgbModal,  private router: Router, private authService: AuthService) {}
     
     ngOnInit(): void {
         if (this.router.url == "/mycharacters") {
             this.isSelfCharacter = true;
-            this.getCharacters(this.UserId);
+            this.authService.getCurrentUser().subscribe(
+                response => {
+                   if (response.result == "OK") {
+                       this.currentUser = response.items[0].object;
+                       this.getCharacters();
+
+                   }
+                }
+            );
         }else{
-            this.getCharacters(false);
+            this.getCharacters();
+
         }
+
     }
     
-    getCharacters(id:any): void {
-        if (!id){
+    getCharacters(): void {
+        if (!this.isSelfCharacter){
             
             this.characterService.getCharacters().subscribe(res => {
                 if (Object(res)["result"] == "ERROR"){                    
@@ -46,7 +57,7 @@ export class CharactersComponent {
                 
             });
         } else {
-            this.characterService.getCharactersByUser(id).subscribe(res => {
+            this.characterService.getCharactersByUser(this.currentUser._id).subscribe(res => {
                 if (Object(res)["result"] == "ERROR"){                    
                     if (Object(res)["errorId"] == 0){
                         //CREATE NEW USER
@@ -74,11 +85,13 @@ export class CharactersComponent {
     
     deleteCharacter(characterId: string) {
         this.characterService.deleteCharacter(characterId).subscribe(res => {
+            console.log(res);
+
             if (Object(res)["result"] == "ERROR"){                    
                 // Handle error
             }else{
                 // Refresh the list of characters
-                this.characters = Object(res)["items"][0]["object"];
+                this.getCharacters();
             }
         });
     }

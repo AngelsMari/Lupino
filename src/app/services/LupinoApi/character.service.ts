@@ -25,22 +25,22 @@ export class CharacterService {
 	}
 
 	getCharactersByUser(id:any) : Observable<Character[]> {
-		const headers= new HttpHeaders({'Authorization': `Bearer ${sessionStorage.getItem('token')}`,'Accept': 'application/json'});
+		const headers= new HttpHeaders({'Accept': 'application/json'});
 		return this.http.post<Character[]>(`${this.apiUrl}/list`,{id},{'headers' : headers});
 	}
 
 	deleteCharacter (id:string)  {
-		const headers= new HttpHeaders({'Authorization': `Bearer ${sessionStorage.getItem('token')}`,'Accept': 'application/json'});
+		const headers= new HttpHeaders({'Accept': 'application/json'});
 		return this.http.post<Character>(`${this.apiUrl}/delete`,{id},{'headers' : headers});
 	}
 
 	createCharacter(character: Character) : Observable<Character>{
-		const headers= new HttpHeaders({'Authorization': `Bearer ${sessionStorage.getItem('token')}`,'Accept': 'application/json'});
+		const headers= new HttpHeaders({'Accept': 'application/json'});
 		return this.http.post<Character>(this.apiUrl+'/create',character,{'headers' : headers});
 	}
 
 	updateCharacter(character: Character) {
-		const headers= new HttpHeaders({'Authorization': `Bearer ${sessionStorage.getItem('token')}`,'Accept': 'application/json'});
+		const headers= new HttpHeaders({'Accept': 'application/json'});
 		console.log(character);
 		return this.http.post<Character>(this.apiUrl+'/update',character,{'headers' : headers});
 

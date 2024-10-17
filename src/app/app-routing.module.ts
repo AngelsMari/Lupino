@@ -15,27 +15,28 @@ import { MentionsLegalesComponent } from './components/pages/mentions-legales/me
 import { ConfidentialiteComponent } from './components/pages/confidentialite/confidentialite.component';
 import { LoreComponent } from './components/pages/lore/lore.component';
 import { ProfilComponent } from './components/UserGestion/profil/profil.component';
+import { AuthGuard } from './services/auth/auth.guard';
 
 const routes: Routes = [
     { path: '', component: HomeComponent },
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
     { path: 'characters', component: CharactersComponent },
-    { path: 'mycharacters', component: CharactersComponent },
+    { path: 'mycharacters', component: CharactersComponent, canActivate: [AuthGuard]  },// Protéger cette route avec AuthGuard
     { path: 'character/:id', component: CharacterDetailComponent }, // Route pour la fiche de personnage
     { path: 'create-character', component: CreateCharacterComponent },
     { path: 'create-character/:id', component: CreateCharacterComponent },
     { path: 'races', component: RacesComponent },
     { path: 'items', component: ItemsComponent },
     { path: 'create-campagne', component: CreateCampagneComponent },
-    { path: 'campagnes/:id', component: CampagneComponent},
+    { path: 'mycampaigns', component: CampagneComponent, canActivate: [AuthGuard]  },
     { path: 'campagnes', component: CampagneComponent},
     { path: 'campagne/:id', component: CampagneDetailComponent},
     { path: 'mentions-legales', component: MentionsLegalesComponent },
     { path: 'politique-confidentialite', component: ConfidentialiteComponent },
     { path: 'lore', component: LoreComponent },
     { path: 'explorer', component: LoreComponent },
-    { path: 'profil', component: ProfilComponent },
+    { path: 'profil', component: ProfilComponent,canActivate: [AuthGuard]   },
 
 ];
 

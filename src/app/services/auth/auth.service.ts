@@ -14,12 +14,14 @@ export class AuthService {
     public loggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
     
     get isLoggedIn() {
-        if (sessionStorage.getItem("token")){
-            this.loggedIn.next(true);
-        }else{
-            this.loggedIn.next(false);
-            
-        }
+        this.getCurrentUser().subscribe((data: any) => {
+            if (data.result == "OK") {
+                this.loggedIn.next(true);
+            } else {
+                this.loggedIn.next(false);
+            }
+        });
+        
         return this.loggedIn.asObservable();
     }
     
@@ -35,8 +37,7 @@ export class AuthService {
     }
     
     logout() {
-        this.loggedIn.next(false);
-        this.router.navigate(['/login']);
+        return this.http.get(`${this.apiUrl}/logout`);
     }
     
     register(name : string, mail:string, password:string): Observable<any> {
@@ -48,19 +49,25 @@ export class AuthService {
     }
 
     changePassword(currentPassword: string, newPassword: string): Observable<any> {
-        const headers= new HttpHeaders({'Authorization': `Bearer ${sessionStorage.getItem('token')}`, 'Accept': 'application/json'});
+        const headers= new HttpHeaders({ 'Accept': 'application/json'});
 
         return this.http.post<User>(`${this.apiUrl}/change-password`, {"currentPassword": currentPassword, "newPassword": newPassword}, {'headers' : headers});
     }
 
+    getCurrentUser(): Observable<any> {
+        const headers= new HttpHeaders({ 'Accept': 'application/json'});
+
+        return this.http.get(`${this.apiUrl}/currentUser`, {'headers' : headers});
+    }
+
     get(id: string): Observable<any> {
-        const headers= new HttpHeaders({'Authorization': `Bearer ${sessionStorage.getItem('token')}`, 'Accept': 'application/json'});
+        const headers= new HttpHeaders({ 'Accept': 'application/json'});
 
         return this.http.post(`${this.apiUrl}/get`,  id, {'headers' : headers});
     }
 
     deleteAccount(): Observable<any> {
-        const headers= new HttpHeaders({'Authorization': `Bearer ${sessionStorage.getItem('token')}`, 'Accept': 'application/json'});
+        const headers= new HttpHeaders({ 'Accept': 'application/json'});
 
         return this.http.post(`${this.apiUrl}/delete`, {}, {'headers' : headers});
     }
@@ -70,7 +77,7 @@ export class AuthService {
     }
 
     updateUserInfo(user: User): Observable<any> {
-        const headers= new HttpHeaders({'Authorization': `Bearer ${sessionStorage.getItem('token')}`, 'Accept': 'application/json'});
+        const headers= new HttpHeaders({ 'Accept': 'application/json'});
 
         return this.http.post(`${this.apiUrl}/update`, user, {'headers' : headers});
     }

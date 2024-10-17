@@ -3,6 +3,7 @@ import { Character } from '../../../models/character';
 import { ActivatedRoute } from '@angular/router';
 import { CharacterService } from '../../../services/LupinoApi/character.service';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { AuthService } from 'app/services/auth/auth.service';
 
 @Component({
   selector: 'app-character-detail',
@@ -13,7 +14,7 @@ export class CharacterDetailComponent {
   character: Character | undefined;
   secondaryStats: { constitution: number; resilience: number; reflex: number; charisma: number } | undefined;
   bonuses: { [key: string]: string } = {};
-  user_id: string | null = sessionStorage.getItem('user_id');
+  user_id: string | null = null;
   sessionActive: boolean = false;
   characterForm: FormGroup = this.fb.group({
     current_hp: [''],
@@ -23,12 +24,18 @@ export class CharacterDetailComponent {
   
   constructor(
     private route: ActivatedRoute,
-    private characterService: CharacterService, private fb: FormBuilder
+    private characterService: CharacterService, private fb: FormBuilder, private authService: AuthService
   ) { }
   
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    
+
+    //get Current User
+    this.authService.getCurrentUser().subscribe((data: any) => {
+      if (data.result == "OK") {
+          this.user_id = data.items[0].object._id;
+      }
+    });
     if (id) {
       this.loadCharacter(id);
     }

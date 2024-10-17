@@ -23,7 +23,7 @@ const headers = new HttpHeaders({'Accept': 'application/json'});
   }
 
   create(contenant: Contenant): Observable<Contenant> {
-    const headers = new HttpHeaders({ 'Authorization': `Bearer ${sessionStorage.getItem('token')}`,'Accept': 'application/json'});
+    const headers = new HttpHeaders({ 'Accept': 'application/json'});
 
     return this.http.post<Contenant>(this.apiUrl+'/create', {contenant}, {'headers' : headers});
   }

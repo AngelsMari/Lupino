@@ -25,7 +25,7 @@ const headers = new HttpHeaders({'Accept': 'application/json'});
   }
 
   create(arme: Arme): Observable<Arme> {
-    const headers = new HttpHeaders({ 'Authorization': `Bearer ${sessionStorage.getItem('token')}`,'Accept': 'application/json'});
+    const headers = new HttpHeaders({ 'Accept': 'application/json'});
     return this.http.post<Arme>(this.apiUrl+'/create', {arme}, {'headers' : headers});
   }
   

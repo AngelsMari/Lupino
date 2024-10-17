@@ -4,16 +4,18 @@ import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 
 import { AuthService } from './auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private toastr: ToastrService) {}
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-    return this.authService.isLoggedIn.pipe(
+    return this.authService.getCurrentUser().pipe(
       take(1),
-      map((isLoggedIn: boolean) => {
-        if (!isLoggedIn) {
+      map((isLoggedIn: any) => {
+        if (isLoggedIn.result !== 'OK') {
+          this.toastr.error('Vous devez être connecté pour accéder à cette page', 'Error',);
           this.router.navigate(['/login']);
           return false;
         }

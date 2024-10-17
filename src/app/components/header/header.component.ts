@@ -8,24 +8,30 @@ import { Observable } from 'rxjs/internal/Observable';
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
-  isLoggedIn$!: Observable<boolean>;
-  userId: string = "";
+  isLoggedIn: boolean=false;
 
   constructor(private authService: AuthService){
   }
 
   ngOnInit() {
-    if (sessionStorage.getItem("token")){
-      this.authService.loggedIn.next(true);
-      this.userId = sessionStorage.getItem("user_id") || "";
-    }
-    this.isLoggedIn$ = this.authService.isLoggedIn;
     
+    this.checkIfLoggedIn();
+  }
+
+  checkIfLoggedIn(): void {
+    this.authService.isLoggedIn.subscribe((data: boolean) => {
+      this.isLoggedIn = data;
+    });
   }
 
   logout(){
-    sessionStorage.removeItem("token");
-    sessionStorage.removeItem("user_id");
-    this.authService.logout();
+    this.authService.logout().subscribe( data => {
+      this.checkIfLoggedIn();
+
+      console.log('data',data);
+      document.cookie = 'token=;expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'; // Ajustez le nom du cookie si nécessaire
+      sessionStorage.removeItem('token'); // Optionnel : supprimer le token du sessionStorage si nécessaire
+      sessionStorage.removeItem('user_id'); // Supprimer l'ID utilisateur du sessionStorage si nécessaire
+    });
   }
 }

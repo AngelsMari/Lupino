@@ -16,30 +16,25 @@ export class ProfilComponent implements OnInit {
     newPassword: string = '';
     confirmPassword: string = '';
     currentUser: User;
-    userId: string = sessionStorage.getItem('user_id') || '';
     usernameTaken: boolean = false;
     
     constructor(private authService: AuthService,private router: Router,private toastr: ToastrService) {
-        this.user = { _id: '', name: '', mail: '', password: '', jwt: '', isAdmin: false, fcmtoken: '' }; 
-        this.currentUser = { _id: '', name: '', mail: '', password: '', jwt: '', isAdmin: false, fcmtoken: '' }; 
+        this.user = { _id: '', name: '', mail: '', password: '', isAdmin: false }; 
+        this.currentUser = { _id: '', name: '', mail: '', password: '',  isAdmin: false }; 
 
     }
     
     ngOnInit(): void {
-        if (!this.userId) {
-            this.toastr.error("Vous n'avez pas accès à cette page", 'Erreur');
-            
-            this.router.navigate(['/']);
-        }
+        
         this.loadUserInfo();
     }
     
     loadUserInfo() {
         // Chargez les informations de l'utilisateur depuis le service
-        this.authService.get(this.userId).subscribe((data: any) => {
-            if (data.result == "OK") {
-                this.user = data.items[0].object;
-                this.currentUser = this.user;
+        this.authService.getCurrentUser().subscribe(response => {
+            if (response.result == "OK") {
+                this.currentUser = response.items[0].object;
+                this.user= response.items[0].object;
             }
         });
     }

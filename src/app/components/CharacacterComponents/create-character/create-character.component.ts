@@ -41,6 +41,7 @@ export class CreateCharacterComponent {
             hair: [''],
             positive_trait: ['', Validators.required],
             negative_trait: ['', Validators.required],
+            imageUrl: [''],
             
             // Etape 2 : Race
             race: ['', Validators.required],
@@ -69,7 +70,6 @@ export class CreateCharacterComponent {
             max_hp: [0],
             current_mana: [0],
             max_mana: [0],
-            owner: [sessionStorage.getItem('user_id')],
             isPNJ: [false]
         });
     }
@@ -162,6 +162,27 @@ export class CreateCharacterComponent {
         this.RemainingPoints = this.MaximumPoints - this.calculateTotalStats();
         
         this.skillCount = 4 + Math.floor(level / 2);
+    }
+
+    onFileSelected(event: Event) {
+        const fileInput = event.target as HTMLInputElement;
+        if (fileInput.files && fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+    
+            // Lisez le fichier et convertissez-le en Base64
+            reader.onload = (e: ProgressEvent<FileReader>) => {
+                const base64String = e.target?.result as string; // Obtenez la chaîne Base64
+                console.log('Fichier sélectionné:', base64String);
+    
+                // Mettez à jour votre modèle de personnage avec l'URL Base64
+                this.characterForm.patchValue({
+                    imageUrl: base64String // Assurez-vous que "image" est un champ dans votre formulaire
+                });
+            };
+    
+            reader.readAsDataURL(file); // Lire le fichier en tant que Data URL (Base64)
+        }
     }
 
 

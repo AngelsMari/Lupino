@@ -22,6 +22,7 @@ import { CreateContenantComponent } from '../../modal/create-contenant/create-co
 import { CreateBazarComponent } from '../../modal/create-bazar/create-bazar.component';
 import { BazarService } from '../../../services/LupinoApi/items/bazar.service';
 import { Bazar } from '../../../models/items/bazar';
+import { AuthService } from 'app/services/auth/auth.service';
 
 
 @Component({
@@ -44,13 +45,12 @@ export class ItemsComponent {
 	bazars: Bazar[] = [];
 	isAdmin: boolean = false; // Par défaut, pas admin
 	searchText: string = ''; // Texte de recherche
-	userId: string | null = sessionStorage.getItem('user_id');
 	
 	
 	constructor( 
 		private modalService: NgbModal, 
 		private armeService: ArmeService, 
-		private userService: UserService, 
+		private authService: AuthService, 
 		private armureService: ArmureService, 
 		private potionService: PotionService,
 		private poisonService: PoisonService,
@@ -149,18 +149,19 @@ export class ItemsComponent {
 	}
 	
 	checkIfAdmin(): void {
-		if (this.userId) {
-			this.userService.getUserById(this.userId).subscribe(data => {
-				if (Object(data)["result"] == "ERROR"){
-					// Handle error
-				}else {
-					let user = Object(data)["items"][0]["object"];
-					if (user && user.isAdmin === true) {
-						this.isAdmin = true;
-					}
+		
+		this.authService.getCurrentUser().subscribe(data => {
+			if (Object(data)["result"] == "ERROR"){
+				// Handle error
+			}else {
+				let user = Object(data)["items"][0]["object"];
+				console.log(user);
+				if (user && user.isAdmin === true) {
+					this.isAdmin = true;
 				}
-			});
-		}
+			}
+		});
+		
 	}
 	
 	// Filtrage des armes corps à corps

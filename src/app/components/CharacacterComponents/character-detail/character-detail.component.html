@@ -18,6 +18,7 @@
         </div>
         <div class="col-md-8">
             <h1>{{ character?.name }}</h1>
+            <h6>Crée par : {{ character?.owner?.name}}</h6>
             <div class="health-mana-section" *ngIf="sessionActive">
                 <div class="health-mana-controls">
                   <!-- Points de vie (HP) -->

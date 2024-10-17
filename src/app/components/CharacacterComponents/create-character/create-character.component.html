@@ -53,6 +53,16 @@
                 <label for="negative_trait">Trait négatif</label>
                 <textarea id="negative_trait" type="text" class="form-control" formControlName="negative_trait"></textarea>
             </div>
+
+            <div class="col-md-8">
+                <label for="imageUrl">Téléchargez votre image</label>
+                <input type="file" (change)="onFileSelected($event)" class="form-control" formControlName="imageUrl" placeholder="Télécharger une image" accept="image/*">
+                <div *ngIf="characterForm.get('imageUrl')?.value">
+                    <h3>Image prévisualisée :</h3>
+                    <img [src]="characterForm.get('imageUrl')?.value" alt="Image prévisualisée" style="max-width: 200px; max-height: 200px;">
+                </div>
+            </div>
+            
         </div>
         
         <button class="btn btn-primary" (click)="nextStep()">Suivant</button>
