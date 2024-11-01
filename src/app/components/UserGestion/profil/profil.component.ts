@@ -12,12 +12,12 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ProfilComponent implements OnInit {
 
-    user : UserPublicData = { _id: '', name: '', mail: '', isAdmin: false };
+    user : UserPublicData = { _id: '', name: '', mail: '', isAdmin: false, isSuperAdmin: false, isMJ: false };
     currentPassword: string = '';
     newPassword: string = '';
     confirmPassword: string = '';
     usernameTaken: boolean = false;
-    currentUser: UserPublicData = { _id: '', name: '', mail: '', isAdmin: false };
+    currentUser: UserPublicData = { _id: '', name: '', mail: '', isAdmin: false, isSuperAdmin: false, isMJ: false };
 
     constructor(private authService: AuthService,private router: Router,private toastr: ToastrService, private userService: UserService) {
     }

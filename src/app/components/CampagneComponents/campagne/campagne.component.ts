@@ -48,7 +48,6 @@ export class CampagneComponent {
             });
         } else {
             this.campagneService.getCampagnesByUser(id).subscribe(res => {
-                console.log(id);
                 if (Object(res)["result"] == "ERROR"){                    
                     if (Object(res)["errorId"] == 0){
                         //CREATE NEW USER

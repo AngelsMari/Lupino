@@ -3,4 +3,6 @@ export interface UserPublicData {
     name: string;
     mail: string;
     isAdmin: boolean;
+    isSuperAdmin: boolean;
+    isMJ: boolean;
 }

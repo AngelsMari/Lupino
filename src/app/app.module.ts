@@ -45,6 +45,9 @@ import { AuthInterceptor } from './auth.interceptor';
 registerLocaleData(localeFr, 'fr');
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { UserListComponent } from './components/UserGestion/list/user-list.component';
+import { AdminGuard } from './services/auth/admin.guard';
+import { UserService } from './services/LupinoApi/user.service';
 
 
 @NgModule({
@@ -76,7 +79,8 @@ import { MatButtonModule } from '@angular/material/button';
     ConfidentialiteComponent,
     MentionsLegalesComponent,
     LoreComponent,
-    ProfilComponent
+    ProfilComponent,
+    UserListComponent
   ],
   imports: [
     BrowserModule,
@@ -94,7 +98,7 @@ import { MatButtonModule } from '@angular/material/button';
       }),
       
   ],
-  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },AuthGuard, AuthService, { provide: LOCALE_ID, useValue: 'fr' }
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },AuthGuard,AuthService,UserService, { provide: LOCALE_ID, useValue: 'fr' },AdminGuard
   ],
   bootstrap: [AppComponent]
 })

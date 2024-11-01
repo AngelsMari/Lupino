@@ -12,7 +12,7 @@ import { UserPublicData } from 'app/models/userpublicdata';
 })
 export class UserService {
     private apiUrl = environment.apiUrl+'/user'; // Assure-toi que cette URL correspond à ton API
-    private userData = new BehaviorSubject<UserPublicData>({ _id: '', name: '', mail: '', isAdmin: false });
+    private userData = new BehaviorSubject<UserPublicData>({ _id: '', name: '', mail: '', isAdmin: false, isSuperAdmin: false, isMJ: false });
     private userLoadedSubject = new BehaviorSubject<boolean>(false); // Ajoutez un sujet pour indiquer que l'utilisateur est chargé
 
     
@@ -38,7 +38,9 @@ export class UserService {
                     _id: user._id || '',  // Assurez-vous que '_id' est présent
                     name: user.name || '', // Utilisez une chaîne vide par défaut
                     mail: user.mail || '', // Utilisez une chaîne vide par défaut
-                    isAdmin: user.isAdmin || false  // Utilisez false par défaut
+                    isAdmin: user.isAdmin || false,  // Utilisez false par défaut
+                    isSuperAdmin: user.isSuperAdmin || false, // Utilisez false par défaut
+                    isMJ: user.isMJ || false // Utilisez false par défaut
                 });
                 this.userLoadedSubject.next(true); // Émettre que l'utilisateur est chargé
             }
@@ -49,7 +51,7 @@ export class UserService {
         return this.userLoadedSubject.asObservable();
     }
 
-    getUserData(): Observable<{ _id: string, name: string; mail: string; isAdmin: boolean }> {
+    getUserData(): Observable<{ _id: string, name: string; mail: string; isAdmin: boolean, isSuperAdmin:boolean,isMJ:boolean }> {
         return this.userData.asObservable();
     }
 }

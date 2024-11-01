@@ -16,6 +16,8 @@ import { ConfidentialiteComponent } from './components/pages/confidentialite/con
 import { LoreComponent } from './components/pages/lore/lore.component';
 import { ProfilComponent } from './components/UserGestion/profil/profil.component';
 import { AuthGuard } from './services/auth/auth.guard';
+import { AdminGuard } from './services/auth/admin.guard';
+import { UserListComponent } from './components/UserGestion/list/user-list.component';
 
 const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -37,6 +39,7 @@ const routes: Routes = [
     { path: 'lore', component: LoreComponent },
     { path: 'explorer', component: LoreComponent },
     { path: 'profil', component: ProfilComponent,canActivate: [AuthGuard]   },
+    { path: 'user-list', component: UserListComponent, canActivate: [AdminGuard]   },
 
 ];
 

@@ -4,4 +4,6 @@ export interface User {
     password: string;
     mail: string;
     isAdmin: boolean;
+    isSuperAdmin: boolean;
+    isMJ: boolean;
 }

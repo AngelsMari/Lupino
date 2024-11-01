@@ -84,3 +84,15 @@
     padding: 15px; /* Padding pour espacer le texte du bord */
     border-radius: 8px; /* Coins arrondis */
 }
+
+.not-published {
+    border: 2px solid #ffc107; /* Jaune doré */
+    background-color: #fff3cd; /* Jaune clair */
+    color: #856404; /* Texte marron pour un meilleur contraste */
+}
+
+h6{
+    font-size: 0.8em; /* Taille de la police */
+    font-weight: 400;
+    font-style: italic;
+}

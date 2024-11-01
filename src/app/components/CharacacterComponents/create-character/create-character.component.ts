@@ -179,19 +179,19 @@ export class CreateCharacterComponent {
         // Calcul du nombre de maîtrises 5 + 2 pour chaques stats > 70
         let numberOfMasteries = 5;
         
-        if (strength > 70) {
+        if (strength >= 70) {
             numberOfMasteries += 2;
         }
-        if (agility > 70) {
+        if (agility >= 70) {
             numberOfMasteries += 2;
         }
-        if (endurance > 70) {
+        if (endurance >= 70) {
             numberOfMasteries += 2;
         }
-        if (social > 70) {
+        if (social >= 70) {
             numberOfMasteries += 2;
         }
-        if (mental > 70) {
+        if (mental >= 70) {
             numberOfMasteries += 2;
         }
         numberOfMasteries += Math.floor(level / 2);

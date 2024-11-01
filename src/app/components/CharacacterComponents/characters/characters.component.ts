@@ -7,6 +7,7 @@ import { DeleteCharacterModalComponent } from '../../modal/delete-character/dele
 import { AuthService } from 'app/services/auth/auth.service';
 import { UserService } from 'app/services/LupinoApi/user.service';
 import { UserPublicData } from 'app/models/userpublicdata';
+import { first, forkJoin } from 'rxjs';
 
 @Component({
     selector: 'app-characters',
@@ -18,51 +19,55 @@ export class CharactersComponent {
     characters: Character[] = [];
     selectedCharacter: any; // Personnage sélectionné pour suppression
     isSelfCharacter: boolean = false;
-    currentUser: UserPublicData = { _id: '', name: '', mail: '', isAdmin: false };
+    currentUser: UserPublicData = { _id: '', name: '', mail: '', isAdmin: false, isSuperAdmin: false, isMJ: false };
     
     constructor(private characterService: CharacterService,private modalService: NgbModal,  private router: Router, private authService: AuthService, private userService: UserService) {}
     
     ngOnInit(): void {
-        if (this.router.url == "/mycharacters") {
-            this.isSelfCharacter = true;
-
-            this.userService.getUserData().subscribe(data => {
-                this.currentUser = data;
-            });
-            
-        }
-        this.getCharacters();
-
+        
+        this.userService.isUserLoaded().subscribe(isLoaded => {
+            if (isLoaded) {
+                this.userService.getUserData().subscribe(data => {
+                    this.currentUser = data;
+                });
+                if (this.router.url == "/mycharacters") {
+                    this.isSelfCharacter = true;
+                  
+                    this.getCharactersByUser();
+                } else {
+                    this.getCharacters();
+                }
+            }
+        });
+        
     }
     
     getCharacters(): void {
-        if (!this.isSelfCharacter){
-            
-            this.characterService.getCharacters().subscribe(res => {
-                if (Object(res)["result"] == "ERROR"){                    
-                    if (Object(res)["errorId"] == 0){
-                        //CREATE NEW USER
-                        this.router.navigate(["/profile/new"]);
-                    }
-                }else{
-                    let characters = Object(res)["items"][0]["object"];
-                    //get access public
-                    this.characters = characters.filter((character:Character) => character.isPublic == true);
-                }
-                
-            });
-        } else {
-            this.characterService.getCharactersByUser(this.currentUser._id).subscribe(res => {
-                if (Object(res)["result"] == "ERROR"){                    
-                    if (Object(res)["errorId"] == 0){
-                        //CREATE NEW USER
-                        this.router.navigate(["/profile/new"]);
-                    }
-                }else{
+
+        this.characterService.getCharacters().subscribe(res => {
+            if (Object(res)["result"] == "ERROR"){                    
+                // Handle error
+            }else{
+                if (this.currentUser.isAdmin) {
                     this.characters = Object(res)["items"][0]["object"];
+                } else {
+                    this.characters = Object(res)["items"][0]["object"].filter((character: Character) => character.isPublic == true);
                 }
-            });
-        }
+            }
+        });
+    }
+
+    getCharactersByUser(): void {
+        this.characterService.getCharactersByUser(this.currentUser._id).subscribe(res => {
+            if (Object(res)["result"] == "ERROR"){                    
+                if (Object(res)["errorId"] == 0){
+                    //CREATE NEW USER
+                    this.router.navigate(["/profile/new"]);
+                }
+            }else{
+                this.characters = Object(res)["items"][0]["object"];
+            }
+        });
     }
     
     createNewCharacter() {
@@ -81,7 +86,7 @@ export class CharactersComponent {
     deleteCharacter(characterId: string) {
         this.characterService.deleteCharacter(characterId).subscribe(res => {
             console.log(res);
-
+            
             if (Object(res)["result"] == "ERROR"){                    
                 // Handle error
             }else{

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { UserService } from './services/LupinoApi/user.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,13 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'Lupino';
+
+  constructor(private userService: UserService) {}
+
+
+  ngOnInit() {
+    // Appeler une méthode du UserService pour s'assurer qu'il est chargé
+    this.userService.getUserData().subscribe(data => {
+    });
+}
 }

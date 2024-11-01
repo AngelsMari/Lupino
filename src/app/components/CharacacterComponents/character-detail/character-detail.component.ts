@@ -6,7 +6,7 @@ import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService } from 'app/services/auth/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { UserService } from 'app/services/LupinoApi/user.service';
-import { catchError, first, forkJoin, of, tap } from 'rxjs';
+import {  first, forkJoin} from 'rxjs';
 
 @Component({
     selector: 'app-character-detail',
@@ -65,8 +65,6 @@ export class CharacterDetailComponent {
             characterData: this.characterService.getCharacterById(id).pipe(first())
         }).subscribe(({ userData, characterData }) => {
             this.user_id = userData._id;
-            console.log("user_id", userData);
-            console.log("characterData", characterData);
             if (Object(characterData)["result"] == "ERROR") {
                 console.log(characterData);
             } else {
@@ -77,7 +75,6 @@ export class CharacterDetailComponent {
                 if (this.user_id !== characterOwnerId && !isPublic) {
                     // Notification toastr pas d'accès
                     this.toastr.error("Vous n'avez pas accès à ce personnage");
-                    console.log("user_id", this.user_id);
                     // Rediriger ou gérer l'erreur
                     return; // Sortir si l'accès n'est pas autorisé
                 }

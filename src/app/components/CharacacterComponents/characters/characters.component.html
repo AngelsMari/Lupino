@@ -15,10 +15,11 @@
     </div>
     <div *ngIf="characters.length > 0;"  class="row">
         <div *ngFor="let character of characters" class=" mx-1 col-lg-2 col-md-3 col-sm-4 col-6">
-            <div class="card character-card">
+            <div class="card character-card" [ngClass]="{ 'not-published': !isSelfCharacter && currentUser.isAdmin && !character.isPublic}">
                 <div class="card-img"><img class="card-img-top" src="{{ character.imageUrl}}" alt="Card image cap"></div>
                 <div class="card-body">
                     <h5 class="card-title">{{ character.name }}</h5>
+                    <h6>créateur : {{character.owner.name}}</h6>
                     <p class="card-text">Level: {{ character.level }}
                         <br>Race: {{ character.race }}
                     </p>

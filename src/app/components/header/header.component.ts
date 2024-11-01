@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth/auth.service';
-import { Observable } from 'rxjs/internal/Observable';
+import { UserService } from 'app/services/LupinoApi/user.service';
 
 @Component({
   selector: 'app-header',
@@ -9,13 +9,14 @@ import { Observable } from 'rxjs/internal/Observable';
 })
 export class HeaderComponent {
   isLoggedIn: boolean=false;
+  isAdmin: boolean=false;
 
-  constructor(private authService: AuthService){
+  constructor(private authService: AuthService, private userService: UserService) {
   }
 
   ngOnInit() {
-    
     this.checkIfLoggedIn();
+    this.checkIfAdmin();
   }
 
   checkIfLoggedIn(): void {
@@ -23,6 +24,13 @@ export class HeaderComponent {
       this.isLoggedIn = data;
     });
   }
+
+  checkIfAdmin(): void {
+		this.userService.getUserData().subscribe(data => {
+            this.isAdmin = data.isAdmin;
+    });
+		
+	}
 
   logout(){
     this.authService.logout().subscribe( data => {

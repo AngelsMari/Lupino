@@ -81,7 +81,6 @@ export class CreateCampagneComponent {
     
     // Ajouter un PJ sélectionné
     addPJ(pj: any): void {
-        console.log('PJ sélectionné', pj);
         if (!this.selectedPJs.includes(pj)) {
             this.selectedPJs.push(pj);
         }
