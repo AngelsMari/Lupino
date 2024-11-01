@@ -1,0 +1,31 @@
+<div class="container">
+<table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>MJ</th>
+        <th>Admin</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{ user.name }}</td>
+        <td><a [href]="'mailto:' + user.mail">{{ user.mail }}</a></td>
+        <td>
+          <button *ngIf="!user.isMJ && !user.isSuperAdmin" class="promote" (click)="toggleMj(user)">Promouvoir</button>
+          <button *ngIf="user.isMJ && !user.isSuperAdmin" class="demote" (click)="toggleMj(user)" >Rétrogader</button>
+        </td>
+        <td>
+          <button *ngIf="!user.isAdmin && !user.isSuperAdmin" class="promote" (click)="toggleAdminRole(user)">Promouvoir</button>
+          <button *ngIf="user.isAdmin && !user.isSuperAdmin" class="demote" (click)="toggleAdminRole(user)">Rétrogader</button>
+        </td>
+        <td>
+          <button class="suspend" *ngIf=" !user.isSuperAdmin" (click)="suspendUser(user)" >Suspendre</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+  
