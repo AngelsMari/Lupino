@@ -13,7 +13,8 @@ import { UserPublicData } from 'app/models/userpublicdata';
 export class UserService {
     private apiUrl = environment.apiUrl+'/user'; // Assure-toi que cette URL correspond à ton API
     private userData = new BehaviorSubject<UserPublicData>({ _id: '', name: '', mail: '', isAdmin: false });
-    
+    private userLoadedSubject = new BehaviorSubject<boolean>(false); // Ajoutez un sujet pour indiquer que l'utilisateur est chargé
+
     
     constructor(private http: HttpClient, private authService: AuthService) { 
         this.loadCurrentUser(); // Charger au démarrage
@@ -39,8 +40,13 @@ export class UserService {
                     mail: user.mail || '', // Utilisez une chaîne vide par défaut
                     isAdmin: user.isAdmin || false  // Utilisez false par défaut
                 });
+                this.userLoadedSubject.next(true); // Émettre que l'utilisateur est chargé
             }
         });
+    }
+
+    isUserLoaded(): Observable<boolean> {
+        return this.userLoadedSubject.asObservable();
     }
 
     getUserData(): Observable<{ _id: string, name: string; mail: string; isAdmin: boolean }> {
