@@ -1,9 +1,9 @@
-import { User } from "./user";
+import { UserPublicData } from "./userpublicdata";
 
 // character.model.ts
 export interface Character {
     _id: string; 
-    owner: User;
+    owner: UserPublicData;
     imageUrl: string;
     isPNJ: boolean;
     name: string;
