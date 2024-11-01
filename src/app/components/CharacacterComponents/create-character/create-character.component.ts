@@ -437,7 +437,8 @@ export class CreateCharacterComponent {
             
             // Mana c'est (Mental + caractéristique la plus haute /10
             let mana = this.characterForm.value.mental;
-            mana += Math.max(this.characterForm.value.agility, this.characterForm.value.endurance, this.characterForm.value.strength,this.characterForm.value.mental,this.characterForm.value.social);
+            console.log(Math.max(this.characterForm.value.agility, this.characterForm.value.endurance, this.characterForm.value.strength,this.characterForm.value.mental,this.characterForm.value.social));
+            mana += Math.max(this.characterForm.value.agility, this.characterForm.value.endurance, this.characterForm.value.strength,this.characterForm.value.social);
             mana = Math.floor(mana/10);
             let manaForLevelUp = 5;
             if (this.characterForm.value.mental >= 70) {
