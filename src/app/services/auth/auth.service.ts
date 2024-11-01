@@ -72,11 +72,11 @@ export class AuthService {
         return this.http.post(`${this.apiUrl}/delete`, {}, {'headers' : headers});
     }
 
-    isUsernameTaken(username: string): Observable<any> {
+    isUsernameTaken(username: any): Observable<any> {
         return this.http.get(`${this.apiUrl}/check-username?username=${username}`);
     }
 
-    updateUserInfo(user: User): Observable<any> {
+    updateUserInfo(user: any): Observable<any> {
         const headers= new HttpHeaders({ 'Accept': 'application/json'});
 
         return this.http.post(`${this.apiUrl}/update`, user, {'headers' : headers});

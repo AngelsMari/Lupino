@@ -5,6 +5,7 @@ import { CharacterService } from '../../../services/LupinoApi/character.service'
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService } from 'app/services/auth/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { UserService } from 'app/services/LupinoApi/user.service';
 
 @Component({
   selector: 'app-character-detail',
@@ -25,7 +26,8 @@ export class CharacterDetailComponent {
   
   constructor(
     private route: ActivatedRoute,
-    private characterService: CharacterService, private fb: FormBuilder, private authService: AuthService, private toastr: ToastrService, private r: Router
+    private characterService: CharacterService, private fb: FormBuilder, private authService: AuthService, private toastr: ToastrService, private r: Router,
+    private userService: UserService
   ) { }
   
   ngOnInit(): void {
@@ -33,16 +35,12 @@ export class CharacterDetailComponent {
 
     //get Current User
     if (id) {
-      this.authService.getCurrentUser().subscribe((data: any) => {
-        if (data.result == "OK") {
-            console.log(data);
-            this.user_id = data.items[0].object._id;
-            this.loadCharacter(id);
 
-        }else{
-          this.loadCharacter(id);
-        }
+      this.userService.getUserData().subscribe(data => {
+        this.user_id = data._id;
       });
+
+      this.loadCharacter(id);
 
     }
   }

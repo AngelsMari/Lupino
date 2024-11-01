@@ -8,6 +8,7 @@ import { environment } from '../../../environments/environements'; // Ajustez le
 	providedIn: 'root'
 })
 export class CharacterService {
+    
 	private apiUrl = environment.apiUrl+'/character'; // Assure-toi que cette URL correspond à ton API
 
 
@@ -44,6 +45,15 @@ export class CharacterService {
 		console.log(character);
 		return this.http.post<Character>(this.apiUrl+'/update',character,{'headers' : headers});
 
+    }
+
+	uploadImage(file: File) : any{
+		const headers= new HttpHeaders({'Accept': 'application/json'});
+		const formData = new FormData();
+		formData.append('file', file); // Ajoutez le fichier au FormData
+		return this.http.post<any>(this.apiUrl+'/upload',formData,{'headers' : headers});
+
+		
     }
 
 }

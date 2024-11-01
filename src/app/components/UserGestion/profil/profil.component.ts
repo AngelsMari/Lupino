@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { User } from 'app/models/user';
+import { UserPublicData } from 'app/models/userpublicdata';
 import { AuthService } from 'app/services/auth/auth.service';
+import { UserService } from 'app/services/LupinoApi/user.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -11,33 +12,25 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ProfilComponent implements OnInit {
 
-    user : User ;
+    user : UserPublicData = { _id: '', name: '', mail: '', isAdmin: false };
     currentPassword: string = '';
     newPassword: string = '';
     confirmPassword: string = '';
-    currentUser: User;
     usernameTaken: boolean = false;
-    
-    constructor(private authService: AuthService,private router: Router,private toastr: ToastrService) {
-        this.user = { _id: '', name: '', mail: '', password: '', isAdmin: false }; 
-        this.currentUser = { _id: '', name: '', mail: '', password: '',  isAdmin: false }; 
+    currentUser: UserPublicData = { _id: '', name: '', mail: '', isAdmin: false };
 
+    constructor(private authService: AuthService,private router: Router,private toastr: ToastrService, private userService: UserService) {
     }
     
     ngOnInit(): void {
+
+        this.userService.getUserData().subscribe(data => {
+            this.user = data;
+            this.currentUser = data;
+        });
         
-        this.loadUserInfo();
     }
     
-    loadUserInfo() {
-        // Chargez les informations de l'utilisateur depuis le service
-        this.authService.getCurrentUser().subscribe(response => {
-            if (response.result == "OK") {
-                this.currentUser = response.items[0].object;
-                this.user= response.items[0].object;
-            }
-        });
-    }
     
     updateUserInfo() {
         if (this.user != this.currentUser) {
@@ -48,7 +41,10 @@ export class ProfilComponent implements OnInit {
             if (response.result == "OK") {
                 alert('Profil modifié avec succès!');
                 //Empty the password fields
-                this.loadUserInfo();
+                this.userService.getUserData().subscribe(data => {
+                    this.user = data;
+                    this.currentUser = data;
+                });
             } else {
                 alert('Erreur lors des modifications.');
                 

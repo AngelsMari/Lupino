@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { Character } from '../../../models/character';
 import { CharacterService } from '../../../services/LupinoApi/character.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DeleteCharacterModalComponent } from '../../modal/delete-character/delete-character.component';
 import { AuthService } from 'app/services/auth/auth.service';
-import { User } from 'app/models/user';
+import { UserService } from 'app/services/LupinoApi/user.service';
+import { UserPublicData } from 'app/models/userpublicdata';
 
 @Component({
     selector: 'app-characters',
@@ -17,26 +18,20 @@ export class CharactersComponent {
     characters: Character[] = [];
     selectedCharacter: any; // Personnage sélectionné pour suppression
     isSelfCharacter: boolean = false;
-    currentUser: User = { _id: '', name: '', mail: '', password:'', isAdmin: false};
+    currentUser: UserPublicData = { _id: '', name: '', mail: '', isAdmin: false };
     
-    constructor(private characterService: CharacterService,private modalService: NgbModal,  private router: Router, private authService: AuthService) {}
+    constructor(private characterService: CharacterService,private modalService: NgbModal,  private router: Router, private authService: AuthService, private userService: UserService) {}
     
     ngOnInit(): void {
         if (this.router.url == "/mycharacters") {
             this.isSelfCharacter = true;
-            this.authService.getCurrentUser().subscribe(
-                response => {
-                   if (response.result == "OK") {
-                       this.currentUser = response.items[0].object;
-                       this.getCharacters();
 
-                   }
-                }
-            );
-        }else{
-            this.getCharacters();
-
+            this.userService.getUserData().subscribe(data => {
+                this.currentUser = data;
+            });
+            
         }
+        this.getCharacters();
 
     }
     

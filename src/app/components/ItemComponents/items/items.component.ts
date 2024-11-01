@@ -22,7 +22,6 @@ import { CreateContenantComponent } from '../../modal/create-contenant/create-co
 import { CreateBazarComponent } from '../../modal/create-bazar/create-bazar.component';
 import { BazarService } from '../../../services/LupinoApi/items/bazar.service';
 import { Bazar } from '../../../models/items/bazar';
-import { AuthService } from 'app/services/auth/auth.service';
 import { Router } from '@angular/router';
 
 
@@ -52,14 +51,14 @@ export class ItemsComponent {
 	constructor( 
 		private modalService: NgbModal, 
 		private armeService: ArmeService, 
-		private authService: AuthService, 
 		private armureService: ArmureService, 
 		private potionService: PotionService,
 		private poisonService: PoisonService,
 		private utilitaireService: UtilitaireService,
 		private contenantService: ContenantService,
 		private bazarService: BazarService,
-		private router: Router
+		private router: Router,
+		private userService: UserService
 	
 	) { }
 	
@@ -158,18 +157,9 @@ export class ItemsComponent {
 	}
 	
 	checkIfAdmin(): void {
-		
-		this.authService.getCurrentUser().subscribe(data => {
-			if (Object(data)["result"] == "ERROR"){
-				// Handle error
-			}else {
-				let user = Object(data)["items"][0]["object"];
-				console.log(user);
-				if (user && user.isAdmin === true) {
-					this.isAdmin = true;
-				}
-			}
-		});
+		this.userService.getUserData().subscribe(data => {
+            this.isAdmin = data.isAdmin;
+        });
 		
 	}
 	

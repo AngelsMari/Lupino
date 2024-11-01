@@ -6,6 +6,7 @@ import { Race } from '../../../models/race';
 import { ActivatedRoute, Router } from '@angular/router';
 import DOMPurify from 'dompurify';
 import { ToastrService } from 'ngx-toastr';
+import { environment } from '../../../../environments/environements'; // Ajustez le chemin si nécessaire
 
 @Component({
     selector: 'app-create-character',
@@ -216,20 +217,22 @@ export class CreateCharacterComponent {
         const fileInput = event.target as HTMLInputElement;
         if (fileInput.files && fileInput.files.length > 0) {
             const file = fileInput.files[0];
-            const reader = new FileReader();
+            console.log(file);
+            //copy the file to a folder
+            this.characterService.uploadImage(file).subscribe((data:any) => {
+
+                if (data.result == "OK") {
+                    this.characterForm.patchValue({ imageUrl: environment.apiUrl+'/public/persoImg/'+data.items[0].object.filename });
+                }else{
+                    alert("Erreur lors de l'upload de l'image");
+                }
+
+                console.log(data);
+            })
+
             
             // Lisez le fichier et convertissez-le en Base64
-            reader.onload = (e: ProgressEvent<FileReader>) => {
-                const base64String = e.target?.result as string; // Obtenez la chaîne Base64
-                console.log('Fichier sélectionné:', base64String);
-                
-                // Mettez à jour votre modèle de personnage avec l'URL Base64
-                this.characterForm.patchValue({
-                    imageUrl: base64String // Assurez-vous que "image" est un champ dans votre formulaire
-                });
-            };
             
-            reader.readAsDataURL(file); // Lire le fichier en tant que Data URL (Base64)
         }
     }
     
