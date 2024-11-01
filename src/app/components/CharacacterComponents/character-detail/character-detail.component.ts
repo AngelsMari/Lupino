@@ -72,7 +72,7 @@ export class CharacterDetailComponent {
                 const characterOwnerId = Object(characterData)["items"][0]["object"]?.owner._id;
                 const isPublic = Object(characterData)["items"][0]["object"]?.isPublic;
                 
-                if (this.user_id !== characterOwnerId && !isPublic) {
+                if (this.user_id !== characterOwnerId && !isPublic && userData.isAdmin === false) {
                     // Notification toastr pas d'accès
                     this.toastr.error("Vous n'avez pas accès à ce personnage");
                     // Rediriger ou gérer l'erreur
