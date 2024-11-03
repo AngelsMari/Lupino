@@ -115,6 +115,8 @@ export class CreateCharacterComponent {
         let { strength, endurance, mental, agility, social } = this.characterForm.value;
         const level = this.characterForm.value.level;
 
+        
+
         // Capper les valeurs à 30 minimum et 85 maximum
         strength = Math.max(30, Math.min(strength, 85));
         this.characterForm.patchValue({ strength: strength });
@@ -207,6 +209,11 @@ export class CreateCharacterComponent {
         
         // Points totaux = 150 (base) + 135 (distribution) + niveau modifié
         this.MaximumPoints = 150 + 135 + (Math.floor(level / 2) * 5);
+        if (this.selectedRace == "Gnomes") {
+            this.MaximumPoints = 150 + 105 + (Math.floor(level / 2) * 5);
+        }else{
+            this.MaximumPoints = 150 + 135 + (Math.floor(level / 2) * 5);
+        }
         // Calculer le total restant (par exemple, en fonction de la somme des statistiques)
         this.RemainingPoints = this.MaximumPoints - this.calculateTotalStats();
         
@@ -406,6 +413,7 @@ export class CreateCharacterComponent {
     
     selectRace(race: String) {
         this.selectedRace = race;
+        this.updateCharacter();
         this.characterForm.patchValue({ race: race });
     }
     
