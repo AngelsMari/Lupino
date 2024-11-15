@@ -32,11 +32,12 @@ export class CharactersComponent {
                 });
                 if (this.router.url == "/mycharacters") {
                     this.isSelfCharacter = true;
-                  
                     this.getCharactersByUser();
                 } else {
                     this.getCharacters();
                 }
+            }else{
+                this.getCharacters();
             }
         });
         
