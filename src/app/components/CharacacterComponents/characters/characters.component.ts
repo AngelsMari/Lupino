@@ -36,8 +36,6 @@ export class CharactersComponent {
                 } else {
                     this.getCharacters();
                 }
-            }else{
-                this.getCharacters();
             }
         });
         
