@@ -24,25 +24,26 @@ export class CharactersComponent {
     constructor(private characterService: CharacterService,private modalService: NgbModal,  private router: Router, private authService: AuthService, private userService: UserService) {}
     
     ngOnInit(): void {
-        
-        this.userService.isUserLoaded().subscribe(isLoaded => {
-            if (isLoaded) {
-                this.userService.getUserData().subscribe(data => {
-                    this.currentUser = data;
-                });
-                if (this.router.url == "/mycharacters") {
+        if (this.router.url == "/mycharacters") {
+            this.userService.isUserLoaded().subscribe(isLoaded => {
+                if (isLoaded) {
+                    this.userService.getUserData().subscribe(data => {
+                        this.currentUser = data;
+                    });
+                    
                     this.isSelfCharacter = true;
                     this.getCharactersByUser();
-                } else {
-                    this.getCharacters();
+                    
                 }
-            }
-        });
+            });
+        } else {
+            this.getCharacters();
+        }
         
     }
     
     getCharacters(): void {
-
+        
         this.characterService.getCharacters().subscribe(res => {
             if (Object(res)["result"] == "ERROR"){                    
                 // Handle error
@@ -55,7 +56,7 @@ export class CharactersComponent {
             }
         });
     }
-
+    
     getCharactersByUser(): void {
         this.characterService.getCharactersByUser(this.currentUser._id).subscribe(res => {
             if (Object(res)["result"] == "ERROR"){                    
