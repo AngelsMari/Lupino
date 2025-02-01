@@ -37,6 +37,9 @@ export class CharactersComponent {
                 }
             });
         } else {
+            this.userService.getUserData().subscribe(data => {
+                this.currentUser = data;
+            });
             this.getCharacters();
         }
         
@@ -49,6 +52,7 @@ export class CharactersComponent {
                 // Handle error
             }else{
                 if (this.currentUser.isAdmin) {
+                    
                     this.characters = Object(res)["items"][0]["object"];
                 } else {
                     this.characters = Object(res)["items"][0]["object"].filter((character: Character) => character.isPublic == true);
@@ -58,6 +62,8 @@ export class CharactersComponent {
     }
     
     getCharactersByUser(): void {
+        console.log(this.currentUser);
+
         this.characterService.getCharactersByUser(this.currentUser._id).subscribe(res => {
             if (Object(res)["result"] == "ERROR"){                    
                 if (Object(res)["errorId"] == 0){
