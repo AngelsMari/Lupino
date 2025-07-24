@@ -48,6 +48,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { UserListComponent } from './components/UserGestion/list/user-list.component';
 import { AdminGuard } from './services/auth/admin.guard';
 import { UserService } from './services/LupinoApi/user.service';
+import { PasswordForgottenComponent } from './components/UserGestion/password-forgotten/password-forgotten.component';
+import { ResetPasswordComponent } from './components/UserGestion/reset-password/reset-password.component';
 
 
 @NgModule({
@@ -80,7 +82,9 @@ import { UserService } from './services/LupinoApi/user.service';
     MentionsLegalesComponent,
     LoreComponent,
     ProfilComponent,
-    UserListComponent
+    UserListComponent,
+    PasswordForgottenComponent,
+    ResetPasswordComponent
   ],
   imports: [
     BrowserModule,
