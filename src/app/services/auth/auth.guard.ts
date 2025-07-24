@@ -1,26 +1,26 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
-import { Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
-
-import { AuthService } from './auth.service';
+import { CanActivate, Router, RouterStateSnapshot, ActivatedRouteSnapshot, UrlTree } from '@angular/router';
+import { Observable, of } from 'rxjs';
+import { catchError, map, take, tap } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 
-@Injectable()
-export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: Router, private toastr: ToastrService) {}
+import { AuthService } from './auth.service';
 
-  canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-    return this.authService.getCurrentUser().pipe(
-      take(1),
-      map((isLoggedIn: any) => {
-        if (isLoggedIn.result !== 'OK') {
-          this.toastr.error('Vous devez être connecté pour accéder à cette page', 'Error',);
-          this.router.navigate(['/login']);
-          return false;
-        }
-        return true;
-      })
-    );
-  }
+@Injectable({ providedIn: 'root' })
+export class AuthGuard implements CanActivate {
+	constructor(private authService: AuthService, private router: Router, private toastr: ToastrService) {}
+
+	canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> {
+		return this.authService.getCurrentUser().pipe(
+			take(1),
+			map((res: any) => res?.result === 'OK'),
+			tap((logged) => {
+				if (!logged) {
+					this.toastr.error('Vous devez être connecté pour accéder à cette page', 'Erreur');
+				}
+			}),
+			map((logged) => (logged ? true : this.router.createUrlTree(['/login'], { queryParams: { redirect: state.url } }))),
+			catchError(() => of(this.router.createUrlTree(['/login'], { queryParams: { redirect: state.url } }))),
+		);
+	}
 }

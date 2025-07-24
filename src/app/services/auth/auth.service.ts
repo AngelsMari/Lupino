@@ -8,77 +8,75 @@ import { environment } from '../../../environments/environements'; // Ajustez le
 @Injectable()
 @Injectable()
 export class AuthService {
-    
-    private apiUrl = environment.apiUrl+'/user'; // Assure-toi que cette URL correspond à ton API
-    
-    public loggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-    
-    get isLoggedIn() {
-        this.getCurrentUser().subscribe((data: any) => {
-            if (data.result == "OK") {
-                this.loggedIn.next(true);
-            } else {
-                this.loggedIn.next(false);
-            }
-        });
-        
-        return this.loggedIn.asObservable();
-    }
-    
-    constructor(
-        private router: Router,private http: HttpClient
-    ) {}
-    
-    login(email : string, password:string): Observable<any> {
-        const headers= new HttpHeaders({'Accept': 'application/json'});
+	private apiUrl = environment.apiUrl + '/user'; // Assure-toi que cette URL correspond à ton API
 
-        // Envoi des données au serveur
-        return this.http.post(`${this.apiUrl}/login`, {"mail":email, "password":password},{'headers' : headers} );
-    }
-    
-    logout() {
-        return this.http.get(`${this.apiUrl}/logout`);
-    }
-    
-    register(name : string, mail:string, password:string): Observable<any> {
-        const headers= new HttpHeaders({'Accept': 'application/json'});
+	public loggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-        
-        // Envoi des données au serveur
-        return this.http.post(`${this.apiUrl}/register`, {"name":name, "mail":mail, "password":password},{'headers' : headers} );
-    }
+	isLoggedIn(): Promise<boolean> {
+		return new Promise((resolve) => {
+			this.getCurrentUser().subscribe((data: any) => {
+				const logged = data.result === 'OK';
+				this.loggedIn.next(logged);
+				resolve(logged);
+			});
+		});
+	}
 
-    changePassword(currentPassword: string, newPassword: string): Observable<any> {
-        const headers= new HttpHeaders({ 'Accept': 'application/json'});
+	constructor(private router: Router, private http: HttpClient) {}
 
-        return this.http.post<User>(`${this.apiUrl}/change-password`, {"currentPassword": currentPassword, "newPassword": newPassword}, {'headers' : headers});
-    }
+	login(email: string, password: string): Observable<any> {
+		const headers = new HttpHeaders({ Accept: 'application/json' });
 
-    getCurrentUser(): Observable<any> {
-        const headers= new HttpHeaders({ 'Accept': 'application/json'});
+		// Envoi des données au serveur
+		return this.http.post(`${this.apiUrl}/login`, { mail: email, password: password }, { headers: headers });
+	}
 
-        return this.http.get(`${this.apiUrl}/currentUser`, {'headers' : headers});
-    }
+	logout() {
+		return this.http.get(`${this.apiUrl}/logout`);
+	}
 
-    get(id: string): Observable<any> {
-        const headers= new HttpHeaders({ 'Accept': 'application/json'});
+	register(name: string, mail: string, password: string): Observable<any> {
+		const headers = new HttpHeaders({ Accept: 'application/json' });
 
-        return this.http.post(`${this.apiUrl}/get`,  id, {'headers' : headers});
-    }
+		// Envoi des données au serveur
+		return this.http.post(`${this.apiUrl}/register`, { name: name, mail: mail, password: password }, { headers: headers });
+	}
 
-    deleteAccount(): Observable<any> {
-        const headers= new HttpHeaders({ 'Accept': 'application/json'});
+	changePassword(currentPassword: string, newPassword: string): Observable<any> {
+		const headers = new HttpHeaders({ Accept: 'application/json' });
 
-        return this.http.post(`${this.apiUrl}/delete`, {}, {'headers' : headers});
-    }
+		return this.http.post<User>(
+			`${this.apiUrl}/change-password`,
+			{ currentPassword: currentPassword, newPassword: newPassword },
+			{ headers: headers },
+		);
+	}
 
-    isUsernameTaken(username: any): Observable<any> {
-        return this.http.get(`${this.apiUrl}/check-username?username=${username}`);
-    }
+	getCurrentUser(): Observable<any> {
+		const headers = new HttpHeaders({ Accept: 'application/json' });
 
-    updateUserInfo(user: any): Observable<any> {
-        const headers= new HttpHeaders({ 'Accept': 'application/json'});
+		return this.http.get(`${this.apiUrl}/currentUser`, { headers: headers });
+	}
 
-        return this.http.post(`${this.apiUrl}/update`, user, {'headers' : headers});
-    }
+	get(id: string): Observable<any> {
+		const headers = new HttpHeaders({ Accept: 'application/json' });
+
+		return this.http.post(`${this.apiUrl}/get`, id, { headers: headers });
+	}
+
+	deleteAccount(): Observable<any> {
+		const headers = new HttpHeaders({ Accept: 'application/json' });
+
+		return this.http.post(`${this.apiUrl}/delete`, {}, { headers: headers });
+	}
+
+	isUsernameTaken(username: any): Observable<any> {
+		return this.http.get(`${this.apiUrl}/check-username?username=${username}`);
+	}
+
+	updateUserInfo(user: any): Observable<any> {
+		const headers = new HttpHeaders({ Accept: 'application/json' });
+
+		return this.http.post(`${this.apiUrl}/update`, user, { headers: headers });
+	}
 }

@@ -20,19 +20,20 @@ import { AdminGuard } from './services/auth/admin.guard';
 import { UserListComponent } from './components/UserGestion/list/user-list.component';
 import { PasswordForgottenComponent } from './components/UserGestion/password-forgotten/password-forgotten.component';
 import { ResetPasswordComponent } from './components/UserGestion/reset-password/reset-password.component';
+import { NoAuthGuard } from './services/auth/noauth.guard';
 
 const routes: Routes = [
 	{ path: '', component: HomeComponent },
-	{ path: 'login', component: LoginComponent },
-	{ path: 'register', component: RegisterComponent },
+	{ path: 'login', component: LoginComponent, canActivate: [NoAuthGuard] }, // Protéger cette route avec AuthGuard
+	{ path: 'register', component: RegisterComponent, canActivate: [NoAuthGuard] },
 	{ path: 'characters', component: CharactersComponent },
 	{ path: 'mycharacters', component: CharactersComponent, canActivate: [AuthGuard] }, // Protéger cette route avec AuthGuard
 	{ path: 'character/:id', component: CharacterDetailComponent }, // Route pour la fiche de personnage
-	{ path: 'create-character', component: CreateCharacterComponent },
-	{ path: 'create-character/:id', component: CreateCharacterComponent },
+	{ path: 'create-character', component: CreateCharacterComponent, canActivate: [AuthGuard] },
+	{ path: 'create-character/:id', component: CreateCharacterComponent, canActivate: [AuthGuard] },
 	{ path: 'races', component: RacesComponent },
 	{ path: 'items', component: ItemsComponent },
-	{ path: 'create-campagne', component: CreateCampagneComponent },
+	{ path: 'create-campagne', component: CreateCampagneComponent, canActivate: [AuthGuard] },
 	{ path: 'mycampaigns', component: CampagneComponent, canActivate: [AuthGuard] },
 	{ path: 'campagnes', component: CampagneComponent },
 	{ path: 'campagne/:id', component: CampagneDetailComponent },
@@ -42,8 +43,8 @@ const routes: Routes = [
 	{ path: 'explorer', component: LoreComponent },
 	{ path: 'profil', component: ProfilComponent, canActivate: [AuthGuard] },
 	{ path: 'user-list', component: UserListComponent, canActivate: [AdminGuard] },
-	{ path: 'forgot-password', component: PasswordForgottenComponent }, // Redirection pour la page de mot de passe oublié
-	{ path: 'reset-password', component: ResetPasswordComponent }, // Redirection pour la page de réinitialisation du mot de passe
+	{ path: 'forgot-password', component: PasswordForgottenComponent, canActivate: [NoAuthGuard] }, // Redirection pour la page de mot de passe oublié
+	{ path: 'reset-password', component: ResetPasswordComponent, canActivate: [NoAuthGuard] }, // Redirection pour la page de réinitialisation du mot de passe
 ];
 
 @NgModule({
