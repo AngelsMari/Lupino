@@ -72,7 +72,9 @@ export class CreateCharacterComponent {
 				skills: this.fb.array([]),
 
 				// Étape 6: Inventaires
-				inventory: '',
+				inventory: [''], // Utilisation de DOMPurify pour nettoyer l'inventaire
+				// Étape 7: Histoire
+				backstory: [''],
 				gold: [0],
 
 				//Champs calculé automatique
@@ -106,15 +108,38 @@ export class CreateCharacterComponent {
 		};
 	}
 
-	sanitizeInventory() {
-		const inventoryControl = this.characterForm.get('inventory');
-		if (inventoryControl) {
-			const sanitizedValue = DOMPurify.sanitize(inventoryControl.value, {
-				ALLOWED_TAGS: ['b', 'i', 'strong', 'ul', 'li', 'p'],
-			});
-			inventoryControl.setValue(sanitizedValue, { emitEvent: false }); // Met à jour le champ sans déclencher de nouvel événement
-		}
+	sanitizeString(input: string): string {
+		// Nettoyage DOMPurify avec les options
+		let clean = DOMPurify.sanitize(input, {
+			ALLOWED_TAGS: ['b', 'i', 'strong', 'ul', 'li', 'p', 'span', 'em', 'u', 's', 'blockquote', 'h1', 'h2', 'h3', 'sub', 'sup'],
+			ALLOWED_ATTR: ['style', 'class'],
+			FORBID_TAGS: ['script', 'iframe', 'object'],
+		});
+
+		// Hook pour filtrer les styles (autoriser uniquement 'color')
+		clean = DOMPurify.sanitize(clean, {
+			ALLOWED_TAGS: ['b', 'i', 'strong', 'ul', 'li', 'p', 'span', 'em', 'u', 's', 'blockquote', 'h1', 'h2', 'h3', 'sub', 'sup'],
+			ALLOWED_ATTR: ['style', 'class'],
+			FORBID_TAGS: ['script', 'iframe', 'object'],
+			// Filtrage via hook
+			ALLOW_UNKNOWN_PROTOCOLS: false,
+		});
+
+		// Post-traitement du style (supprimer les styles sauf color)
+		clean = clean.replace(/style="([^"]*)"/g, (match, styleContent) => {
+			const colorMatch = styleContent.match(/color\s*:\s*[^;]+/i);
+			return colorMatch ? `style="${colorMatch[0]}"` : '';
+		});
+
+		// Supprimer les paragraphes vides (<p></p>)
+		clean = clean.replace(/<p>\s*<\/p>/g, '');
+
+		// Remplacer &nbsp; par un espace
+		clean = clean.replace(/&nbsp;/g, ' ');
+
+		return clean;
 	}
+
 	toggleExoticVisibility() {
 		this.isExoticVisible = !this.isExoticVisible;
 	}
@@ -314,6 +339,7 @@ export class CreateCharacterComponent {
 					social: character.social,
 					mental: character.mental,
 					imageUrl: character.imageUrl,
+					backstory: character.backstory,
 				});
 
 				// Remplir les tableaux de maîtrises, langues et compétences
@@ -404,7 +430,7 @@ export class CreateCharacterComponent {
 
 	// Naviguer vers l'étape suivante
 	nextStep() {
-		if (this.step < 6) {
+		if (this.step < 7) {
 			this.step++;
 		}
 	}
@@ -425,7 +451,13 @@ export class CreateCharacterComponent {
 	// Soumettre le formulaire une fois toutes les étapes complétées
 	onSubmit() {
 		if (this.characterForm.valid) {
-			this.sanitizeInventory();
+			console.log(this.characterForm.value);
+
+			this.characterForm.patchValue({
+				inventory: this.sanitizeString(this.characterForm.value.inventory),
+				backstory: this.sanitizeString(this.characterForm.value.backstory),
+			});
+			console.log(this.characterForm.value);
 
 			// On définit HP et Mana
 			let hp = this.characterForm.value.endurance / 10 + 10;
@@ -537,6 +569,7 @@ export class CreateCharacterComponent {
 					if (errors['pattern']) {
 						this.toastr.error(`Le champ ${field} a un format incorrect.`, 'Erreur');
 					}
+					console.log(`Le champ ${field} est invalide :`, errors);
 				}
 			}
 		});

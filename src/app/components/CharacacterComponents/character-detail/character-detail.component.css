@@ -71,7 +71,7 @@
     .nav-tabs {
         flex-wrap: wrap;
     }
-    
+
     .nav-tabs .nav-link {
         margin-bottom: 5px;
         flex: 1 0 100%;
@@ -92,3 +92,70 @@
     max-height: 300px;
 }
 
+.backstoryContainer p + p {
+    margin-top: 1rem; /* espace entre paragraphes */
+}
+
+.backstoryContainer {
+	color: #333; /* couleur du texte */
+	margin-top: 1rem; /* marge supérieure pour espacer du reste du contenu */
+}
+
+.backstoryContainer p {
+	margin-bottom: 0; /* marge inférieure pour espacer les paragraphes */
+}
+
+.backstoryContainer p.ql-align-justify {
+	text-align: justify; /* alignement du texte en justification */
+}
+
+.backstoryContainer p.ql-align-center {
+	text-align: center; /* alignement du texte au centre */
+}
+
+.backstoryContainer p.ql-align-right {
+	text-align: right; /* alignement du texte à droite */
+}
+
+.backstoryContainer p.ql-align-left {
+	text-align: left; /* alignement du texte à gauche */
+}
+
+.backstoryContainer p.ql-indent-1 {
+	margin-left: 1.5rem; /* indentation pour le premier niveau */
+}
+.backstoryContainer p.ql-indent-2 {
+	margin-left: 3rem; /* indentation pour le deuxième niveau */
+}
+.backstoryContainer p.ql-indent-3 {
+	margin-left: 4.5rem; /* indentation pour le troisième niveau */
+}
+.backstoryContainer p.ql-indent-4 {
+	margin-left: 6rem; /* indentation pour le quatrième niveau */
+}
+.backstoryContainer p.ql-indent-5 {
+	margin-left: 7.5rem; /* indentation pour le cinquième niveau */
+}
+.backstoryContainer p.ql-indent-6 {
+	margin-left: 9rem; /* indentation pour le sixième niveau */
+}
+.backstoryContainer p.ql-indent-7 {
+	margin-left: 10.5rem; /* indentation pour le septième niveau */
+}
+.backstoryContainer p.ql-size-small {
+	font-size: 0.875rem; /* taille de police pour le texte plus petit */
+}
+.backstoryContainer p.ql-size-large {
+	font-size: 1.25rem; /* taille de police pour le texte plus grand */
+}
+.backstoryContainer p.ql-size-huge {
+	font-size: 1.5rem; /* taille de police pour le texte énorme */
+}
+
+.backstoryContainer p.ql-font-serif {
+	    font-family: Georgia, Times New Roman, serif;
+}
+
+.backstoryContainer p.ql-font-monospace {
+    font-family: Monaco, Courier New, monospace;
+}
