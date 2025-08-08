@@ -24,46 +24,45 @@ import { BazarService } from '../../../services/LupinoApi/items/bazar.service';
 import { Bazar } from '../../../models/items/bazar';
 import { Router } from '@angular/router';
 
+import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
+import { catchError, map, shareReplay, startWith } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-items',
 	templateUrl: './items.component.html',
-	styleUrl: './items.component.css'
+	styleUrls: ['./items.component.css'],
 })
 export class ItemsComponent {
-	armescac: Arme[] = [];
-	distance: Arme[] = [];
-	siege: Arme[] = [];
-	explosif: Arme[] = [];
-	armurelegere: Armure[] = [];
-	armureinter: Armure[] = [];
-	armurelourde: Armure[] = [];
-	potions: Potion[] = [];
-	poisons: Poison[] = [];
-	utilitaires: Utilitaire[] = [];
-	contenant: Contenant[] = [];
-	bazars: Bazar[] = [];
-	isAdmin: boolean = false; // Par défaut, pas admin
-	searchText: string = ''; // Texte de recherche
-	isInCharacterCreation: boolean = false;
-	
-	
-	constructor( 
-		private modalService: NgbModal, 
-		private armeService: ArmeService, 
-		private armureService: ArmureService, 
+	armurelegere$!: Observable<Armure[]>;
+	armureinter$!: Observable<Armure[]>;
+	armurelourde$!: Observable<Armure[]>;
+
+	potions$!: Observable<Potion[]>;
+	poisons$!: Observable<Poison[]>;
+	utilitaires$!: Observable<Utilitaire[]>;
+	contenants$!: Observable<Contenant[]>;
+	bazars$!: Observable<Bazar[]>;
+
+	isAdmin$!: Observable<boolean>;
+	isInCharacterCreation = false;
+
+	// searchText sous forme de BehaviorSubject pour rendre la recherche réactive
+	private searchTextSubject = new BehaviorSubject<string>('');
+	searchText$ = this.searchTextSubject.asObservable();
+
+	constructor(
+		private modalService: NgbModal,
+		private armureService: ArmureService,
 		private potionService: PotionService,
 		private poisonService: PoisonService,
 		private utilitaireService: UtilitaireService,
 		private contenantService: ContenantService,
 		private bazarService: BazarService,
 		private router: Router,
-		private userService: UserService
-	
-	) { }
-	
+		private userService: UserService,
+	) {}
+
 	ngOnInit(): void {
-		this.loadArmes();
 		this.loadArmures();
 		this.loadPotions();
 		this.loadPoisons();
@@ -72,258 +71,201 @@ export class ItemsComponent {
 		this.loadBazars();
 		this.checkIfAdmin();
 
-
 		if (this.router.url.startsWith('/create-character')) {
 			this.isInCharacterCreation = true;
 		}
-		
-	}
-	
-	loadArmes(): void {
-		this.armeService.getArmes().subscribe(data => {
-			if (Object(data)["result"] == "ERROR"){                    
-				// Handle error
-			}else{
-				let armes = Object(data)["items"][0]["object"];
-				this.armescac = armes.filter((arme: any) => arme.categorie === 'cac');
-				this.distance = armes.filter((arme: any) => arme.categorie === 'distance');
-				this.siege = armes.filter((arme: any) => arme.categorie === 'siege');
-				this.explosif = armes.filter((arme: any) => arme.categorie === 'explosif');
-			}
-		});
-	}
-	
-	loadArmures(): void {
-		this.armureService.getArmures().subscribe((data) => {
-			if (Object(data)["result"] == "ERROR"){                    
-				// Handle error
-			}else{
-				let armure = Object(data)["items"][0]["object"];
-				this.armurelegere = armure.filter((armure: any) => armure.categorie === 'légère');
-				this.armureinter = armure.filter((armure: any) => armure.categorie === 'intermédiaire');
-				this.armurelourde = armure.filter((armure: any) => armure.categorie === 'lourde');
-			}
-		});
-	}
-	
-	loadPotions(): void {
-		this.potionService.getPotions().subscribe(data => {
-			if (Object(data)["result"] == "ERROR"){                    
-				// Handle error
-			}else{
-				this.potions = Object(data)["items"][0]["object"];
-			}
-		});
 	}
 
-	loadPoisons(): void {
-		this.poisonService.getPoisons().subscribe(data => {
-			if (Object(data)["result"] == "ERROR"){                    
-				// Handle error
-			}else{
-				this.poisons = Object(data)["items"][0]["object"];
-			}
-		});
+	private loadArmures(): void {
+		const armures$ = this.armureService.getArmures().pipe(
+			catchError(() => of([])),
+			shareReplay(1),
+		);
+
+		this.armurelegere$ = armures$.pipe(map((armures) => armures.filter((a) => a.categorie === 'légère')));
+		this.armureinter$ = armures$.pipe(map((armures) => armures.filter((a) => a.categorie === 'intermédiaire')));
+		this.armurelourde$ = armures$.pipe(map((armures) => armures.filter((a) => a.categorie === 'lourde')));
 	}
 
-	loadUtilitaires(): void {
-		this.utilitaireService.getUtilitaires().subscribe((data) => {
-			if (Object(data)["result"] == "ERROR"){                    
-				// Handle error
-			}else{
-				this.utilitaires = Object(data)["items"][0]["object"];
-			}
-		});
-	}
-
-	loadContenants(): void {
-		this.contenantService.getContenant().subscribe((data) => {
-			if (Object(data)["result"] == "ERROR"){                    
-				// Handle error
-			}else{
-				this.contenant = Object(data)["items"][0]["object"];
-			}
-		});
-	}
-
-	loadBazars() {
-		this.bazarService.getBazars().subscribe((data:any) => {
-			if (Object(data)["result"] == "ERROR"){                    
-				// Handle error
-			}else{
-				this.bazars = Object(data)["items"][0]["object"];
-			}
-		});
-	}
-	
-	checkIfAdmin(): void {
-		this.userService.getUserData().subscribe(data => {
-            this.isAdmin = data.isAdmin;
-        });
-		
-	}
-	
-	// Filtrage des armes corps à corps
-	get filteredArmesCac() {
-		return this.armescac.filter(arme => this.matchSearchArme(arme));
-	}
-	
-	// Filtrage des armes à distance
-	get filteredDistance() {
-		return this.distance.filter(arme => this.matchSearchArme(arme));
-	}
-	
-	// Filtrage des armes de siège
-	get filteredSiege() {
-		return this.siege.filter(arme => this.matchSearchArme(arme));
-	}
-	
-	// Filtrage des explosifs
-	get filteredExplosif() {
-		return this.explosif.filter(arme => this.matchSearchArme(arme));
-	}
-
-	get filteredArmuresLeg() {
-		return this.armurelegere.filter(armure => this.matchSearchArmure(armure));
-	}
-
-	get filteredArmuresInter() {
-		return this.armureinter.filter(armure => this.matchSearchArmure(armure));
-	}
-
-	get filteredArmuresLourdes() {
-		return this.armurelourde.filter(armure => this.matchSearchArmure(armure));
-	}
-
-	get filteredPotions() {
-		return this.potions.filter(potion => this.matchSearchPotion(potion));
-	}
-
-	get filteredPoisons() {
-		return this.poisons.filter(poison => this.matchSearchPotion(poison));
-	}
-
-	get filteredUtilitaires() {
-		return this.utilitaires.filter(utilitaire => this.matchSearchPotion(utilitaire));
-	}
-
-	get filteredContenants() {
-		return this.contenant.filter(contenant => this.matchSearchPotion(contenant));
-	}
-
-	get filteredBazars() {
-		return this.bazars.filter(bazar => this.matchSearchPotion(bazar));
-	}
-
-	// Méthode de correspondance pour la recherche
-	matchSearchArme(arme: Arme): any {
-		const searchTerm = this.searchText.toLowerCase();
-		return (
-			arme.nom.toLowerCase().includes(searchTerm) ||
-			arme.type.toLowerCase().includes(searchTerm) ||
-			arme.effet?.toLowerCase().includes(searchTerm) ||
-			arme.degats?.toString().includes(searchTerm) ||
-			arme.portee?.toString().includes(searchTerm) ||
-			arme.prix?.toString().includes(searchTerm) ||
-			(arme.munitions?.toString().includes(searchTerm) || arme.prixMunitions?.toString().includes(searchTerm))
+	private loadPotions(): void {
+		this.potions$ = this.potionService.getPotions().pipe(
+			catchError(() => of([])),
+			shareReplay(1),
 		);
 	}
 
-	matchSearchArmure(armure: Armure): any {
-		const searchTerm = this.searchText.toLowerCase();
-		return (
-			armure.nom.toLowerCase().includes(searchTerm) ||
-			armure.description.toLowerCase().includes(searchTerm) ||
-			armure.statistiques?.toLowerCase().includes(searchTerm) ||
-			armure.prix?.toString().includes(searchTerm)
+	private loadPoisons(): void {
+		this.poisons$ = this.poisonService.getPoisons().pipe(
+			catchError(() => of([])),
+			shareReplay(1),
 		);
 	}
 
-	matchSearchPotion(potion: any): any {
-		
-		const searchTerm = this.searchText.toLowerCase();
-		return (
-			potion.nom.toLowerCase().includes(searchTerm) ||
-			potion.effet?.toLowerCase().includes(searchTerm) ||
-			potion.prix?.toString().includes(searchTerm)
+	private loadUtilitaires(): void {
+		this.utilitaires$ = this.utilitaireService.getUtilitaires().pipe(
+			catchError(() => of([])),
+			shareReplay(1),
 		);
 	}
-	
-	openCreateArmeModal(): void {
-		const modalRef = this.modalService.open(CreateArmeComponent);
-		modalRef.result.then((result) => {
-			if (result === 'created') {
-				this.loadArmes(); // Recharger les races après création
-			}
-		}, (reason) => {
-			console.log('Modale fermée: ', reason);
-		});
+
+	private loadContenants(): void {
+		this.contenants$ = this.contenantService.getContenant().pipe(
+			catchError(() => of([])),
+			shareReplay(1),
+		);
+	}
+
+	private loadBazars(): void {
+		this.bazars$ = this.bazarService.getBazars().pipe(
+			catchError(() => of([])),
+			shareReplay(1),
+		);
+	}
+
+	private checkIfAdmin(): void {
+		this.isAdmin$ = this.userService.getUserData().pipe(
+			map((user) => user?.isAdmin ?? false),
+			startWith(false),
+			shareReplay(1),
+		);
+	}
+
+	// --- Recherche réactive ---
+	// Méthodes pour mettre à jour le search text depuis le template
+	onSearchTextChanged(text: string) {
+		this.searchTextSubject.next(text);
+	}
+
+	// Fonction générique de filtre pour armures
+	filterArmures(armures$: Observable<Armure[]>): Observable<Armure[]> {
+		return combineLatest([armures$, this.searchText$]).pipe(
+			map(([armures, searchText]) => {
+				const s = searchText.toLowerCase();
+				return armures.filter(
+					(armure) =>
+						armure.nom.toLowerCase().includes(s) ||
+						armure.description.toLowerCase().includes(s) ||
+						armure.statistiques?.toLowerCase().includes(s) ||
+						armure.prix?.toString().includes(s),
+				);
+			}),
+		);
+	}
+
+	// Fonction générique de filtre pour potions, poisons, utilitaires, contenants, bazars
+	filterItems<T extends { nom: string; effet?: string; prix?: any }>(items$: Observable<T[]>): Observable<T[]> {
+		return combineLatest([items$, this.searchText$]).pipe(
+			map(([items, searchText]) => {
+				const s = searchText.toLowerCase();
+				return items.filter(
+					(item) => item.nom.toLowerCase().includes(s) || item.effet?.toLowerCase().includes(s) || item.prix?.toString().includes(s),
+				);
+			}),
+		);
+	}
+
+	// --- Getters exposés pour le template avec filtres appliqués ---
+	get filteredArmuresLeg$() {
+		return this.filterArmures(this.armurelegere$);
+	}
+
+	get filteredArmuresInter$() {
+		return this.filterArmures(this.armureinter$);
+	}
+
+	get filteredArmuresLourdes$() {
+		return this.filterArmures(this.armurelourde$);
+	}
+
+	get filteredPotions$() {
+		return this.filterItems(this.potions$);
+	}
+
+	get filteredPoisons$() {
+		return this.filterItems(this.poisons$);
+	}
+
+	get filteredUtilitaires$() {
+		return this.filterItems(this.utilitaires$);
+	}
+
+	get filteredContenants$() {
+		return this.filterItems(this.contenants$);
+	}
+
+	get filteredBazars$() {
+		return this.filterItems(this.bazars$);
 	}
 
 	openCreateArmureModal(): void {
 		const modalRef = this.modalService.open(CreateArmureComponent);
-		modalRef.result.then((result) => {
-			if (result === 'created') {
-				this.loadArmures(); // Recharger
-			}}, (reason) => {
-				console.log('Modale fermée: ', reason);
-			
-		});
+		modalRef.result.then(
+			(result) => {
+				if (result === 'created') this.loadArmures();
+			},
+			(reason) => {
+				console.log('Modale fermée:', reason);
+			},
+		);
 	}
 
 	openCreatePotionModal(): void {
 		const modalRef = this.modalService.open(CreatePotionComponent);
-		modalRef.result.then((result) => {
-			if (result === 'created') {
-				this.loadPotions(); // Recharger
-			}}, (reason) => {
-				console.log('Modale fermée: ', reason);
-			
-		});
+		modalRef.result.then(
+			(result) => {
+				if (result === 'created') this.loadPotions();
+			},
+			(reason) => {
+				console.log('Modale fermée:', reason);
+			},
+		);
 	}
 
 	openCreatePoisonModal(): void {
 		const modalRef = this.modalService.open(CreatePoisonComponent);
-		modalRef.result.then((result) => {
-			if (result === 'created') {
-				this.loadPoisons(); // Recharger
-			}}, (reason) => {
-				console.log('Modale fermée: ', reason);
-			
-		});
+		modalRef.result.then(
+			(result) => {
+				if (result === 'created') this.loadPoisons();
+			},
+			(reason) => {
+				console.log('Modale fermée:', reason);
+			},
+		);
 	}
 
 	openCreateUtilitaireModal(): void {
 		const modalRef = this.modalService.open(CreateUtilitaireComponent);
-		modalRef.result.then((result) => {
-			if (result === 'created') {
-				this.loadUtilitaires(); // Recharger
-			}}, (reason) => {
-				console.log('Modale fermée: ', reason);
-			
-		});
+		modalRef.result.then(
+			(result) => {
+				if (result === 'created') this.loadUtilitaires();
+			},
+			(reason) => {
+				console.log('Modale fermée:', reason);
+			},
+		);
 	}
 
 	openCreateContenantModal(): void {
 		const modalRef = this.modalService.open(CreateContenantComponent);
-		modalRef.result.then((result) => {
-			if (result === 'created') {
-				this.loadContenants(); // Recharger
-			}}, (reason) => {
-				console.log('Modale fermée: ', reason);
-			
-		});
+		modalRef.result.then(
+			(result) => {
+				if (result === 'created') this.loadContenants();
+			},
+			(reason) => {
+				console.log('Modale fermée:', reason);
+			},
+		);
 	}
 
 	openCreateBazarModal(): void {
 		const modalRef = this.modalService.open(CreateBazarComponent);
-		modalRef.result.then((result) => {
-			if (result === 'created') {
-				this.loadBazars(); // Recharger
-			}}, (reason) => {
-				console.log('Modale fermée: ', reason);
-			});
+		modalRef.result.then(
+			(result) => {
+				if (result === 'created') this.loadBazars();
+			},
+			(reason) => {
+				console.log('Modale fermée:', reason);
+			},
+		);
 	}
-	
-	
 }

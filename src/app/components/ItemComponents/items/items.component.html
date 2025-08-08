@@ -1,425 +1,107 @@
-<!-- Onglets -->
 <div class="container">
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <li class="nav-item" role="presentation">
-            <a class="nav-link active" id="armes-tab" data-bs-toggle="tab" href="#armes" role="tab" aria-controls="armes" aria-selected="true">Les armes</a>
-        </li>
-        <li class="nav-item" role="presentation">
-            <a class="nav-link" id="armures-tab" data-bs-toggle="tab" href="#armures" role="tab" aria-controls="armures" aria-selected="false">Les armures</a>
-        </li>
-        <li class="nav-item" role="presentation">
-            <a class="nav-link" id="potion-tab" data-bs-toggle="tab" href="#potion" role="tab" aria-controls="potion" aria-selected="false">Les potions</a>
-        </li>
-        <li class="nav-item" role="presentation">
-            <a class="nav-link" id="poison-tab" data-bs-toggle="tab" href="#poison" role="tab" aria-controls="poison" aria-selected="false">Les poisons</a>
-        </li>
-        <li class="nav-item" role="presentation">
-            <a class="nav-link" id="utilitaire-tab" data-bs-toggle="tab" href="#utilitaire" role="tab" aria-controls="utilitaire" aria-selected="false">Les objets de soins et utilitaires</a>
-        </li>
-        <li class="nav-item" role="presentation">
-            <a class="nav-link" id="bazar-tab" data-bs-toggle="tab" href="#bazar" role="tab" aria-controls="bazar" aria-selected="false">Le bazar</a>
-        </li>
-    </ul>
+	<ul class="nav nav-tabs" id="itemsTabs" role="tablist">
+		<li class="nav-item" role="presentation">
+			<button
+				class="nav-link active"
+				id="armes-tab"
+				data-bs-toggle="tab"
+				data-bs-target="#armes"
+				type="button"
+				role="tab"
+				aria-controls="armes"
+				aria-selected="true"
+			>
+				<span class="material-symbols-outlined">swords</span>
 
-    <div class="tab-content" id="myTabContent">
+				Armes
+			</button>
+		</li>
+		<li>
+			<button
+				class="nav-link"
+				id="armures-tab"
+				data-bs-toggle="tab"
+				data-bs-target="#armures"
+				type="button"
+				role="tab"
+				aria-controls="armures"
+				aria-selected="false"
+			>
+				<span class="material-symbols-outlined">shield</span>
 
-        <!-- Armes -->
-        <div class="tab-pane fade show active" id="armes" role="armes" aria-labelledby="armes-tab">
-            <!-- Barre de recherche -->
-            <div class="search-container">
-                <input type="text" class="search-input" placeholder="Rechercher une arme..." [(ngModel)]="searchText">
-                <div *ngIf="isAdmin && !isInCharacterCreation">
-                    <button class="add-button" (click)="openCreateArmeModal()">
-                        <i class="bi bi-sign-intersection-fill"></i> Ajouter une arme
-                    </button>
-                </div>
-            </div>
-        
-            <!-- Armes corps à corps -->
-            <h2 *ngIf="filteredArmesCac.length > 0">Armes corps à corps</h2>
-            
-            <div class="d-none d-lg-block">
-                <table class="table" *ngIf="filteredArmesCac.length > 0">
-                    <thead>
-                        <tr>
-                            <th>Armes</th>
-                            <th>Type</th>
-                            <th>Effets</th>
-                            <th>Dégâts</th>
-                            <th>Prix</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let item of filteredArmesCac">
-                            <td>{{item.nom}}</td>
-                            <td>{{item.type}}</td>
-                            <td>{{item.effet}}</td>
-                            <td>{{item.degats}}</td>
-                            <td>{{item.prix}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        
-            <div class="d-lg-none">
-                <div class="card-container">
-                    <div class="card" *ngFor="let item of filteredArmesCac">
-                        <div class="card-body">
-                            <h5 class="card-title">{{item.nom}}</h5>
-                            <p class="card-text"><strong>Type:</strong> {{item.type}}</p>
-                            <p class="card-text"><strong>Effets:</strong> {{item.effet}}</p>
-                            <p class="card-text"><strong>Dégâts:</strong> {{item.degats}}</p>
-                            <p class="card-text"><strong>Prix:</strong> {{item.prix}}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        
-            <!-- Armes à distance -->
-            <h2 *ngIf="filteredDistance.length > 0">Armes à distance</h2>
-        
-            <div class="d-none d-lg-block">
-                <table class="table" *ngIf="filteredDistance.length > 0">
-                    <thead>
-                        <tr>
-                            <th>Armes</th>
-                            <th>Type</th>
-                            <th>Effets</th>
-                            <th>Portée</th>
-                            <th>Dégâts</th>
-                            <th>Prix</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let item of filteredDistance">
-                            <td>{{item.nom}}</td>
-                            <td>{{item.type}}</td>
-                            <td>{{item.effet}}</td>
-                            <td>{{item.portee}}</td>
-                            <td>{{item.degats}}</td>
-                            <td>{{item.prix}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        
-            <div class="d-lg-none">
-                <div class="card-container">
-                    <div class="card" *ngFor="let item of filteredDistance">
-                        <div class="card-body">
-                            <h5 class="card-title">{{item.nom}}</h5>
-                            <p class="card-text"><strong>Type:</strong> {{item.type}}</p>
-                            <p class="card-text"><strong>Effets:</strong> {{item.effet}}</p>
-                            <p class="card-text"><strong>Portée:</strong> {{item.portee}}</p>
-                            <p class="card-text"><strong>Dégâts:</strong> {{item.degats}}</p>
-                            <p class="card-text"><strong>Prix:</strong> {{item.prix}}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        
-            <!-- Explosifs -->
-            <h2 *ngIf="filteredExplosif.length > 0">Explosifs</h2>
-        
-            <div class="d-none d-lg-block">
-                <table class="table" *ngIf="filteredExplosif.length > 0">
-                    <thead>
-                        <tr>
-                            <th>Armes</th>
-                            <th>Effets</th>
-                            <th>Rayon</th>
-                            <th>Dégâts</th>
-                            <th>Prix</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let item of filteredExplosif">
-                            <td>{{item.nom}}</td>
-                            <td>{{item.effet}}</td>
-                            <td>{{item.portee}}</td>
-                            <td>{{item.degats}}</td>
-                            <td>{{item.prix}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        
-            <div class="d-lg-none">
-                <div class="card-container">
-                    <div class="card" *ngFor="let item of filteredExplosif">
-                        <div class="card-body">
-                            <h5 class="card-title">{{item.nom}}</h5>
-                            <p class="card-text"><strong>Effets:</strong> {{item.effet}}</p>
-                            <p class="card-text"><strong>Rayon:</strong> {{item.portee}}</p>
-                            <p class="card-text"><strong>Dégâts:</strong> {{item.degats}}</p>
-                            <p class="card-text"><strong>Prix:</strong> {{item.prix}}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        
-            <!-- Armes de siège -->
-            <h2 *ngIf="filteredSiege.length > 0">Armes de siège</h2>
-        
-            <div class="d-none d-lg-block">
-                <table class="table" *ngIf="filteredSiege.length > 0">
-                    <thead>
-                        <tr>
-                            <th>Armes</th>
-                            <th>Effets</th>
-                            <th>Portée</th>
-                            <th>Dégâts</th>
-                            <th>Prix</th>
-                            <th>Munitions</th>
-                            <th>Prix des munitions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let item of filteredSiege">
-                            <td>{{item.nom}}</td>
-                            <td>{{item.effet}}</td>
-                            <td>{{item.portee}}</td>
-                            <td>{{item.degats}}</td>
-                            <td>{{item.prix}}</td>
-                            <td>{{item.munitions}}</td>
-                            <td>{{item.prixMunitions}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        
-            <div class="d-lg-none">
-                <div class="card-container">
-                    <div class="card" *ngFor="let item of filteredSiege">
-                        <div class="card-body">
-                            <h5 class="card-title">{{item.nom}}</h5>
-                            <p class="card-text"><strong>Effets:</strong> {{item.effet}}</p>
-                            <p class="card-text"><strong>Portée:</strong> {{item.portee}}</p>
-                            <p class="card-text"><strong>Dégâts:</strong> {{item.degats}}</p>
-                            <p class="card-text"><strong>Prix:</strong> {{item.prix}}</p>
-                            <p class="card-text"><strong>Munitions:</strong> {{item.munitions}}</p>
-                            <p class="card-text"><strong>Prix des munitions:</strong> {{item.prixMunitions}}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        
+				Armures
+			</button>
+		</li>
+		<li>
+			<button
+				class="nav-link"
+				id="potion-tab"
+				data-bs-toggle="tab"
+				data-bs-target="#potions"
+				type="button"
+				role="tab"
+				aria-controls="potions"
+				aria-selected="false"
+			>
+				Potions
+			</button>
+		</li>
+		<li>
+			<button
+				class="nav-link"
+				id="poison-tab"
+				data-bs-toggle="tab"
+				data-bs-target="#poisons"
+				type="button"
+				role="tab"
+				aria-controls="poisons"
+				aria-selected="false"
+			>
+				Poisons
+			</button>
+		</li>
 
-        <!-- Armures -->
-        <div class="tab-pane fade" id="armures" role="armures" aria-labelledby="armures-tab">
+		<li>
+			<button
+				class="nav-link"
+				id="utilitaire-tab"
+				data-bs-toggle="tab"
+				data-bs-target="#utilitaires"
+				type="button"
+				role="tab"
+				aria-controls="utilitaires"
+				aria-selected="false"
+			>
+				Utilitaires
+			</button>
+		</li>
+		<li>
+			<button
+				class="nav-link"
+				id="autres-tab"
+				data-bs-toggle="tab"
+				data-bs-target="#autres"
+				type="button"
+				role="tab"
+				aria-controls="autres"
+				aria-selected="false"
+			>
+				Autres
+			</button>
+		</li>
+	</ul>
 
-            <div class="search-container">
-                <input type="text" class="search-input" placeholder="Rechercher une armure..." [(ngModel)]="searchText">
-                <div *ngIf="isAdmin && !isInCharacterCreation"><button class="add-button" (click)="openCreateArmureModal()"><i class="bi bi-sign-intersection-fill"></i>
-                    Ajouter une armure</button>
-                </div>
-            </div>
-            <!-- Version tableau pour les grands écrans -->
-            <div class="container d-none d-md-block" *ngIf="filteredArmuresLeg.length > 0">
-                <h2>Armures légère</h2>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Armures</th>
-                            <th>Description</th>
-                            <th>Statistique</th>
-                            <th>Prix</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let item of filteredArmuresLeg">
-                            <td>{{item.nom}}</td>
-                            <td>{{item.description}}</td>
-                            <td>{{item.statistiques}}</td>
-                            <td>{{item.prix}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            
-            <!-- Version cartes pour les petits écrans -->
-            <div class="container d-md-none" *ngIf="filteredArmuresLeg.length > 0">
-                <h2>Armures légère</h2>
-                <div class="card mb-3" *ngFor="let item of filteredArmuresLeg">
-                    <div class="card-body">
-                        <h5 class="card-title">{{item.nom}}</h5>
-                        <p class="card-text"><strong>Description :</strong> {{item.description}}</p>
-                        <p class="card-text"><strong>Statistiques :</strong> {{item.statistiques}}</p>
-                        <p class="card-text"><strong>Prix :</strong> {{item.prix}}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+	<div class="tab-content" id="itemsTabsContent">
+		<div class="tab-pane fade show active" id="armes" role="tabpanel" aria-labelledby="armes-tab">
+			<!-- Appel du component armes -->
+			<app-arme-component [isAdmin$]="isAdmin$" [isInCharacterCreation]="isInCharacterCreation"></app-arme-component>
+		</div>
 
-        <!-- Potions -->
-        <div class="tab-pane fade" id="potion" role="potion" aria-labelledby="potion-tab">
-            <div class="search-container">
-                <input type="text" class="search-input" placeholder="Rechercher une potion..." [(ngModel)]="searchText">
-                <div *ngIf="isAdmin && !isInCharacterCreation"><button class="add-button" (click)="openCreatePotionModal()"><i class="bi bi-sign-intersection-fill"></i>
-                    Ajouter une potion</button>
-                </div>
-            </div>
-            <!-- Version tableau pour les grands écrans -->
-            <div class="container d-none d-md-block" *ngIf="filteredPotions.length > 0">
-                <h2>Potions</h2>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Potions</th>
-                            <th>Effets</th>
-                            <th>Prix</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let item of filteredPotions">
-                            <td>{{item.nom}}</td>
-                            <td>{{item.effet}}</td>
-                            <td>{{item.prix}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            
-            <!-- Version cartes pour les petits écrans -->
-            <div class="container d-md-none" *ngIf="filteredPotions.length > 0">
-                <h2>Potions</h2>
-                <div class="card mb-3" *ngFor="let item of filteredPotions">
-                    <div class="card-body">
-                        <h5 class="card-title">{{item.nom}}</h5>
-                        <p class="card-text"><strong>Effets :</strong> {{item.effet}}</p>
-                        <p class="card-text"><strong>Prix :</strong> {{item.prix}}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Poisons -->
-        <div class="tab-pane fade" id="poison" role="poison" aria-labelledby="poison-tab">
-            <div class="search-container">
-                <input type="text" class="search-input" placeholder="Rechercher un poison..." [(ngModel)]="searchText">
-                <div *ngIf="isAdmin && !isInCharacterCreation"><button class="add-button" (click)="openCreatePoisonModal()"><i class="bi bi-sign-intersection-fill"></i>
-                    Ajouter un poison</button>
-                </div>
-            </div>
-            <!-- Version tableau pour les grands écrans -->
-            <div class="container d-none d-md-block" *ngIf="filteredPoisons.length > 0">
-                <h2>Poisons</h2>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Poisons</th>
-                            <th>Effets</th>
-                            <th>Prix</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let item of filteredPoisons">
-                            <td>{{item.nom}}</td>
-                            <td>{{item.effet}}</td>
-                            <td>{{item.prix}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            
-            <!-- Version cartes pour les petits écrans -->
-            <div class="container d-md-none" *ngIf="filteredPoisons.length > 0">
-                <h2>Poisons</h2>
-                <div class="card mb-3" *ngFor="let item of filteredPoisons">
-                    <div class="card-body">
-                        <h5 class="card-title">{{item.nom}}</h5>
-                        <p class="card-text"><strong>Effets :</strong> {{item.effet}}</p>
-                        <p class="card-text"><strong>Prix :</strong> {{item.prix}}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Objets utilitaires -->
-        <div class="tab-pane fade" id="utilitaire" role="utilitaire" aria-labelledby="utilitaire-tab">
-            <div class="search-container">
-                <input type="text" class="search-input" placeholder="Rechercher un objet utilitaire..." [(ngModel)]="searchText">
-                <div *ngIf="isAdmin && !isInCharacterCreation">
-                    <button class="add-button" (click)="openCreateUtilitaireModal()"><i class="bi bi-sign-intersection-fill"></i>
-                    Ajouter un objet utilitaire</button>
-                    <button class="add-button" (click)="openCreateContenantModal()"><i class="bi bi-sign-intersection-fill"></i>
-                        Ajouter un contenant</button>
-                </div>
-                
-            </div>
-            <!-- Version tableau pour les grands écrans -->
-            <div class="container d-none d-md-block" *ngIf="filteredUtilitaires.length > 0">
-                <h2>Objets utilitaires</h2>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Objets</th>
-                            <th>Effets</th>
-                            <th>Prix</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let item of filteredUtilitaires">
-                            <td>{{item.nom}}</td>
-                            <td>{{item.effet}}</td>
-                            <td>{{item.prix}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            
-            <!-- Version cartes pour les petits écrans -->
-            <div class="container d-md-none" *ngIf="filteredUtilitaires.length > 0">
-                <h2>Objets utilitaires</h2>
-                <div class="card mb-3" *ngFor="let item of filteredUtilitaires">
-                    <div class="card-body">
-                        <h5 class="card-title">{{item.nom}}</h5>
-                        <p class="card-text"><strong>Effets :</strong> {{item.effet}}</p>
-                        <p class="card-text"><strong>Prix :</strong> {{item.prix}}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Bazar -->
-        <div class="tab-pane fade" id="bazar" role="bazar" aria-labelledby="bazar-tab">
-            <div class="search-container">
-                <input type="text" class="search-input" placeholder="Rechercher un objet du bazar..." [(ngModel)]="searchText">
-                <div *ngIf="isAdmin && !isInCharacterCreation"><button class="add-button" (click)="openCreateBazarModal()"><i class="bi bi-sign-intersection-fill"></i>
-                    Ajouter un objet du bazar</button>
-                </div>
-            </div>
-            <!-- Version tableau pour les grands écrans -->
-            <div class="container d-none d-md-block" *ngIf="filteredBazars.length > 0">
-                <h2>Bazar</h2>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Objets</th>
-                            <th>Prix</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let item of filteredBazars">
-                            <td>{{item.nom}}</td>
-                            <td>{{item.prix}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            
-            <!-- Version cartes pour les petits écrans -->
-            <div class="container d-md-none" *ngIf="filteredBazars.length > 0">
-                <h2>Bazar</h2>
-                <div class="card mb-3" *ngFor="let item of filteredBazars">
-                    <div class="card-body">
-                        <h5 class="card-title">{{item.nom}}</h5>
-                        <p class="card-text"><strong>Prix :</strong> {{item.prix}}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+		<!-- Exemple d'autres tabs -->
+		<!--
+  <div class="tab-pane fade" id="armures" role="tabpanel" aria-labelledby="armures-tab">
+    <app-armures [isAdmin]="isAdmin"></app-armures>
+  </div>
+  -->
+	</div>
 </div>

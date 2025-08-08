@@ -1,40 +1,64 @@
-<div class="user-profile container">
-    <h2>Informations de l'utilisateur</h2>
-    
-    <form (ngSubmit)="updateUserInfo()">
-        <div class="form-group">
-            <label for="username">Nom d'utilisateur</label>
-            <input type="text" id="username" class="form-control" [(ngModel)]="user.name" (blur)="checkUsernameAvailability()" [ngModelOptions]="{standalone: true}">
-            <span *ngIf="!usernameTaken && user.name != currentUser.name" style="color: red;">Nom d'utilisateur déjà pris.</span>
-        </div>
-        
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email"class="form-control"  id="email" [(ngModel)]="user.mail" name="email" required>
-        </div>
-        
-        <button type="submit" class="btn btn-primary">Mettre à jour les informations</button>
-    </form>
+<div class="user-profile container" *ngIf="user$ | async as user">
+	<h2>Informations de l'utilisateur</h2>
 
-    <h3>Changer de mot de passe</h3>
-    <form (ngSubmit)="changePassword()">
-        <div class="form-group">
-            <label for="currentPassword">Mot de passe actuel</label>
-            <input type="password" class="form-control" autocomplete="current-password" id="currentPassword" [(ngModel)]="currentPassword" name="currentPassword" required>
-        </div>
-        
-        <div class="form-group">
-            <label for="newPassword">Nouveau mot de passe</label>
-            <input type="password" class="form-control" autocomplete="new-password" id="newPassword" [(ngModel)]="newPassword" name="newPassword" required>
-        </div>
+	<form [formGroup]="profileForm" (ngSubmit)="updateUserInfo()">
+		<div class="form-group">
+			<label for="username">Nom d'utilisateur</label>
+			<input type="text" id="username" class="form-control" formControlName="name" (blur)="checkUsernameAvailability()" />
+			<span *ngIf="usernameTaken" style="color: red"> Nom d'utilisateur déjà pris. </span>
+		</div>
 
-        <div class="form-group">
-            <label for="confirmPassword">Confirmer le nouveau mot de passe</label>
-            <input type="password" class="form-control" autocomplete="new-password" id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword" required>
-        </div>
+		<div class="form-group">
+			<label for="email">Email</label>
+			<input type="email" class="form-control" id="email" formControlName="mail" required />
+		</div>
 
-        <button type="submit" class="btn btn-danger">Changer le mot de passe</button>
-    </form>
+		<button type="submit" class="btn btn-primary" [disabled]="profileForm.invalid">Mettre à jour les informations</button>
+	</form>
 
-    <button class="btn btn-danger" (click)="deleteAccount()">Supprimer le compte</button>
+	<h3>Changer de mot de passe</h3>
+	<form (ngSubmit)="changePassword()">
+		<div class="form-group">
+			<label for="currentPassword">Mot de passe actuel</label>
+			<input
+				type="password"
+				class="form-control"
+				autocomplete="current-password"
+				id="currentPassword"
+				[(ngModel)]="currentPassword"
+				name="currentPassword"
+				required
+			/>
+		</div>
+
+		<div class="form-group">
+			<label for="newPassword">Nouveau mot de passe</label>
+			<input
+				type="password"
+				class="form-control"
+				autocomplete="new-password"
+				id="newPassword"
+				[(ngModel)]="newPassword"
+				name="newPassword"
+				required
+			/>
+		</div>
+
+		<div class="form-group">
+			<label for="confirmPassword">Confirmer le nouveau mot de passe</label>
+			<input
+				type="password"
+				class="form-control"
+				autocomplete="new-password"
+				id="confirmPassword"
+				[(ngModel)]="confirmPassword"
+				name="confirmPassword"
+				required
+			/>
+		</div>
+
+		<button type="submit" class="btn btn-danger">Changer le mot de passe</button>
+	</form>
+
+	<button class="btn btn-danger" (click)="deleteAccount()">Supprimer le compte</button>
 </div>

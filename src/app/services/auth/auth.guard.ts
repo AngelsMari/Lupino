@@ -11,16 +11,17 @@ export class AuthGuard implements CanActivate {
 	constructor(private authService: AuthService, private router: Router, private toastr: ToastrService) {}
 
 	canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> {
-		return this.authService.getCurrentUser().pipe(
+		return this.authService.loggedIn$.pipe(
 			take(1),
-			map((res: any) => res?.result === 'OK'),
-			tap((logged) => {
-				if (!logged) {
+			tap((isLoggedIn) => {
+				if (!isLoggedIn) {
 					this.toastr.error('Vous devez être connecté pour accéder à cette page', 'Erreur');
 				}
 			}),
-			map((logged) => (logged ? true : this.router.createUrlTree(['/login'], { queryParams: { redirect: state.url } }))),
-			catchError(() => of(this.router.createUrlTree(['/login'], { queryParams: { redirect: state.url } }))),
+			map((isLoggedIn) => {
+				return isLoggedIn ? true : this.router.createUrlTree(['/login']);
+			}),
+			catchError(() => of(this.router.createUrlTree(['/login']))),
 		);
 	}
 }

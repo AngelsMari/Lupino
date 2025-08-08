@@ -1,41 +1,33 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth/auth.service';
 import { UserService } from 'app/services/LupinoApi/user.service';
+import { Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-header',
 	templateUrl: './header.component.html',
-	styleUrl: './header.component.css',
+	styleUrls: ['./header.component.css'], // attention au pluriel
 })
-export class HeaderComponent {
-	isLoggedIn: boolean = false;
-	isAdmin: boolean = false;
+export class HeaderComponent implements OnInit, OnDestroy {
+	private destroy$ = new Subject<void>();
+	isLoggedIn$ = this.authService.loggedIn$; // Observable<boolean>
+	isAdmin$ = this.userService.getUserData().pipe(map((user) => user?.isAdmin ?? false));
 
 	constructor(private authService: AuthService, private userService: UserService) {}
 
-	async ngOnInit() {
-		await this.checkIfLoggedIn();
-		await this.checkIfAdmin();
-	}
-
-	async checkIfLoggedIn(): Promise<void> {
-		this.isLoggedIn = await this.authService.isLoggedIn();
-	}
-
-	async checkIfAdmin(): Promise<void> {
-		this.userService.getUserData().subscribe((data) => {
-			this.isAdmin = data.isAdmin;
-		});
-	}
+	ngOnInit() {}
 
 	logout() {
-		this.authService.logout().subscribe((data) => {
-			this.checkIfLoggedIn();
-
-			console.log('data', data);
-			document.cookie = 'token=;expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'; // Ajustez le nom du cookie si nécessaire
-			sessionStorage.removeItem('token'); // Optionnel : supprimer le token du sessionStorage si nécessaire
-			sessionStorage.removeItem('user_id'); // Supprimer l'ID utilisateur du sessionStorage si nécessaire
+		this.authService.logout().subscribe({
+			next: () => {
+				console.log('Déconnexion réussie');
+			},
 		});
+	}
+
+	ngOnDestroy() {
+		this.destroy$.next();
+		this.destroy$.complete();
 	}
 }

@@ -12,11 +12,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class LoginComponent {
 	loginForm: FormGroup;
 	error: boolean = false;
-	isLoggedIn: boolean = false;
 
 	constructor(private fb: FormBuilder, private authService: AuthService, private router: Router, private toastr: ToastrService) {
-		// vérifier si l'utilisateur est déjà connecté
-
 		this.loginForm = this.fb.group({
 			email: ['', [Validators.required, Validators.email]],
 			password: ['', [Validators.required, Validators.minLength(6)]],
@@ -27,19 +24,17 @@ export class LoginComponent {
 		if (this.loginForm.valid) {
 			const email = this.loginForm.value.email;
 			const password = this.loginForm.value.password;
-			// Appeler le service d'authentification ici
-			this.authService.login(email, password).subscribe((data) => {
-				if (Object(data)['result'] == 'ERROR') {
-					this.error = true;
-				} else {
-					this.authService.loggedIn.next(true);
-					this.toastr.success('Inscription réussie ! Vous pouvez maintenant vous connecter.', 'Succès');
 
-					//force reload to update user data
-					window.location.reload();
+			this.authService.login(email, password).subscribe({
+				next: (data) => {
+					this.toastr.success('Connexion réussie !', 'Succès');
 
 					this.router.navigate(['/']);
-				}
+				},
+				error: () => {
+					this.error = true;
+					this.toastr.error('Erreur lors de la connexion', 'Erreur');
+				},
 			});
 		}
 	}

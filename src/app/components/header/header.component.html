@@ -38,17 +38,17 @@
 					<i class="bi bi-person"></i>
 				</a>
 				<ul class="dropdown-menu" aria-labelledby="userDropdown">
-					<li *ngIf="!isLoggedIn">
+					<li *ngIf="!(isLoggedIn$ | async)">
 						<a class="dropdown-item" routerLink="/login">Connexion</a>
 						<a class="dropdown-item" routerLink="/register">Inscription</a>
 					</li>
-					<li *ngIf="isLoggedIn">
+					<li *ngIf="isLoggedIn$ | async">
 						<a class="dropdown-item" routerLink="/profil">Mon profil</a>
 						<a class="dropdown-item" routerLink="/mycharacters">Mes personnages</a>
-						<a class="dropdown-item disabled-link" onclick="event.preventDefault();" [routerLink]="['/campagnes', 1]">Mes campagnes</a>
+						<a class="dropdown-item disabled-link" (click)="$event.preventDefault()" [routerLink]="['/campagnes', 1]">Mes campagnes</a>
 						<div class="dropdown-divider"></div>
-						<a *ngIf="isAdmin" class="dropdown-item" routerLink="/user-list">Listes des utilisateurs</a>
-						<div *ngIf="isAdmin" class="dropdown-divider"></div>
+						<a *ngIf="isAdmin$ | async" class="dropdown-item" routerLink="/user-list">Listes des utilisateurs</a>
+						<div *ngIf="isAdmin$ | async" class="dropdown-divider"></div>
 						<a class="dropdown-item" (click)="logout()">Déconnexion</a>
 					</li>
 				</ul>

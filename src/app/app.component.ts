@@ -1,20 +1,18 @@
 import { Component } from '@angular/core';
-import { UserService } from './services/LupinoApi/user.service';
+import { AuthService } from './services/auth/auth.service';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+	selector: 'app-root',
+	templateUrl: './app.component.html',
+	styleUrl: './app.component.css',
 })
 export class AppComponent {
-  title = 'Lupino';
+	title = 'Lupino';
 
-  constructor(private userService: UserService) {}
+	constructor(private authService: AuthService) {}
 
-
-  ngOnInit() {
-    // Appeler une méthode du UserService pour s'assurer qu'il est chargé
-    this.userService.getUserData().subscribe(data => {
-    });
-}
+	ngOnInit() {
+		// Appeler une méthode du UserService pour s'assurer qu'il est chargé
+		this.authService.autoLogin();
+	}
 }

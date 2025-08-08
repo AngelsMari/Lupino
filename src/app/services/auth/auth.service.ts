@@ -1,61 +1,73 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { User } from '../../models/user';
-import { environment } from '../../../environments/environements'; // Ajustez le chemin si nécessaire
+import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { environment } from '../../../environments/environements';
+import { UserService } from '../LupinoApi/user.service';
+import { User } from 'app/models/user';
+import { UserPublicData } from 'app/models/userpublicdata';
 
-@Injectable()
 @Injectable()
 export class AuthService {
-	private apiUrl = environment.apiUrl + '/user'; // Assure-toi que cette URL correspond à ton API
+	private apiUrl = environment.apiUrl + '/user';
 
-	public loggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+	userService = inject(UserService);
 
-	isLoggedIn(): Promise<boolean> {
-		return new Promise((resolve) => {
-			this.getCurrentUser().subscribe((data: any) => {
-				const logged = data.result === 'OK';
-				this.loggedIn.next(logged);
-				resolve(logged);
-			});
-		});
-	}
+	private loggedInSubject = new BehaviorSubject<boolean>(false);
+	public loggedIn$ = this.loggedInSubject.asObservable();
 
 	constructor(private router: Router, private http: HttpClient) {}
 
-	login(email: string, password: string): Observable<any> {
-		const headers = new HttpHeaders({ Accept: 'application/json' });
-
-		// Envoi des données au serveur
-		return this.http.post(`${this.apiUrl}/login`, { mail: email, password: password }, { headers: headers });
+	autoLogin(): void {
+		this.http.get<UserPublicData>(`${this.apiUrl}/currentUser`, { withCredentials: true }).subscribe({
+			next: (user) => {
+				this.loggedInSubject.next(true);
+				this.userService.setUserData(user);
+			},
+			error: () => {
+				this.userService.clearUserData();
+			},
+		});
 	}
 
-	logout() {
-		return this.http.get(`${this.apiUrl}/logout`);
+	login(email: string, password: string): Observable<UserPublicData> {
+		const headers = new HttpHeaders({ Accept: 'application/json' });
+		return this.http.post<UserPublicData>(`${this.apiUrl}/login`, { mail: email, password: password }, { headers }).pipe(
+			tap((user) => {
+				if (user) {
+					// Notifier loggedIn
+					this.loggedInSubject.next(true);
+					// Mettre à jour UserService avec les données utilisateur reçues
+					this.userService.setUserData(user);
+				} else {
+					this.loggedInSubject.next(false);
+					this.userService.clearUserData();
+				}
+			}),
+		);
+	}
+
+	logout(): Observable<any> {
+		return this.http.get(`${this.apiUrl}/logout`).pipe(
+			tap(() => {
+				document.cookie = 'token=;expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+				sessionStorage.removeItem('token');
+				sessionStorage.removeItem('user_id');
+				this.loggedInSubject.next(false); // Notifie que user est déconnecté
+				this.userService.clearUserData(); // Vide les données utilisateur si tu as un UserService
+				this.router.navigate(['/login']); // Redirige vers la page de connexion
+			}),
+		);
 	}
 
 	register(name: string, mail: string, password: string): Observable<any> {
 		const headers = new HttpHeaders({ Accept: 'application/json' });
-
-		// Envoi des données au serveur
-		return this.http.post(`${this.apiUrl}/register`, { name: name, mail: mail, password: password }, { headers: headers });
+		return this.http.post(`${this.apiUrl}/register`, { name, mail, password }, { headers });
 	}
 
 	changePassword(currentPassword: string, newPassword: string): Observable<any> {
 		const headers = new HttpHeaders({ Accept: 'application/json' });
-
-		return this.http.post<User>(
-			`${this.apiUrl}/change-password`,
-			{ currentPassword: currentPassword, newPassword: newPassword },
-			{ headers: headers },
-		);
-	}
-
-	getCurrentUser(): Observable<any> {
-		const headers = new HttpHeaders({ Accept: 'application/json' });
-
-		return this.http.get(`${this.apiUrl}/currentUser`, { headers: headers });
+		return this.http.post<any>(`${this.apiUrl}/change-password`, { currentPassword, newPassword }, { headers });
 	}
 
 	get(id: string): Observable<any> {
