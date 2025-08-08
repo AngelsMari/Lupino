@@ -1,98 +1,105 @@
 <div class="modal-dialog"> <!-- Ajout de la classe modal-lg pour augmenter la largeur -->
-	<div class="modal-content">
-	  <div class="modal-header">
-		<h5 class="modal-title">Ajouter une nouvelle arme</h5>
-		<button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"><i class="bi bi-x-circle-fill"></i>
-		</button>
-	  </div>
-  
-	  <div class="modal-body">
-		<form [formGroup]="armeForm" (ngSubmit)="createArme()">
-		  <div class="row">
-			<!-- Première colonne -->
-			<div class="col-md-6">
-			  <div class="form-group">
-				<label for="rarete">Rareté</label>
-				<select id="rarete" formControlName="rarete" class="form-control">
-				  <option *ngFor="let option of rareteOptions" [value]="option">{{ option }}</option>
-				</select>
-			  </div>
-  
-			  <div class="form-group">
-				<label for="nom">Nom</label>
-				<input id="nom" type="text" formControlName="nom" class="form-control">
-			  </div>
-  
-			  <div class="form-group">
-				<label for="type">Type</label>
-				<select id="type" formControlName="type" class="form-control">
-				  <option *ngFor="let option of typeOptions" [value]="option">{{ option }}</option>
-				</select>
-			  </div>
-  
-			  <div class="form-group">
-				<label for="categorie">Catégorie</label>
-				<select id="categorie" formControlName="categorie" class="form-control">
-				  <option *ngFor="let option of categorieOptions" [value]="option">{{ option }}</option>
-				</select>
-			  </div>
-
-			  
-			</div>
-  
-			<!-- Deuxième colonne -->
-			<div class="col-md-6">
-			  
-  
-				<div class="form-group">
-					<label for="maniement">Maniement</label>
-					<select id="maniement" formControlName="maniement" class="form-control">
-					  <option *ngFor="let option of maniementOptions" [value]="option">{{ option }}</option>
-					</select>
-				  </div>
-  
-			  <div class="form-group">
-				<label for="degats">Dégâts</label>
-				<input id="degats" type="text" formControlName="degats" class="form-control">
-			  </div>
-  
-			  <div class="form-group">
-				<label for="portee">Portée/Rayon</label>
-				<input id="portee" type="text" formControlName="portee" class="form-control">
-			  </div>
-  
-			  <div class="form-group">
-				<label for="munitions">Munitions</label>
-				<input id="munitions" type="text" formControlName="munitions" class="form-control">
-			  </div>
-			</div>
-		  </div>
-  
-		  <div class="row">
-			<!-- Champ prix et prix munitions dans une nouvelle ligne -->
-			<div class="col-md-6">
-			  <div class="form-group">
-				<label for="prix">Prix</label>
-				<input id="prix" type="number" formControlName="prix" class="form-control">
-			  </div>
-			</div>
-  
-			<div class="col-md-6">
-			  <div class="form-group">
-				<label for="prixMunitions">Prix des munitions (optionnel)</label>
-				<input id="prixMunitions" type="number" formControlName="prixMunitions" class="form-control">
-			  </div>
-			</div>
-		  </div>
-
-		  <div class="form-group">
-			<label for="effet">Effet</label>
-			<textarea id="effet" type="text" formControlName="effet" class="form-control"></textarea>
-		  </div>
-  
-		  <button type="submit" class="btn btn-primary" [disabled]="armeForm.invalid">Créer l'arme</button>
-		</form>
-	  </div>
-	</div>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Ajouter une nouvelle arme</h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"><i class="bi bi-x-circle-fill"></i>
+    </button>
   </div>
-  
+
+  <div class="modal-body">
+    <form [formGroup]="armeForm" (ngSubmit)="createArme()">
+      <div class="row">
+        <!-- Première colonne -->
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="rarete">Rareté</label>
+            <select id="rarete" formControlName="rarete" class="form-control">
+              @for (option of rareteOptions; track option) {
+                <option [value]="option">{{ option }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="nom">Nom</label>
+            <input id="nom" type="text" formControlName="nom" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="type">Type</label>
+            <select id="type" formControlName="type" class="form-control">
+              @for (option of typeOptions; track option) {
+                <option [value]="option">{{ option }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="categorie">Catégorie</label>
+            <select id="categorie" formControlName="categorie" class="form-control">
+              @for (option of categorieOptions; track option) {
+                <option [value]="option">{{ option }}</option>
+              }
+            </select>
+          </div>
+
+
+        </div>
+
+        <!-- Deuxième colonne -->
+        <div class="col-md-6">
+
+
+          <div class="form-group">
+            <label for="maniement">Maniement</label>
+            <select id="maniement" formControlName="maniement" class="form-control">
+              @for (option of maniementOptions; track option) {
+                <option [value]="option">{{ option }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="degats">Dégâts</label>
+            <input id="degats" type="text" formControlName="degats" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="portee">Portée/Rayon</label>
+            <input id="portee" type="text" formControlName="portee" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="munitions">Munitions</label>
+            <input id="munitions" type="text" formControlName="munitions" class="form-control">
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- Champ prix et prix munitions dans une nouvelle ligne -->
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="prix">Prix</label>
+            <input id="prix" type="number" formControlName="prix" class="form-control">
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="prixMunitions">Prix des munitions (optionnel)</label>
+            <input id="prixMunitions" type="number" formControlName="prixMunitions" class="form-control">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="effet">Effet</label>
+        <textarea id="effet" type="text" formControlName="effet" class="form-control"></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary" [disabled]="armeForm.invalid">Créer l'arme</button>
+    </form>
+  </div>
+</div>
+</div>

@@ -1,5 +1,5 @@
 <div class="container">
-<table class="table">
+  <table class="table">
     <thead>
       <tr>
         <th>Name</th>
@@ -10,22 +10,33 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let user of users">
-        <td>{{ user.name }}</td>
-        <td><a [href]="'mailto:' + user.mail">{{ user.mail }}</a></td>
-        <td>
-          <button *ngIf="!user.isMJ && !user.isSuperAdmin" class="promote" (click)="toggleMj(user)">Promouvoir</button>
-          <button *ngIf="user.isMJ && !user.isSuperAdmin" class="demote" (click)="toggleMj(user)" >Rétrogader</button>
-        </td>
-        <td>
-          <button *ngIf="!user.isAdmin && !user.isSuperAdmin" class="promote" (click)="toggleAdminRole(user)">Promouvoir</button>
-          <button *ngIf="user.isAdmin && !user.isSuperAdmin" class="demote" (click)="toggleAdminRole(user)">Rétrogader</button>
-        </td>
-        <td>
-          <button class="suspend" *ngIf=" !user.isSuperAdmin" (click)="suspendUser(user)" >Suspendre</button>
-        </td>
-      </tr>
+      @for (user of users; track user) {
+        <tr>
+          <td>{{ user.name }}</td>
+          <td><a [href]="'mailto:' + user.mail">{{ user.mail }}</a></td>
+          <td>
+            @if (!user.isMJ && !user.isSuperAdmin) {
+              <button class="promote" (click)="toggleMj(user)">Promouvoir</button>
+            }
+            @if (user.isMJ && !user.isSuperAdmin) {
+              <button class="demote" (click)="toggleMj(user)" >Rétrogader</button>
+            }
+          </td>
+          <td>
+            @if (!user.isAdmin && !user.isSuperAdmin) {
+              <button class="promote" (click)="toggleAdminRole(user)">Promouvoir</button>
+            }
+            @if (user.isAdmin && !user.isSuperAdmin) {
+              <button class="demote" (click)="toggleAdminRole(user)">Rétrogader</button>
+            }
+          </td>
+          <td>
+            @if ( !user.isSuperAdmin) {
+              <button class="suspend" (click)="suspendUser(user)" >Suspendre</button>
+            }
+          </td>
+        </tr>
+      }
     </tbody>
   </table>
 </div>
-  

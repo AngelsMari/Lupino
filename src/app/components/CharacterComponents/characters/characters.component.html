@@ -1,42 +1,49 @@
 <div class="container">
-	<!-- Message si aucun personnage -->
-	<ng-container *ngIf="characters$ | async as characters; else loading">
-		<div *ngIf="characters.length === 0" class="no-character-message">Aucun personnage... mais vous pouvez en créer un !</div>
+  <!-- Message si aucun personnage -->
+  @if (characters$ | async; as characters) {
+    @if (characters.length === 0) {
+      <div class="no-character-message">Aucun personnage... mais vous pouvez en créer un !</div>
+    }
+    <!-- Bouton de création -->
+    @if (isMyCharacterPage) {
+      <div class="d-flex justify-content-end mb-3">
+        <button class="btn btn-success" (click)="createNewCharacter()">Créer un nouveau personnage</button>
+      </div>
+    }
+    <!-- Liste -->
+    @if (characters.length > 0) {
+      <div class="row">
+        @for (character of characters; track character) {
+          <div class="mx-1 col-lg-2 col-md-3 col-sm-4 col-6">
+            <div
+              class="card character-card"
+              [ngClass]="{ 'not-published': !isMyCharacterPage && (currentUser$ | async)?.isAdmin && !character.isPublic }"
+              >
+              <div class="card-img">
+                <img class="card-img-top" [src]="character.imageUrl" alt="Card image cap" />
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">{{ character.name }}</h5>
+                <h6>créateur : {{ character.owner.name }}</h6>
+                <p class="card-text">
+                  Level: {{ character.level }}<br />
+                  Race: {{ character.race }}
+                </p>
+                <a [routerLink]="['/character', character._id]" class="btn btn-primary">Voir la fiche</a>
+                @if (isMyCharacterPage) {
+                  <button class="btn btn-danger ml-2" (click)="openDeleteModal(character)">X</button>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  } @else {
+    <div class="loading-message">
+      <p>Loading character data...</p>
+    </div>
+  }
 
-		<!-- Bouton de création -->
-		<div *ngIf="isMyCharacterPage" class="d-flex justify-content-end mb-3">
-			<button class="btn btn-success" (click)="createNewCharacter()">Créer un nouveau personnage</button>
-		</div>
-
-		<!-- Liste -->
-		<div *ngIf="characters.length > 0" class="row">
-			<div *ngFor="let character of characters" class="mx-1 col-lg-2 col-md-3 col-sm-4 col-6">
-				<div
-					class="card character-card"
-					[ngClass]="{ 'not-published': !isMyCharacterPage && (currentUser$ | async)?.isAdmin && !character.isPublic }"
-				>
-					<div class="card-img">
-						<img class="card-img-top" [src]="character.imageUrl" alt="Card image cap" />
-					</div>
-					<div class="card-body">
-						<h5 class="card-title">{{ character.name }}</h5>
-						<h6>créateur : {{ character.owner.name }}</h6>
-						<p class="card-text">
-							Level: {{ character.level }}<br />
-							Race: {{ character.race }}
-						</p>
-						<a [routerLink]="['/character', character._id]" class="btn btn-primary">Voir la fiche</a>
-						<button *ngIf="isMyCharacterPage" class="btn btn-danger ml-2" (click)="openDeleteModal(character)">X</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</ng-container>
-
-	<!-- Loading -->
-	<ng-template #loading>
-		<div class="loading-message">
-			<p>Loading character data...</p>
-		</div>
-	</ng-template>
+  <!-- Loading -->
 </div>

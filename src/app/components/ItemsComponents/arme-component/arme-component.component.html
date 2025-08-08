@@ -1,177 +1,211 @@
 <!-- Armes -->
 <!-- Barre de recherche -->
 <div class="search-container">
-	<input type="text" class="search-input ng-untouched ng-pristine ng-valid" placeholder="Rechercher une arme..." [(ngModel)]="searchText" />
-	<div *ngIf="(isAdmin$ | async) && !isInCharacterCreation">
-		<button class="add-button" (click)="openCreateArmeModal()"><i class="bi bi-sign-intersection-fill"></i> Ajouter une arme</button>
-	</div>
+  <input type="text" class="search-input ng-untouched ng-pristine ng-valid" placeholder="Rechercher une arme..." [(ngModel)]="searchText" />
+  @if ((isAdmin$ | async) && !isInCharacterCreation) {
+    <div>
+      <button class="add-button" (click)="openCreateArmeModal()"><i class="bi bi-sign-intersection-fill"></i> Ajouter une arme</button>
+    </div>
+  }
 </div>
 
 <!-- Armes corps à corps -->
-<h2 *ngIf="filteredArmesCac$ | async as filteredArmesCac">Armes corps à corps</h2>
+@if (filteredArmesCac$ | async; as filteredArmesCac) {
+  <h2>Armes corps à corps</h2>
+}
 
 <div class="d-none d-lg-block">
-	<table class="table" *ngIf="filteredArmesCac$ | async as filteredArmesCac">
-		<thead>
-			<tr>
-				<th>Armes</th>
-				<th>Type</th>
-				<th>Effets</th>
-				<th>Dégâts</th>
-				<th>Prix</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr *ngFor="let item of filteredArmesCac$ | async">
-				<td>{{ item.nom }}</td>
-				<td>{{ item.type }}</td>
-				<td>{{ item.effet }}</td>
-				<td>{{ item.degats }}</td>
-				<td>{{ item.prix }}</td>
-			</tr>
-		</tbody>
-	</table>
+  @if (filteredArmesCac$ | async; as filteredArmesCac) {
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Armes</th>
+          <th>Type</th>
+          <th>Effets</th>
+          <th>Dégâts</th>
+          <th>Prix</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of filteredArmesCac$ | async; track item) {
+          <tr>
+            <td>{{ item.nom }}</td>
+            <td>{{ item.type }}</td>
+            <td>{{ item.effet }}</td>
+            <td>{{ item.degats }}</td>
+            <td>{{ item.prix }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
 </div>
 
 <div class="d-lg-none">
-	<div class="card-container">
-		<div class="card" *ngFor="let item of filteredArmesCac$ | async">
-			<div class="card-body">
-				<h5 class="card-title">{{ item.nom }}</h5>
-				<p class="card-text"><strong>Type:</strong> {{ item.type }}</p>
-				<p class="card-text"><strong>Effets:</strong> {{ item.effet }}</p>
-				<p class="card-text"><strong>Dégâts:</strong> {{ item.degats }}</p>
-				<p class="card-text"><strong>Prix:</strong> {{ item.prix }}</p>
-			</div>
-		</div>
-	</div>
+  <div class="card-container">
+    @for (item of filteredArmesCac$ | async; track item) {
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{ item.nom }}</h5>
+          <p class="card-text"><strong>Type:</strong> {{ item.type }}</p>
+          <p class="card-text"><strong>Effets:</strong> {{ item.effet }}</p>
+          <p class="card-text"><strong>Dégâts:</strong> {{ item.degats }}</p>
+          <p class="card-text"><strong>Prix:</strong> {{ item.prix }}</p>
+        </div>
+      </div>
+    }
+  </div>
 </div>
 
 <!-- Armes à distance -->
-<h2 *ngIf="filteredDistance$ | async as filteredDistance">Armes à distance</h2>
+@if (filteredDistance$ | async; as filteredDistance) {
+  <h2>Armes à distance</h2>
+}
 
 <div class="d-none d-lg-block">
-	<table class="table" *ngIf="filteredDistance$ | async as filteredDistance">
-		<thead>
-			<tr>
-				<th>Armes</th>
-				<th>Type</th>
-				<th>Effets</th>
-				<th>Portée</th>
-				<th>Dégâts</th>
-				<th>Prix</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr *ngFor="let item of filteredDistance$ | async">
-				<td>{{ item.nom }}</td>
-				<td>{{ item.type }}</td>
-				<td>{{ item.effet }}</td>
-				<td>{{ item.portee }}</td>
-				<td>{{ item.degats }}</td>
-				<td>{{ item.prix }}</td>
-			</tr>
-		</tbody>
-	</table>
+  @if (filteredDistance$ | async; as filteredDistance) {
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Armes</th>
+          <th>Type</th>
+          <th>Effets</th>
+          <th>Portée</th>
+          <th>Dégâts</th>
+          <th>Prix</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of filteredDistance$ | async; track item) {
+          <tr>
+            <td>{{ item.nom }}</td>
+            <td>{{ item.type }}</td>
+            <td>{{ item.effet }}</td>
+            <td>{{ item.portee }}</td>
+            <td>{{ item.degats }}</td>
+            <td>{{ item.prix }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
 </div>
 
 <div class="d-lg-none">
-	<div class="card-container">
-		<div class="card" *ngFor="let item of filteredDistance$ | async">
-			<div class="card-body">
-				<h5 class="card-title">{{ item.nom }}</h5>
-				<p class="card-text"><strong>Type:</strong> {{ item.type }}</p>
-				<p class="card-text"><strong>Effets:</strong> {{ item.effet }}</p>
-				<p class="card-text"><strong>Portée:</strong> {{ item.portee }}</p>
-				<p class="card-text"><strong>Dégâts:</strong> {{ item.degats }}</p>
-				<p class="card-text"><strong>Prix:</strong> {{ item.prix }}</p>
-			</div>
-		</div>
-	</div>
+  <div class="card-container">
+    @for (item of filteredDistance$ | async; track item) {
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{ item.nom }}</h5>
+          <p class="card-text"><strong>Type:</strong> {{ item.type }}</p>
+          <p class="card-text"><strong>Effets:</strong> {{ item.effet }}</p>
+          <p class="card-text"><strong>Portée:</strong> {{ item.portee }}</p>
+          <p class="card-text"><strong>Dégâts:</strong> {{ item.degats }}</p>
+          <p class="card-text"><strong>Prix:</strong> {{ item.prix }}</p>
+        </div>
+      </div>
+    }
+  </div>
 </div>
 
 <!-- Explosifs -->
-<h2 *ngIf="filteredExplosif$ | async as filteredExplosif">Explosifs</h2>
+@if (filteredExplosif$ | async; as filteredExplosif) {
+  <h2>Explosifs</h2>
+}
 
 <div class="d-none d-lg-block">
-	<table class="table" *ngIf="filteredExplosif$ | async as filteredExplosif">
-		<thead>
-			<tr>
-				<th>Armes</th>
-				<th>Effets</th>
-				<th>Rayon</th>
-				<th>Dégâts</th>
-				<th>Prix</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr *ngFor="let item of filteredExplosif$ | async">
-				<td>{{ item.nom }}</td>
-				<td>{{ item.effet }}</td>
-				<td>{{ item.portee }}</td>
-				<td>{{ item.degats }}</td>
-				<td>{{ item.prix }}</td>
-			</tr>
-		</tbody>
-	</table>
+  @if (filteredExplosif$ | async; as filteredExplosif) {
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Armes</th>
+          <th>Effets</th>
+          <th>Rayon</th>
+          <th>Dégâts</th>
+          <th>Prix</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of filteredExplosif$ | async; track item) {
+          <tr>
+            <td>{{ item.nom }}</td>
+            <td>{{ item.effet }}</td>
+            <td>{{ item.portee }}</td>
+            <td>{{ item.degats }}</td>
+            <td>{{ item.prix }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
 </div>
 
 <div class="d-lg-none">
-	<div class="card-container">
-		<div class="card" *ngFor="let item of filteredExplosif$ | async">
-			<div class="card-body">
-				<h5 class="card-title">{{ item.nom }}</h5>
-				<p class="card-text"><strong>Effets:</strong> {{ item.effet }}</p>
-				<p class="card-text"><strong>Rayon:</strong> {{ item.portee }}</p>
-				<p class="card-text"><strong>Dégâts:</strong> {{ item.degats }}</p>
-				<p class="card-text"><strong>Prix:</strong> {{ item.prix }}</p>
-			</div>
-		</div>
-	</div>
+  <div class="card-container">
+    @for (item of filteredExplosif$ | async; track item) {
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{ item.nom }}</h5>
+          <p class="card-text"><strong>Effets:</strong> {{ item.effet }}</p>
+          <p class="card-text"><strong>Rayon:</strong> {{ item.portee }}</p>
+          <p class="card-text"><strong>Dégâts:</strong> {{ item.degats }}</p>
+          <p class="card-text"><strong>Prix:</strong> {{ item.prix }}</p>
+        </div>
+      </div>
+    }
+  </div>
 </div>
 
 <!-- Armes de siège -->
-<h2 *ngIf="filteredSiege$ | async as filteredSiege">Armes de siège</h2>
+@if (filteredSiege$ | async; as filteredSiege) {
+  <h2>Armes de siège</h2>
+}
 
 <div class="d-none d-lg-block">
-	<table class="table" *ngIf="filteredSiege$ | async as filteredSiege">
-		<thead>
-			<tr>
-				<th>Armes</th>
-				<th>Effets</th>
-				<th>Portée</th>
-				<th>Dégâts</th>
-				<th>Prix</th>
-				<th>Munitions</th>
-				<th>Prix des munitions</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr *ngFor="let item of filteredSiege$ | async">
-				<td>{{ item.nom }}</td>
-				<td>{{ item.effet }}</td>
-				<td>{{ item.portee }}</td>
-				<td>{{ item.degats }}</td>
-				<td>{{ item.prix }}</td>
-				<td>{{ item.munitions }}</td>
-				<td>{{ item.prixMunitions }}</td>
-			</tr>
-		</tbody>
-	</table>
+  @if (filteredSiege$ | async; as filteredSiege) {
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Armes</th>
+          <th>Effets</th>
+          <th>Portée</th>
+          <th>Dégâts</th>
+          <th>Prix</th>
+          <th>Munitions</th>
+          <th>Prix des munitions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of filteredSiege$ | async; track item) {
+          <tr>
+            <td>{{ item.nom }}</td>
+            <td>{{ item.effet }}</td>
+            <td>{{ item.portee }}</td>
+            <td>{{ item.degats }}</td>
+            <td>{{ item.prix }}</td>
+            <td>{{ item.munitions }}</td>
+            <td>{{ item.prixMunitions }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
 </div>
 
 <div class="d-lg-none">
-	<div class="card-container">
-		<div class="card" *ngFor="let item of filteredSiege$ | async">
-			<div class="card-body">
-				<h5 class="card-title">{{ item.nom }}</h5>
-				<p class="card-text"><strong>Effets:</strong> {{ item.effet }}</p>
-				<p class="card-text"><strong>Portée:</strong> {{ item.portee }}</p>
-				<p class="card-text"><strong>Dégâts:</strong> {{ item.degats }}</p>
-				<p class="card-text"><strong>Prix:</strong> {{ item.prix }}</p>
-				<p class="card-text"><strong>Munitions:</strong> {{ item.munitions }}</p>
-				<p class="card-text"><strong>Prix des munitions:</strong> {{ item.prixMunitions }}</p>
-			</div>
-		</div>
-	</div>
+  <div class="card-container">
+    @for (item of filteredSiege$ | async; track item) {
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{ item.nom }}</h5>
+          <p class="card-text"><strong>Effets:</strong> {{ item.effet }}</p>
+          <p class="card-text"><strong>Portée:</strong> {{ item.portee }}</p>
+          <p class="card-text"><strong>Dégâts:</strong> {{ item.degats }}</p>
+          <p class="card-text"><strong>Prix:</strong> {{ item.prix }}</p>
+          <p class="card-text"><strong>Munitions:</strong> {{ item.munitions }}</p>
+          <p class="card-text"><strong>Prix des munitions:</strong> {{ item.prixMunitions }}</p>
+        </div>
+      </div>
+    }
+  </div>
 </div>

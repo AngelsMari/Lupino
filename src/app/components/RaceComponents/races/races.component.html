@@ -1,37 +1,47 @@
 <div class="container mt-4">
-    <div *ngIf="isAdmin" class="mt-4">
-        <button class="btn btn-primary" (click)="openCreateRaceModal()">Créer une nouvelle race</button>
+  @if (isAdmin) {
+    <div class="mt-4">
+      <button class="btn btn-primary" (click)="openCreateRaceModal()">Créer une nouvelle race</button>
+    </div>
+  }
+  <!-- Section pour les races communes -->
+  <h2>Races Communes</h2>
+  <div class="row">
+    @for (race of commonRaces; track race) {
+      <div class="col-md-4 mb-3">
+        <div class="card race-card">
+          <div class="card-body">
+            <h5 class="card-title">{{ race.name }}</h5>
+            <p class="card-text hidden-info">{{ race.trait }}</p>
+          </div>
+        </div>
       </div>
-    <!-- Section pour les races communes -->
-    <h2>Races Communes</h2>
-    <div class="row">
-        <div class="col-md-4 mb-3" *ngFor="let race of commonRaces">
-            <div class="card race-card">
-                <div class="card-body">
-                    <h5 class="card-title">{{ race.name }}</h5>
-                    <p class="card-text hidden-info">{{ race.trait }}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-     <!-- Bouton semi-visible pour afficher les races exotiques -->
-    <button class="toggle-exotic-btn" (click)="toggleExoticVisibility()">
-        <span *ngIf="!isExoticVisible">Afficher les Races Exotiques</span>
-        <span *ngIf="isExoticVisible">Masquer les Races Exotiques</span>
-    </button>
-    <!-- Section pour les races inhabituelles -->
-    <div class="row exotic-races" [ngClass]="{'hidden': !isExoticVisible}">
-        <h2>Races Exotiques/Inhabituelles</h2>
+    }
+  </div>
 
-        <div class="col-md-4 mb-3" *ngFor="let race of exoticRaces">
-            <div class="card race-card">
-                <div class="card-body">
-                    <h5 class="card-title">{{ race.name }}</h5>
-                    <p class="card-text hidden-info">{{ race.trait }}</p>
-                </div>
-            </div>
+  <!-- Bouton semi-visible pour afficher les races exotiques -->
+  <button class="toggle-exotic-btn" (click)="toggleExoticVisibility()">
+    @if (!isExoticVisible) {
+      <span>Afficher les Races Exotiques</span>
+    }
+    @if (isExoticVisible) {
+      <span>Masquer les Races Exotiques</span>
+    }
+  </button>
+  <!-- Section pour les races inhabituelles -->
+  <div class="row exotic-races" [ngClass]="{'hidden': !isExoticVisible}">
+    <h2>Races Exotiques/Inhabituelles</h2>
+
+    @for (race of exoticRaces; track race) {
+      <div class="col-md-4 mb-3">
+        <div class="card race-card">
+          <div class="card-body">
+            <h5 class="card-title">{{ race.name }}</h5>
+            <p class="card-text hidden-info">{{ race.trait }}</p>
+          </div>
         </div>
-    </div>
-    
+      </div>
+    }
+  </div>
+
 </div>
