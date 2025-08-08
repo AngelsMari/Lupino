@@ -5,9 +5,10 @@ import { ArmureService } from '../../../services/LupinoApi/items/armure.service'
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-	selector: 'app-create-armure',
-	templateUrl: './create-armure.component.html',
-	styleUrls: ['./create-armure.component.css']
+    selector: 'app-create-armure',
+    templateUrl: './create-armure.component.html',
+    styleUrls: ['./create-armure.component.css'],
+    standalone: false
 })
 export class CreateArmureComponent {
 	armureForm: FormGroup;

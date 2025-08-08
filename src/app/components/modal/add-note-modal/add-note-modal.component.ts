@@ -3,9 +3,10 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'app-add-note-modal',
-  templateUrl: './add-note-modal.component.html',
-  styleUrls: ['./add-note-modal.component.css']
+    selector: 'app-add-note-modal',
+    templateUrl: './add-note-modal.component.html',
+    styleUrls: ['./add-note-modal.component.css'],
+    standalone: false
 })
 export class AddNoteModalComponent implements OnInit {
   noteForm: FormGroup;

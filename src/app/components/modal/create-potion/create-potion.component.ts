@@ -5,9 +5,10 @@ import { PotionService } from '../../../services/LupinoApi/items/potion.service'
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-	selector: 'app-create-potion',
-	templateUrl: './create-potion.component.html',
-	styleUrls: ['./create-potion.component.css']
+    selector: 'app-create-potion',
+    templateUrl: './create-potion.component.html',
+    styleUrls: ['./create-potion.component.css'],
+    standalone: false
 })
 export class CreatePotionComponent {
 	potionForm: FormGroup;

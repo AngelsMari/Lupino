@@ -9,9 +9,10 @@ import { ToastrService } from 'ngx-toastr';
 import { environment } from '../../../../environments/environements'; // Ajustez le chemin si nécessaire
 
 @Component({
-	selector: 'app-create-character',
-	templateUrl: './create-character.component.html',
-	styleUrls: ['./create-character.component.css'],
+    selector: 'app-create-character',
+    templateUrl: './create-character.component.html',
+    styleUrls: ['./create-character.component.css'],
+    standalone: false
 })
 export class CreateCharacterComponent {
 	step = 1; // Pour suivre la progression des étapes

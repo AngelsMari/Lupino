@@ -9,7 +9,8 @@ import { AddNoteModalComponent } from '../../modal/add-note-modal/add-note-modal
 @Component({
     selector: 'app-campagne-detail',
     templateUrl: './campagne-detail.component.html',
-    styleUrls: ['./campagne-detail.component.css']
+    styleUrls: ['./campagne-detail.component.css'],
+    standalone: false
 })
 export class CampagneDetailComponent implements OnInit {
     campagne: Campagne | null = null;

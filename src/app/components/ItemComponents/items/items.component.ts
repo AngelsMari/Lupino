@@ -28,9 +28,10 @@ import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, startWith } from 'rxjs/operators';
 
 @Component({
-	selector: 'app-items',
-	templateUrl: './items.component.html',
-	styleUrls: ['./items.component.css'],
+    selector: 'app-items',
+    templateUrl: './items.component.html',
+    styleUrls: ['./items.component.css'],
+    standalone: false
 })
 export class ItemsComponent {
 	armurelegere$!: Observable<Armure[]>;

@@ -5,9 +5,10 @@ import { UserService } from 'app/services/LupinoApi/user.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
-	selector: 'app-reset-password',
-	templateUrl: './reset-password.component.html',
-	styleUrl: './reset-password.component.css',
+    selector: 'app-reset-password',
+    templateUrl: './reset-password.component.html',
+    styleUrl: './reset-password.component.css',
+    standalone: false
 })
 export class ResetPasswordComponent {
 	resetForm: FormGroup;

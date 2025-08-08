@@ -5,9 +5,10 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Contenant } from '../../../models/items/contenant';
 
 @Component({
-	selector: 'app-create-contenant',
-	templateUrl: './create-contenant.component.html',
-	styleUrl: './create-contenant.component.css'
+    selector: 'app-create-contenant',
+    templateUrl: './create-contenant.component.html',
+    styleUrl: './create-contenant.component.css',
+    standalone: false
 })
 export class CreateContenantComponent {
 	contenantForm: FormGroup;

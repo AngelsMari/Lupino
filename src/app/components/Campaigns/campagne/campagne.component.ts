@@ -10,7 +10,8 @@ import { UserService } from '../../../services/LupinoApi/user.service';
 @Component({
     selector: 'app-campagne',
     templateUrl: './campagne.component.html',
-    styleUrl: './campagne.component.css'
+    styleUrl: './campagne.component.css',
+    standalone: false
 })
 export class CampagneComponent {
     campagnes: Campagne[] = [];

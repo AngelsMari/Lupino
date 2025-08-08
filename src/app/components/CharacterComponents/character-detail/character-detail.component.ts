@@ -10,10 +10,11 @@ import { first, forkJoin } from 'rxjs';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
-	selector: 'app-character-detail',
-	templateUrl: './character-detail.component.html',
-	styleUrl: './character-detail.component.css',
-	encapsulation: ViewEncapsulation.None,
+    selector: 'app-character-detail',
+    templateUrl: './character-detail.component.html',
+    styleUrl: './character-detail.component.css',
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class CharacterDetailComponent {
 	character: Character | undefined;

@@ -5,9 +5,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'app-create-utilitaire',
-  templateUrl: './create-utilitaire.component.html',
-  styleUrl: './create-utilitaire.component.css'
+    selector: 'app-create-utilitaire',
+    templateUrl: './create-utilitaire.component.html',
+    styleUrl: './create-utilitaire.component.css',
+    standalone: false
 })
 export class CreateUtilitaireComponent {
   utilitaireForm: FormGroup;

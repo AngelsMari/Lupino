@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-contenant-component',
-  templateUrl: './contenant-component.component.html',
-  styleUrl: './contenant-component.component.css'
+    selector: 'app-contenant-component',
+    templateUrl: './contenant-component.component.html',
+    styleUrl: './contenant-component.component.css',
+    standalone: false
 })
 export class ContenantComponentComponent {
 

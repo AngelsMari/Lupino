@@ -8,7 +8,8 @@ import { RaceCreateComponent } from '../../modal/race-create/race-createcomponen
 @Component({
     selector: 'app-races',
     templateUrl: './races.component.html',
-    styleUrl: './races.component.css'
+    styleUrl: './races.component.css',
+    standalone: false
 })
 export class RacesComponent {
     commonRaces: Race[] = [];

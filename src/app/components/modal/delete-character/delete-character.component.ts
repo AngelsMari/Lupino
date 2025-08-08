@@ -2,9 +2,10 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'app-delete-character-modal',
-  templateUrl: './delete-character-modal.component.html',
-  styleUrls: ['./delete-character-modal.component.css']
+    selector: 'app-delete-character-modal',
+    templateUrl: './delete-character-modal.component.html',
+    styleUrls: ['./delete-character-modal.component.css'],
+    standalone: false
 })
 export class DeleteCharacterModalComponent {
   @Input() character: any; // Reçoit les données du personnage à supprimer

@@ -5,9 +5,10 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Bazar } from '../../../models/items/bazar';
 
 @Component({
-  selector: 'app-create-bazar',
-  templateUrl: './create-bazar.component.html',
-  styleUrl: './create-bazar.component.css'
+    selector: 'app-create-bazar',
+    templateUrl: './create-bazar.component.html',
+    styleUrl: './create-bazar.component.css',
+    standalone: false
 })
 export class CreateBazarComponent {
   bazarForm: FormGroup;

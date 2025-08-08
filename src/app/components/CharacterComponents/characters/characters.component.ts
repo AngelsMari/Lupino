@@ -11,9 +11,10 @@ import { UserService } from 'app/services/LupinoApi/user.service';
 import { UserPublicData } from 'app/models/userpublicdata';
 
 @Component({
-	selector: 'app-characters',
-	templateUrl: './characters.component.html',
-	styleUrl: './characters.component.css',
+    selector: 'app-characters',
+    templateUrl: './characters.component.html',
+    styleUrl: './characters.component.css',
+    standalone: false
 })
 export class CharactersComponent {
 	characters$ = combineLatest([

@@ -5,9 +5,10 @@ import { ArmeService } from '../../../services/LupinoApi/items/arme.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap'; // Si tu utilises ng-bootstrap
 
 @Component({
-  selector: 'app-create-arme',
-  templateUrl: './create-arme.component.html',
-  styleUrls: ['./create-arme.component.css']
+    selector: 'app-create-arme',
+    templateUrl: './create-arme.component.html',
+    styleUrls: ['./create-arme.component.css'],
+    standalone: false
 })
 export class CreateArmeComponent {
   armeForm: FormGroup;

@@ -8,7 +8,8 @@ import { Character } from '../../../models/character';
 @Component({
     selector: 'app-create-campagne',
     templateUrl: './create-campagne.component.html',
-    styleUrl: './create-campagne.component.css'
+    styleUrl: './create-campagne.component.css',
+    standalone: false
 })
 export class CreateCampagneComponent {
     campagneForm: FormGroup;

@@ -5,9 +5,10 @@ import { UserService } from 'app/services/LupinoApi/user.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
-	selector: 'app-password-forgotten',
-	templateUrl: './password-forgotten.component.html',
-	styleUrl: './password-forgotten.component.css',
+    selector: 'app-password-forgotten',
+    templateUrl: './password-forgotten.component.html',
+    styleUrl: './password-forgotten.component.css',
+    standalone: false
 })
 export class PasswordForgottenComponent {
 	forgotForm: FormGroup;

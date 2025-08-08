@@ -7,9 +7,10 @@ import { ArmeService } from 'app/services/LupinoApi/items/arme.service';
 import { BehaviorSubject, catchError, combineLatest, map, Observable, of, shareReplay } from 'rxjs';
 
 @Component({
-	selector: 'app-arme-component',
-	templateUrl: './arme-component.component.html',
-	styleUrl: './arme-component.component.css',
+    selector: 'app-arme-component',
+    templateUrl: './arme-component.component.html',
+    styleUrl: './arme-component.component.css',
+    standalone: false
 })
 export class ArmeComponentComponent {
 	@Input() isAdmin$!: Observable<boolean>;
