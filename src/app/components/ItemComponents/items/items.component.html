@@ -1,100 +1,74 @@
 <div class="container">
 	<ul class="nav nav-tabs" id="itemsTabs" role="tablist">
 		<li class="nav-item" role="presentation">
-			<button
-				class="nav-link active"
-				id="armes-tab"
-				data-bs-toggle="tab"
-				data-bs-target="#armes"
-				type="button"
-				role="tab"
-				aria-controls="armes"
-				aria-selected="true"
-			>
-				<span class="material-symbols-outlined">swords</span>
-
-				Armes
+			<button class="nav-link" [class.active]="activeTab === 'armes'" id="armes-tab" (click)="setActiveTab('armes')">Armes</button>
+		</li>
+		<li>
+			<button class="nav-link" [class.active]="activeTab === 'armures'" id="armures-tab" (click)="setActiveTab('armures')">Armures</button>
+		</li>
+		<li>
+			<button class="nav-link" [class.active]="activeTab === 'potions'" id="potion-tab" (click)="setActiveTab('potions')">Potions</button>
+		</li>
+		<li>
+			<button class="nav-link" [class.active]="activeTab === 'poisons'" id="poison-tab" (click)="setActiveTab('poisons')">Poisons</button>
+		</li>
+		<li>
+			<button class="nav-link" [class.active]="activeTab === 'contenants'" id="contenants-tab" (click)="setActiveTab('contenants')">
+				Contenants
 			</button>
 		</li>
 		<li>
-			<button
-				class="nav-link"
-				id="armures-tab"
-				data-bs-toggle="tab"
-				data-bs-target="#armures"
-				type="button"
-				role="tab"
-				aria-controls="armures"
-				aria-selected="false"
-			>
-				<span class="material-symbols-outlined">shield</span>
-
-				Armures
-			</button>
-		</li>
-		<li>
-			<button
-				class="nav-link"
-				id="potion-tab"
-				data-bs-toggle="tab"
-				data-bs-target="#potions"
-				type="button"
-				role="tab"
-				aria-controls="potions"
-				aria-selected="false"
-			>
-				Potions
-			</button>
-		</li>
-		<li>
-			<button
-				class="nav-link"
-				id="poison-tab"
-				data-bs-toggle="tab"
-				data-bs-target="#poisons"
-				type="button"
-				role="tab"
-				aria-controls="poisons"
-				aria-selected="false"
-			>
-				Poisons
-			</button>
-		</li>
-
-		<li>
-			<button
-				class="nav-link"
-				id="utilitaire-tab"
-				data-bs-toggle="tab"
-				data-bs-target="#utilitaires"
-				type="button"
-				role="tab"
-				aria-controls="utilitaires"
-				aria-selected="false"
-			>
+			<button class="nav-link" [class.active]="activeTab === 'utilitaires'" id="utilitaire-tab" (click)="setActiveTab('utilitaires')">
 				Utilitaires
 			</button>
 		</li>
 		<li>
-			<button
-				class="nav-link"
-				id="autres-tab"
-				data-bs-toggle="tab"
-				data-bs-target="#autres"
-				type="button"
-				role="tab"
-				aria-controls="autres"
-				aria-selected="false"
-			>
-				Autres
-			</button>
+			<button class="nav-link" [class.active]="activeTab === 'autres'" id="autres-tab" (click)="setActiveTab('autres')">Autres</button>
 		</li>
 	</ul>
 
 	<div class="tab-content" id="itemsTabsContent">
-		<div class="tab-pane fade show active" id="armes" role="tabpanel" aria-labelledby="armes-tab">
+		<div class="tab-pane fade show" id="armes" role="tabpanel" aria-labelledby="armes-tab" [class.active]="activeTab === 'armes'">
 			<!-- Appel du component armes -->
-			<app-arme-component [isAdmin$]="isAdmin$" [isInCharacterCreation]="isInCharacterCreation"></app-arme-component>
+			@if (activeTab === 'armes') {
+				<app-arme-component [isAdmin$]="isAdmin$" [isInCharacterCreation]="isInCharacterCreation"></app-arme-component>
+			}
+		</div>
+		<div class="tab-pane fade show" id="armures" role="tabpanel" aria-labelledby="armures-tab" [class.active]="activeTab === 'armures'">
+			@if (activeTab === 'armures') {
+				<app-armure-component [isAdmin$]="isAdmin$" [isInCharacterCreation]="isInCharacterCreation"></app-armure-component>
+			}
+		</div>
+		<div class="tab-pane fade show" id="potions" role="tabpanel" aria-labelledby="potion-tab" [class.active]="activeTab === 'potions'">
+			@if (activeTab === 'potions') {
+				<app-potion-component [isAdmin$]="isAdmin$" [isInCharacterCreation]="isInCharacterCreation"></app-potion-component>
+			}
+		</div>
+		<div class="tab-pane fade show" id="poisons" role="tabpanel" aria-labelledby="poison-tab" [class.active]="activeTab === 'poisons'">
+			@if (activeTab === 'poisons') {
+				<app-poison-component [isAdmin$]="isAdmin$" [isInCharacterCreation]="isInCharacterCreation"></app-poison-component>
+			}
+		</div>
+		<div
+			class="tab-pane fade show"
+			id="utilitaires"
+			role="tabpanel"
+			aria-labelledby="utilitaire-tab"
+			[class.active]="activeTab === 'utilitaires'"
+		>
+			@if (activeTab === 'utilitaires') {
+				<app-utilitaire-component [isAdmin$]="isAdmin$" [isInCharacterCreation]="isInCharacterCreation"></app-utilitaire-component>
+			}
+		</div>
+		<div class="tab-pane fade show" id="autres" role="tabpanel" aria-labelledby="autres-tab" [class.active]="activeTab === 'autres'">
+			@if (activeTab === 'autres') {
+				<app-bazar-component [isAdmin$]="isAdmin$" [isInCharacterCreation]="isInCharacterCreation"></app-bazar-component>
+			}
+		</div>
+		<div class="tab-pane fade show" id="contenants" role="tabpanel" aria-labelledby="contenants-tab" [class.active]="activeTab === 'contenants'">
+			@if (activeTab === 'contenants') {
+				<app-contenant-component [isAdmin$]="isAdmin$" [isInCharacterCreation]="isInCharacterCreation"></app-contenant-component>
+			}
 		</div>
 
 		<!-- Exemple d'autres tabs -->

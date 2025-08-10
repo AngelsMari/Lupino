@@ -28,48 +28,28 @@ import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, startWith } from 'rxjs/operators';
 
 @Component({
-    selector: 'app-items',
-    templateUrl: './items.component.html',
-    styleUrls: ['./items.component.css'],
-    standalone: false
+	selector: 'app-items',
+	templateUrl: './items.component.html',
+	styleUrls: ['./items.component.css'],
+	standalone: false,
 })
 export class ItemsComponent {
-	armurelegere$!: Observable<Armure[]>;
-	armureinter$!: Observable<Armure[]>;
-	armurelourde$!: Observable<Armure[]>;
-
-	potions$!: Observable<Potion[]>;
-	poisons$!: Observable<Poison[]>;
-	utilitaires$!: Observable<Utilitaire[]>;
 	contenants$!: Observable<Contenant[]>;
-	bazars$!: Observable<Bazar[]>;
 
 	isAdmin$!: Observable<boolean>;
 	isInCharacterCreation = false;
 
-	// searchText sous forme de BehaviorSubject pour rendre la recherche réactive
-	private searchTextSubject = new BehaviorSubject<string>('');
-	searchText$ = this.searchTextSubject.asObservable();
+	activeTab = 'armes';
 
 	constructor(
 		private modalService: NgbModal,
-		private armureService: ArmureService,
-		private potionService: PotionService,
-		private poisonService: PoisonService,
-		private utilitaireService: UtilitaireService,
 		private contenantService: ContenantService,
-		private bazarService: BazarService,
 		private router: Router,
 		private userService: UserService,
 	) {}
 
 	ngOnInit(): void {
-		this.loadArmures();
-		this.loadPotions();
-		this.loadPoisons();
-		this.loadUtilitaires();
 		this.loadContenants();
-		this.loadBazars();
 		this.checkIfAdmin();
 
 		if (this.router.url.startsWith('/create-character')) {
@@ -77,47 +57,8 @@ export class ItemsComponent {
 		}
 	}
 
-	private loadArmures(): void {
-		const armures$ = this.armureService.getArmures().pipe(
-			catchError(() => of([])),
-			shareReplay(1),
-		);
-
-		this.armurelegere$ = armures$.pipe(map((armures) => armures.filter((a) => a.categorie === 'légère')));
-		this.armureinter$ = armures$.pipe(map((armures) => armures.filter((a) => a.categorie === 'intermédiaire')));
-		this.armurelourde$ = armures$.pipe(map((armures) => armures.filter((a) => a.categorie === 'lourde')));
-	}
-
-	private loadPotions(): void {
-		this.potions$ = this.potionService.getPotions().pipe(
-			catchError(() => of([])),
-			shareReplay(1),
-		);
-	}
-
-	private loadPoisons(): void {
-		this.poisons$ = this.poisonService.getPoisons().pipe(
-			catchError(() => of([])),
-			shareReplay(1),
-		);
-	}
-
-	private loadUtilitaires(): void {
-		this.utilitaires$ = this.utilitaireService.getUtilitaires().pipe(
-			catchError(() => of([])),
-			shareReplay(1),
-		);
-	}
-
 	private loadContenants(): void {
 		this.contenants$ = this.contenantService.getContenant().pipe(
-			catchError(() => of([])),
-			shareReplay(1),
-		);
-	}
-
-	private loadBazars(): void {
-		this.bazars$ = this.bazarService.getBazars().pipe(
 			catchError(() => of([])),
 			shareReplay(1),
 		);
@@ -131,142 +72,7 @@ export class ItemsComponent {
 		);
 	}
 
-	// --- Recherche réactive ---
-	// Méthodes pour mettre à jour le search text depuis le template
-	onSearchTextChanged(text: string) {
-		this.searchTextSubject.next(text);
-	}
-
-	// Fonction générique de filtre pour armures
-	filterArmures(armures$: Observable<Armure[]>): Observable<Armure[]> {
-		return combineLatest([armures$, this.searchText$]).pipe(
-			map(([armures, searchText]) => {
-				const s = searchText.toLowerCase();
-				return armures.filter(
-					(armure) =>
-						armure.nom.toLowerCase().includes(s) ||
-						armure.description.toLowerCase().includes(s) ||
-						armure.statistiques?.toLowerCase().includes(s) ||
-						armure.prix?.toString().includes(s),
-				);
-			}),
-		);
-	}
-
-	// Fonction générique de filtre pour potions, poisons, utilitaires, contenants, bazars
-	filterItems<T extends { nom: string; effet?: string; prix?: any }>(items$: Observable<T[]>): Observable<T[]> {
-		return combineLatest([items$, this.searchText$]).pipe(
-			map(([items, searchText]) => {
-				const s = searchText.toLowerCase();
-				return items.filter(
-					(item) => item.nom.toLowerCase().includes(s) || item.effet?.toLowerCase().includes(s) || item.prix?.toString().includes(s),
-				);
-			}),
-		);
-	}
-
-	// --- Getters exposés pour le template avec filtres appliqués ---
-	get filteredArmuresLeg$() {
-		return this.filterArmures(this.armurelegere$);
-	}
-
-	get filteredArmuresInter$() {
-		return this.filterArmures(this.armureinter$);
-	}
-
-	get filteredArmuresLourdes$() {
-		return this.filterArmures(this.armurelourde$);
-	}
-
-	get filteredPotions$() {
-		return this.filterItems(this.potions$);
-	}
-
-	get filteredPoisons$() {
-		return this.filterItems(this.poisons$);
-	}
-
-	get filteredUtilitaires$() {
-		return this.filterItems(this.utilitaires$);
-	}
-
-	get filteredContenants$() {
-		return this.filterItems(this.contenants$);
-	}
-
-	get filteredBazars$() {
-		return this.filterItems(this.bazars$);
-	}
-
-	openCreateArmureModal(): void {
-		const modalRef = this.modalService.open(CreateArmureComponent);
-		modalRef.result.then(
-			(result) => {
-				if (result === 'created') this.loadArmures();
-			},
-			(reason) => {
-				console.log('Modale fermée:', reason);
-			},
-		);
-	}
-
-	openCreatePotionModal(): void {
-		const modalRef = this.modalService.open(CreatePotionComponent);
-		modalRef.result.then(
-			(result) => {
-				if (result === 'created') this.loadPotions();
-			},
-			(reason) => {
-				console.log('Modale fermée:', reason);
-			},
-		);
-	}
-
-	openCreatePoisonModal(): void {
-		const modalRef = this.modalService.open(CreatePoisonComponent);
-		modalRef.result.then(
-			(result) => {
-				if (result === 'created') this.loadPoisons();
-			},
-			(reason) => {
-				console.log('Modale fermée:', reason);
-			},
-		);
-	}
-
-	openCreateUtilitaireModal(): void {
-		const modalRef = this.modalService.open(CreateUtilitaireComponent);
-		modalRef.result.then(
-			(result) => {
-				if (result === 'created') this.loadUtilitaires();
-			},
-			(reason) => {
-				console.log('Modale fermée:', reason);
-			},
-		);
-	}
-
-	openCreateContenantModal(): void {
-		const modalRef = this.modalService.open(CreateContenantComponent);
-		modalRef.result.then(
-			(result) => {
-				if (result === 'created') this.loadContenants();
-			},
-			(reason) => {
-				console.log('Modale fermée:', reason);
-			},
-		);
-	}
-
-	openCreateBazarModal(): void {
-		const modalRef = this.modalService.open(CreateBazarComponent);
-		modalRef.result.then(
-			(result) => {
-				if (result === 'created') this.loadBazars();
-			},
-			(reason) => {
-				console.log('Modale fermée:', reason);
-			},
-		);
+	setActiveTab(tab: string) {
+		this.activeTab = tab;
 	}
 }

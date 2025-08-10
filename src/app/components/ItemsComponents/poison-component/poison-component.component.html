@@ -1,1 +1,45 @@
-<p>poison-component works!</p>
+<div class="search-container">
+	<input type="text" class="search-input ng-untouched ng-pristine ng-valid" placeholder="Rechercher un poison..." [(ngModel)]="searchText" />
+	@if ((isAdmin$ | async) && !isInCharacterCreation) {
+		<div>
+			<button class="add-button" (click)="openCreatePoisonModal()"><i class="bi bi-sign-intersection-fill"></i> Ajouter un poison</button>
+		</div>
+	}
+</div>
+
+@if (poisons$ | async | filterList: searchText : filterFn; as filteredPoisons) {
+	<h2>Poisons</h2>
+
+	<div class="d-none d-lg-block">
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Nom</th>
+					<th>Effets</th>
+					<th>Prix</th>
+				</tr>
+			</thead>
+			<tbody>
+				@for (item of filteredPoisons; track item) {
+					<tr>
+						<td>{{ item.nom }}</td>
+						<td>{{ item.effet }}</td>
+						<td>{{ item.prix }}</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+
+	<div class="container d-md-none">
+		@for (item of filteredPoisons; track item) {
+			<div class="card mb-3">
+				<div class="card-body">
+					<h5 class="card-title">{{ item.nom }}</h5>
+					<p class="card-text"><strong>Effets :</strong> {{ item.effet }}</p>
+					<p class="card-text"><strong>Prix :</strong> {{ item.prix }}</p>
+				</div>
+			</div>
+		}
+	</div>
+}

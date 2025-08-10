@@ -7,10 +7,10 @@ import { ArmeService } from 'app/services/LupinoApi/items/arme.service';
 import { BehaviorSubject, catchError, combineLatest, map, Observable, of, shareReplay } from 'rxjs';
 
 @Component({
-    selector: 'app-arme-component',
-    templateUrl: './arme-component.component.html',
-    styleUrl: './arme-component.component.css',
-    standalone: false
+	selector: 'app-arme-component',
+	templateUrl: './arme-component.component.html',
+	styleUrl: './arme-component.component.css',
+	standalone: false,
 })
 export class ArmeComponentComponent {
 	@Input() isAdmin$!: Observable<boolean>;
@@ -22,9 +22,20 @@ export class ArmeComponentComponent {
 	siege$!: Observable<Arme[]>;
 	explosif$!: Observable<Arme[]>;
 
+	filterFn = (item: Arme, search: string) =>
+		item.nom.toLowerCase().includes(search) ||
+		item.type.toLowerCase().includes(search) ||
+		item.effet?.toLowerCase().includes(search) ||
+		item.degats?.toString().includes(search) ||
+		item.prix?.toString().includes(search);
+
 	searchText = '';
 
-	constructor(private armeService: ArmeService, private router: Router, private modalService: NgbModal) {
+	constructor(
+		private armeService: ArmeService,
+		private router: Router,
+		private modalService: NgbModal,
+	) {
 		this.loadArmes();
 		if (this.router.url.startsWith('/create-character')) {
 			this.isInCharacterCreation = true;
@@ -49,42 +60,6 @@ export class ArmeComponentComponent {
 			value = '';
 		}
 		this.searchText = value;
-	}
-
-	// Fonction générique de filtre pour armes
-	filterArmes(armes$: Observable<Arme[]>): Observable<Arme[]> {
-		return combineLatest([armes$, of(this.searchText)]).pipe(
-			map(([armes, searchText]) => {
-				const s = searchText.toLowerCase();
-				return armes.filter(
-					(arme) =>
-						arme.nom.toLowerCase().includes(s) ||
-						arme.type.toLowerCase().includes(s) ||
-						arme.effet?.toLowerCase().includes(s) ||
-						arme.degats?.toString().includes(s) ||
-						arme.portee?.toString().includes(s) ||
-						arme.prix?.toString().includes(s) ||
-						arme.munitions?.toString().includes(s) ||
-						arme.prixMunitions?.toString().includes(s),
-				);
-			}),
-		);
-	}
-
-	get filteredArmesCac$() {
-		return this.filterArmes(this.armesCac$);
-	}
-
-	get filteredDistance$() {
-		return this.filterArmes(this.distance$);
-	}
-
-	get filteredSiege$() {
-		return this.filterArmes(this.siege$);
-	}
-
-	get filteredExplosif$() {
-		return this.filterArmes(this.explosif$);
 	}
 
 	// --- Méthodes modales ---

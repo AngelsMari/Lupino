@@ -1,1 +1,135 @@
-<p>armure-component works!</p>
+<!-- Armes -->
+<!-- Barre de recherche -->
+<div class="search-container">
+	<input type="text" class="search-input ng-untouched ng-pristine ng-valid" placeholder="Rechercher une armure..." [(ngModel)]="searchText" />
+	@if ((isAdmin$ | async) && !isInCharacterCreation) {
+		<div>
+			<button class="add-button" (click)="openCreateArmureModal()"><i class="bi bi-sign-intersection-fill"></i> Ajouter une armure</button>
+		</div>
+	}
+</div>
+
+<!-- Armes corps à corps -->
+@if (filteredArmuresLeg$ | async | filterList: searchText : filterFn; as filteredArmuresLeg) {
+	<h2>Armure légère</h2>
+
+	<div class="d-none d-lg-block">
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Armures</th>
+					<th>Description</th>
+					<th>Statistique</th>
+					<th>Prix</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				@for (item of filteredArmuresLeg; track item) {
+					<tr>
+						<td>{{ item.nom }}</td>
+						<td>{{ item.description }}</td>
+						<td>{{ item.statistiques }}</td>
+						<td>{{ item.prix }}</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+
+	<div class="container d-md-none">
+		@for (item of filteredArmuresLeg; track item) {
+			<div class="card mb-3">
+				<div class="card-body">
+					<h5 class="card-title">{{ item.nom }}</h5>
+					<p class="card-text"><strong>Description :</strong> {{ item.description }}</p>
+					<p class="card-text"><strong>Statistiques :</strong> {{ item.statistiques }}</p>
+					<p class="card-text"><strong>Prix :</strong> {{ item.prix }}</p>
+				</div>
+			</div>
+		}
+	</div>
+}
+
+@if (filteredArmuresInter$ | async | filterList: searchText : filterFn; as filteredArmuresInter) {
+	<h2>Armure intermédiaire</h2>
+
+	<div class="d-none d-lg-block">
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Armures</th>
+					<th>Description</th>
+					<th>Statistique</th>
+					<th>Prix</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				@for (item of filteredArmuresInter; track item) {
+					<tr>
+						<td>{{ item.nom }}</td>
+						<td>{{ item.description }}</td>
+						<td>{{ item.statistiques }}</td>
+						<td>{{ item.prix }}</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+
+	<div class="container d-md-none">
+		@for (item of filteredArmuresInter; track item) {
+			<div class="card mb-3">
+				<div class="card-body">
+					<h5 class="card-title">{{ item.nom }}</h5>
+					<p class="card-text"><strong>Description :</strong> {{ item.description }}</p>
+					<p class="card-text"><strong>Statistiques :</strong> {{ item.statistiques }}</p>
+					<p class="card-text"><strong>Prix :</strong> {{ item.prix }}</p>
+				</div>
+			</div>
+		}
+	</div>
+}
+
+@if (filteredArmuresLourdes$ | async | filterList: searchText : filterFn; as filteredArmuresLourdes) {
+	<h2>Armure lourde</h2>
+
+	<div class="d-none d-lg-block">
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Armures</th>
+					<th>Description</th>
+					<th>Statistique</th>
+					<th>Prix</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				@for (item of filteredArmuresLourdes; track item) {
+					<tr>
+						<td>{{ item.nom }}</td>
+						<td>{{ item.description }}</td>
+						<td>{{ item.statistiques }}</td>
+						<td>{{ item.prix }}</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+
+	<div class="container d-md-none">
+		<h2>Armures lourde</h2>
+		@for (item of filteredArmuresLourdes; track item) {
+			<div class="card mb-3">
+				<div class="card-body">
+					<h5 class="card-title">{{ item.nom }}</h5>
+					<p class="card-text"><strong>Description :</strong> {{ item.description }}</p>
+					<p class="card-text"><strong>Statistiques :</strong> {{ item.statistiques }}</p>
+					<p class="card-text"><strong>Prix :</strong> {{ item.prix }}</p>
+				</div>
+			</div>
+		}
+	</div>
+}

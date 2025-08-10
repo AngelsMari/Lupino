@@ -1,1 +1,45 @@
-<p>contenant-component works!</p>
+<div class="search-container">
+	<input type="text" class="search-input ng-untouched ng-pristine ng-valid" placeholder="Rechercher un contenant..." [(ngModel)]="searchText" />
+	@if ((isAdmin$ | async) && !isInCharacterCreation) {
+		<div>
+			<button class="add-button" (click)="openCreateContenantModal()"><i class="bi bi-sign-intersection-fill"></i> Ajouter un contenant</button>
+		</div>
+	}
+</div>
+
+@if (contenant$ | async | filterList: searchText : filterFn; as filteredContenants) {
+	<h2>Contenants</h2>
+
+	<div class="d-none d-lg-block">
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Nom</th>
+					<th>Contenance</th>
+					<th>Prix</th>
+				</tr>
+			</thead>
+			<tbody>
+				@for (contenant of filteredContenants; track contenant) {
+					<tr>
+						<td>{{ contenant.nom }}</td>
+						<td>{{ contenant.contenance }}</td>
+						<td>{{ contenant.prix }}</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+
+	<div class="container d-md-none">
+		@for (contenant of filteredContenants; track contenant) {
+			<div class="card mb-3">
+				<div class="card-body">
+					<h5 class="card-title">{{ contenant.nom }}</h5>
+					<p class="card-text"><strong>Contenance :</strong> {{ contenant.contenance }}</p>
+					<p class="card-text"><strong>Prix :</strong> {{ contenant.prix }}</p>
+				</div>
+			</div>
+		}
+	</div>
+}

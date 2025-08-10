@@ -1,1 +1,42 @@
-<p>bazar-component works!</p>
+<div class="search-container">
+	<input type="text" class="search-input ng-untouched ng-pristine ng-valid" placeholder="Rechercher un bazar..." [(ngModel)]="searchText" />
+	@if ((isAdmin$ | async) && !isInCharacterCreation) {
+		<div>
+			<button class="add-button" (click)="openCreateBazarModal()"><i class="bi bi-sign-intersection-fill"></i> Ajouter un bazar</button>
+		</div>
+	}
+</div>
+
+@if (bazar$ | async | filterList: searchText : filterFn; as filteredBazars) {
+	<h2>Bazars</h2>
+
+	<div class="d-none d-lg-block">
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Nom</th>
+					<th>Prix</th>
+				</tr>
+			</thead>
+			<tbody>
+				@for (item of filteredBazars; track item) {
+					<tr>
+						<td>{{ item.nom }}</td>
+						<td>{{ item.prix }}</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+
+	<div class="container d-md-none">
+		@for (item of filteredBazars; track item) {
+			<div class="card mb-3">
+				<div class="card-body">
+					<h5 class="card-title">{{ item.nom }}</h5>
+					<p class="card-text"><strong>Prix :</strong> {{ item.prix }}</p>
+				</div>
+			</div>
+		}
+	</div>
+}

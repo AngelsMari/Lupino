@@ -51,13 +51,13 @@ import { UserService } from './services/LupinoApi/user.service';
 import { PasswordForgottenComponent } from './components/UserGestion/password-forgotten/password-forgotten.component';
 import { ResetPasswordComponent } from './components/UserGestion/reset-password/reset-password.component';
 import { ArmeComponentComponent } from './components/ItemsComponents/arme-component/arme-component.component';
-import { ArmureComponentComponent } from './components/ItemsComponents/armure-component/armure-component.component';
+import { ArmureComponent } from './components/ItemsComponents/armure-component/armure-component.component';
 import { PotionComponentComponent } from './components/ItemsComponents/potion-component/potion-component.component';
 import { PoisonComponentComponent } from './components/ItemsComponents/poison-component/poison-component.component';
 import { UtilitaireComponentComponent } from './components/ItemsComponents/utilitaire-component/utilitaire-component.component';
 import { ContenantComponentComponent } from './components/ItemsComponents/contenant-component/contenant-component.component';
 import { BazarComponentComponent } from './components/ItemsComponents/bazar-component/bazar-component.component';
-import { MatIconModule } from '@angular/material/icon';
+import { FilterListPipe } from './pipes/filter-list.pipe';
 
 @NgModule({
 	declarations: [
@@ -93,7 +93,7 @@ import { MatIconModule } from '@angular/material/icon';
 		PasswordForgottenComponent,
 		ResetPasswordComponent,
 		ArmeComponentComponent,
-		ArmureComponentComponent,
+		ArmureComponent,
 		PotionComponentComponent,
 		PoisonComponentComponent,
 		UtilitaireComponentComponent,
@@ -115,7 +115,7 @@ import { MatIconModule } from '@angular/material/icon';
 			timeOut: 3000, // Temps avant que la notification disparaisse (en ms)
 			preventDuplicates: true, // Prévenir les notifications dupliquées
 		}),
-		MatIconModule,
+		FilterListPipe,
 	],
 	providers: [
 		{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
