@@ -1,9 +1,13 @@
 /* Styles pour la barre de navigation */
 .navbar {
 	padding: 10px 20px; /* Espacement */
-	z-index: 1000; /* Assure que la barre de navigation est au-dessus des autres éléments */
 	font-size: 1em; /* Taille de la police */
 	font-family: 'Merriweather', serif !important; /* Police de la barre de navigation */
+}
+
+.navBarMom {
+	position: relative;
+	z-index: 1000; /* Assure que la barre de navigation est au-dessus des autres éléments */
 }
 
 .navbar.not-home {
