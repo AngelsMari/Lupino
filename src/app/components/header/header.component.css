@@ -1,59 +1,129 @@
 /* Styles pour la barre de navigation */
 .navbar {
-    background-color: #621503; /* Couleur de fond principale */
-    padding: 10px 20px; /* Espacement */
+	padding: 10px 20px; /* Espacement */
+	z-index: 1000; /* Assure que la barre de navigation est au-dessus des autres éléments */
+	font-size: 1em; /* Taille de la police */
+	font-family: 'Merriweather', serif !important; /* Police de la barre de navigation */
+}
+
+.navbar.not-home {
+	background-color: #621503;
 }
 
 .navbar-brand {
-    color: #FFB65F; /* Couleur du texte pour le nom de la marque */
-    font-weight: bold; /* Met le texte en gras */
-    font-size: 1.5em; /* Taille de la police */
-    font-family: "Cinzel", serif;
+	color: #ffb65f; /* Couleur du texte pour le nom de la marque */
+	font-weight: bold; /* Met le texte en gras */
+	font-size: 1.8em; /* Taille de la police */
+	font-family: 'Cinzel', serif;
 }
 
 .nav-link {
-    color: #FFB65F; /* Couleur des liens */
-    padding: 8px 15px; /* Espacement des liens */
-    transition: background-color 0.3s, color 0.3s; /* Transition pour l'effet de survol */
+	color: #ffb65f; /* Couleur des liens */
+	padding: 8px 15px; /* Espacement des liens */
+	transition:
+		background-color 0.3s,
+		color 0.3s; /* Transition pour l'effet de survol */
 }
 
 .nav-link:hover {
-    background-color: rgba(255, 182, 95, 0.2); /* Couleur de fond sur le survol */
-    color: #ffffff; /* Change la couleur du texte au survol */
+	background-color: rgba(255, 182, 95, 0.2); /* Couleur de fond sur le survol */
+	color: #ffffff; /* Change la couleur du texte au survol */
 }
 
 .navbar-toggler {
-    border-color: rgba(255, 255, 255, 0.5); /* Couleur de la bordure */
+	border-color: rgba(255, 255, 255, 0.5); /* Couleur de la bordure */
 }
 
 .navbar-toggler-icon {
-    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(255,255,255,.5)' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E"); /* Couleur de l'icône du menu */
+	background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(255,255,255,.5)' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E"); /* Couleur de l'icône du menu */
 }
 
 .dropdown-menu {
-    background-color: #621503; /* Couleur de fond du menu déroulant */
+	background-color: #621503; /* Couleur de fond du menu déroulant */
+	z-index: 10002 !important;
 }
 
 .dropdown-item {
-    color: #FFB65F; /* Couleur des éléments du menu déroulant */
+	color: #ffb65f; /* Couleur des éléments du menu déroulant */
 }
 
 .dropdown-item:hover {
-    background-color: rgba(255, 182, 95, 0.2); /* Couleur de fond sur le survol des éléments du menu */
-    color: #ffffff; /* Change la couleur du texte au survol */
+	background-color: rgba(255, 182, 95, 0.2); /* Couleur de fond sur le survol des éléments du menu */
+	color: #ffffff; /* Change la couleur du texte au survol */
 }
 
 .badge {
-    font-size: 0.8em; /* Taille de la police pour les badges */
-    margin-left: 5px; /* Marge à gauche */
+	font-size: 0.8em; /* Taille de la police pour les badges */
+	margin-left: 5px; /* Marge à gauche */
 }
 
 .dropdown-divider {
-    border-color: rgba(255, 255, 255, 0.1); /* Couleur du séparateur */
+	border-color: rgba(255, 255, 255, 0.1); /* Couleur du séparateur */
 }
 
 .disabled-link {
-    color: #ccc; /* Couleur grisée */
-    text-decoration: none; /* Supprime le soulignement */
-    pointer-events: none; /* Empêche le clic */
+	color: #ccc; /* Couleur grisée */
+	text-decoration: none; /* Supprime le soulignement */
+	pointer-events: none; /* Empêche le clic */
+}
+
+/* Conteneur principal (fond transparent) */
+.bar-wrap {
+	width: 100%;
+	box-sizing: border-box;
+	background: transparent;
+	position: relative;
+	z-index: 1001;
+	margin-top: -25px;
+}
+
+/* La "barre" : on utilise flex pour aligner éléments */
+.bar {
+	display: flex;
+	align-items: center; /* centre verticalement séparateur et ronds */
+	height: 48px; /* hauteur de référence de la barre (modifiable) */
+}
+
+/* Ronds (gauche / droite) : juste bordure, fond transparent */
+.dot {
+	width: 28px;
+	height: 28px;
+	border-radius: 50%;
+	border: 3px solid #ffb65f; /* couleur et épaisseur de la bordure */
+	background: transparent;
+	box-sizing: border-box;
+}
+
+/* Ligne horizontale qui occupe l'espace restant entre les ronds */
+.line {
+	height: 3px; /* épaisseur de la ligne */
+	width: 100vw; /* occupe tout l'espace disponible */
+	background: #ffb65f;
+	position: relative; /* permet de positionner le séparateur centré */
+}
+
+/* Variantes rapides — ajuste si tu veux des ronds plus petits / gros */
+.dot.small {
+	width: 18px;
+	height: 18px;
+	border-width: 1.5px;
+}
+.dot.large {
+	width: 36px;
+	height: 36px;
+	border-width: 2.5px;
+}
+
+/* Responsive : réduire la hauteur et la taille des dots sur petits écrans */
+@media (max-width: 420px) {
+	.bar {
+		height: 40px;
+	}
+	.dot {
+		width: 22px;
+		height: 22px;
+	}
+	.line::after {
+		height: 48%;
+	}
 }

@@ -1,109 +1,147 @@
 /* Styles globaux */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+
+h1 {
+	font-family: 'Cinzel', serif;
+	font-size: 2.5rem;
+	margin-bottom: 0;
+	color: #ffb65f;
 }
 
-body {
-    font-family: 'Raleway', sans-serif;
-    color: #333;
-    background-color: #f0f0f0;
-    line-height: 1.6;
-}
-
-h1, h2 {
-    font-family: 'Cinzel', serif;
+h2 {
+	text-transform: uppercase;
+	font-family: 'Merriweather Sans', sans-serif !important; /* Police de la barre de navigation */
 }
 
 .hero {
-    position: relative;
-    height:  calc(100vh - 66px);
-    background: url('/still-life-map-with-dices.jpg') center/cover no-repeat;
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    color: white;
+	position: absolute;
+	height: calc(100vh);
+	top: 0;
+	width: 100%;
+	background: url('/Image_accueil.svg') center/cover no-repeat;
+	display: flex !important;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	color: white;
 }
 
 /* reduce Hero height on small devices */
 @media (max-width: 768px) {
-    .hero {
-        height: 50vh;
-    }
+	.hero {
+		height: 50vh;
+	}
 }
 
 .hero .overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.5);
 }
 
 .hero .content {
-    z-index: 1;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+	z-index: 1;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
 }
 
 .hero h1 {
-    font-size: 3rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
+	font-size: 3rem;
+	font-weight: 700;
+	margin-bottom: 1rem;
 }
 
 .hero h1 span {
-    color: #f4c542;
+	color: #f4c542;
 }
 
 .hero p {
-    font-size: 1.2rem;
-    margin-bottom: 2rem;
+	font-size: 1.2rem;
+	margin-bottom: 2rem;
+}
+
+.hero .content div:has(> a) {
+	margin-top: 3rem;
 }
 
 .hero .btn-explorer {
-    padding: 0.75rem 2rem;
-    background-color: #f4c542;
-    color: #333;
-    border: none;
-    font-size: 1rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    border-radius: 5px;
-    cursor: pointer;
-    text-decoration: none;
+	padding: 0.75rem 2rem;
+	background: linear-gradient(to bottom, #621503, #2b0800);
+	color: #ffb65f;
+	border: 2px solid #ffb65f;
+	font-family: 'Alegreya', serif;
+	font-size: 1rem;
+	font-weight: 600;
+	text-transform: uppercase;
+	border-radius: 5px;
+	cursor: pointer;
+	text-decoration: none;
 }
 
 .hero .btn-explorer:hover {
-    background-color: #dab233;
+	background-color: #dab233;
 }
 
-/* Section features */
-.features {
-    display: flex;
-    justify-content: space-around;
-    padding: 4rem 2rem;
-    background-color: #fff;
-}
-.features .feature {
-    text-align: center;
+/* Conteneur principal (fond transparent) */
+.bar-wrap {
+	width: 150px;
+	box-sizing: border-box;
+	background: transparent;
+	position: relative;
+	z-index: 999;
 }
 
-
-
-
-.features .feature h2 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
+/* La "barre" : on utilise flex pour aligner éléments */
+.bar {
+	display: flex;
+	align-items: center; /* centre verticalement séparateur et ronds */
+	height: 48px; /* hauteur de référence de la barre (modifiable) */
 }
 
-.features .feature p {
-    font-size: 1rem;
-    color: #666;
+/* Ronds (gauche / droite) : juste bordure, fond transparent */
+.dot {
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	border: 3px solid #ffb65f; /* couleur et épaisseur de la bordure */
+	background: transparent;
+	box-sizing: border-box;
 }
 
+/* Ligne horizontale qui occupe l'espace restant entre les ronds */
+.line {
+	height: 3px; /* épaisseur de la ligne */
+	width: 110px; /* occupe tout l'espace disponible */
+	background: #ffb65f;
+	position: relative; /* permet de positionner le séparateur centré */
+}
+
+/* Variantes rapides — ajuste si tu veux des ronds plus petits / gros */
+.dot.small {
+	width: 18px;
+	height: 18px;
+	border-width: 1.5px;
+}
+.dot.large {
+	width: 36px;
+	height: 36px;
+	border-width: 2.5px;
+}
+
+/* Responsive : réduire la hauteur et la taille des dots sur petits écrans */
+@media (max-width: 420px) {
+	.bar {
+		height: 40px;
+	}
+	.dot {
+		width: 22px;
+		height: 22px;
+	}
+	.line::after {
+		height: 48%;
+	}
+}
