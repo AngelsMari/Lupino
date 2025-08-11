@@ -9,10 +9,10 @@ import { ToastrService } from 'ngx-toastr';
 import { environment } from '../../../../environments/environements'; // Ajustez le chemin si nécessaire
 
 @Component({
-    selector: 'app-create-character',
-    templateUrl: './create-character.component.html',
-    styleUrls: ['./create-character.component.css'],
-    standalone: false
+	selector: 'app-create-character',
+	templateUrl: './create-character.component.html',
+	styleUrls: ['./create-character.component.css'],
+	standalone: false,
 })
 export class CreateCharacterComponent {
 	step = 1; // Pour suivre la progression des étapes
@@ -283,14 +283,10 @@ export class CreateCharacterComponent {
 	ngOnInit() {
 		// Charger les races depuis l'API lors de l'initialisation du composant
 		this.raceService.getRaces().subscribe((data) => {
-			if (Object(data)['result'] == 'ERROR') {
-				// Handle error
-			} else {
-				let races = Object(data)['items'][0]['object'];
+			let races = data;
 
-				this.commonRaces = races.filter((race: any) => race.type === 'commune');
-				this.exoticRaces = races.filter((race: any) => race.type === 'inhabituelle');
-			}
+			this.commonRaces = races.filter((race: any) => race.type === 'commune');
+			this.exoticRaces = races.filter((race: any) => race.type === 'inhabituelle');
 		});
 		this.characterId = this.route.snapshot.paramMap.get('id'); // Récupère l'ID du personnage si en mode édition
 		if (this.characterId) {
@@ -318,8 +314,6 @@ export class CreateCharacterComponent {
 	loadCharacterData() {
 		if (this.characterId) {
 			this.characterService.getCharacterById(this.characterId).subscribe((character) => {
-				character = Object(character)['items'][0]['object'];
-				console.log(character);
 				this.characterForm.patchValue({
 					name: character.name,
 					age: character.age,
@@ -529,12 +523,7 @@ export class CreateCharacterComponent {
 			if (this.characterId) {
 				this.characterForm.patchValue({ _id: this.characterId });
 				this.characterService.updateCharacter(this.characterForm.value).subscribe((data) => {
-					if (Object(data)['result'] == 'ERROR') {
-						// Handle error
-					} else {
-						// Handle success
-						this.router.navigate(['/character', this.characterId]);
-					}
+					this.router.navigate(['/character', this.characterId]);
 				});
 			} else {
 				this.characterService.createCharacter(this.characterForm.value).subscribe((data) => {

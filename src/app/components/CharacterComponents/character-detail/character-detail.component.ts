@@ -10,11 +10,11 @@ import { first, forkJoin } from 'rxjs';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
-    selector: 'app-character-detail',
-    templateUrl: './character-detail.component.html',
-    styleUrl: './character-detail.component.css',
-    encapsulation: ViewEncapsulation.None,
-    standalone: false
+	selector: 'app-character-detail',
+	templateUrl: './character-detail.component.html',
+	styleUrl: './character-detail.component.css',
+	encapsulation: ViewEncapsulation.None,
+	standalone: false,
 })
 export class CharacterDetailComponent {
 	character: Character | undefined;
@@ -69,25 +69,22 @@ export class CharacterDetailComponent {
 			characterData: this.characterService.getCharacterById(id).pipe(first()),
 		}).subscribe(({ userData, characterData }) => {
 			this.user_id = userData._id;
-			if (Object(characterData)['result'] == 'ERROR') {
-				console.log(characterData);
-			} else {
-				// Vérifiez si on a le droit de voir le personnage
-				const characterOwnerId = Object(characterData)['items'][0]['object']?.owner._id;
-				const isPublic = Object(characterData)['items'][0]['object']?.isPublic;
 
-				if (this.user_id !== characterOwnerId && !isPublic && userData.isAdmin === false) {
-					// Notification toastr pas d'accès
-					this.toastr.error("Vous n'avez pas accès à ce personnage");
-					// Rediriger ou gérer l'erreur
-					return; // Sortir si l'accès n'est pas autorisé
-				}
+			// Vérifiez si on a le droit de voir le personnage
+			const characterOwnerId = characterData?.owner._id;
+			const isPublic = characterData?.isPublic;
 
-				this.character = Object(characterData)['items'][0]['object'];
-				this.calculateSecondaryStats();
-				this.calculateBonuses();
-				this.initializeForm();
+			if (this.user_id !== characterOwnerId && !isPublic && userData.isAdmin === false) {
+				// Notification toastr pas d'accès
+				this.toastr.error("Vous n'avez pas accès à ce personnage");
+				// Rediriger ou gérer l'erreur
+				return; // Sortir si l'accès n'est pas autorisé
 			}
+
+			this.character = characterData;
+			this.calculateSecondaryStats();
+			this.calculateBonuses();
+			this.initializeForm();
 		});
 	}
 
@@ -215,13 +212,9 @@ export class CharacterDetailComponent {
 		if (this.character) {
 			this.character.isPublic = !this.character.isPublic;
 			this.characterService.updateCharacter(this.character).subscribe((data) => {
-				if (Object(data)['result'] == 'ERROR') {
-					console.log(data);
-				} else {
-					let id = this.route.snapshot.paramMap.get('id');
-					if (id) {
-						this.loadCharacter(id);
-					}
+				let id = this.route.snapshot.paramMap.get('id');
+				if (id) {
+					this.loadCharacter(id);
 				}
 			});
 			// Ajoute ici la logique pour sauvegarder ce changement dans la base de données si nécessaire
