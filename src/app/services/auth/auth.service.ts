@@ -13,20 +13,28 @@ export class AuthService {
 
 	userService = inject(UserService);
 
-	private loggedInSubject = new BehaviorSubject<boolean>(false);
+	private loggedInSubject = new BehaviorSubject<boolean | null>(null);
 	public loggedIn$ = this.loggedInSubject.asObservable();
 
-	constructor(private router: Router, private http: HttpClient) {}
+	constructor(
+		private router: Router,
+		private http: HttpClient,
+	) {}
 
-	autoLogin(): void {
-		this.http.get<UserPublicData>(`${this.apiUrl}/currentUser`, { withCredentials: true }).subscribe({
-			next: (user) => {
-				this.loggedInSubject.next(true);
-				this.userService.setUserData(user);
-			},
-			error: () => {
-				this.userService.clearUserData();
-			},
+	autoLogin(): Promise<void> {
+		return new Promise((resolve) => {
+			this.http.get<UserPublicData>(`${this.apiUrl}/currentUser`, { withCredentials: true }).subscribe({
+				next: (user) => {
+					this.loggedInSubject.next(true);
+					this.userService.setUserData(user); // stocke tout en mémoire centrale
+					resolve();
+				},
+				error: () => {
+					this.loggedInSubject.next(false);
+					this.userService.clearUserData();
+					resolve();
+				},
+			});
 		});
 	}
 

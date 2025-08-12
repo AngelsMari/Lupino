@@ -1,49 +1,88 @@
-<div class="container">
-  <!-- Message si aucun personnage -->
-  @if (characters$ | async; as characters) {
-    @if (characters.length === 0) {
-      <div class="no-character-message">Aucun personnage... mais vous pouvez en créer un !</div>
-    }
-    <!-- Bouton de création -->
-    @if (isMyCharacterPage) {
-      <div class="d-flex justify-content-end mb-3">
-        <button class="btn btn-success" (click)="createNewCharacter()">Créer un nouveau personnage</button>
-      </div>
-    }
-    <!-- Liste -->
-    @if (characters.length > 0) {
-      <div class="row">
-        @for (character of characters; track character) {
-          <div class="mx-1 col-lg-2 col-md-3 col-sm-4 col-6">
-            <div
-              class="card character-card"
-              [ngClass]="{ 'not-published': !isMyCharacterPage && (currentUser$ | async)?.isAdmin && !character.isPublic }"
-              >
-              <div class="card-img">
-                <img class="card-img-top" [src]="character.imageUrl" alt="Card image cap" />
-              </div>
-              <div class="card-body">
-                <h5 class="card-title">{{ character.name }}</h5>
-                <h6>créateur : {{ character.owner.name }}</h6>
-                <p class="card-text">
-                  Level: {{ character.level }}<br />
-                  Race: {{ character.race }}
-                </p>
-                <a [routerLink]="['/character', character._id]" class="btn btn-primary">Voir la fiche</a>
-                @if (isMyCharacterPage) {
-                  <button class="btn btn-danger ml-2" (click)="openDeleteModal(character)">X</button>
-                }
-              </div>
-            </div>
-          </div>
-        }
-      </div>
-    }
-  } @else {
-    <div class="loading-message">
-      <p>Loading character data...</p>
-    </div>
-  }
+<aside class="lupino-filters sticky-filter">
+	<h4>Filtres</h4>
 
-  <!-- Loading -->
+	<div>
+		<label>Âge</label>
+		<mat-slider min="0" max="1000" step="1" thumbLabel discrete tickInterval="10" (input)="applyFilters()">
+			<input matSliderStartThumb [(ngModel)]="filters.ageRange[0]" />
+			<input matSliderEndThumb [(ngModel)]="filters.ageRange[1]" />
+		</mat-slider>
+	</div>
+
+	<div>
+		<label>Level</label>
+
+		<mat-slider min="1" max="10" step="1" thumbLabel discrete tickInterval="10" (input)="applyFilters()">
+			<input matSliderStartThumb [(ngModel)]="filters.levelRange[0]" />
+			<input matSliderEndThumb [(ngModel)]="filters.levelRange[1]" />
+		</mat-slider>
+	</div>
+</aside>
+<div class="container lupino-container">
+	<!-- Message si aucun personnage -->
+	@if (characters$ | async; as characters) {
+		@if (characters.length === 0) {
+			<div class="lupino-empty-state">
+				<div class="lupino-empty-icon">🎭</div>
+				<div class="lupino-empty-text">Aucun personnage... mais vous pouvez en créer un !</div>
+			</div>
+		}
+		<!-- Bouton de création -->
+		@if (isMyCharacterPage) {
+			<div class="d-flex justify-content-end mb-4">
+				<button class="btn lupino-create-btn" (click)="createNewCharacter()">
+					<i class="fas fa-plus me-2"></i>Créer un nouveau personnage
+				</button>
+			</div>
+		}
+		<!-- Liste -->
+		@if (characters.length > 0) {
+			<div class="row g-4">
+				@for (character of characters; track character) {
+					<div class="col-lg-3 col-md-4 col-sm-6 col-12">
+						<div
+							class="card lupino-character-card h-100"
+							[ngClass]="{ 'lupino-not-published': !isMyCharacterPage && (currentUser$ | async)?.isAdmin && !character.isPublic }"
+						>
+							<div class="lupino-card-img-container">
+								<img class="card-img-top lupino-character-img" [src]="character.imageUrl" alt="Image de {{ character.name }}" />
+								@if (!isMyCharacterPage && (currentUser$ | async)?.isAdmin && !character.isPublic) {
+									<div class="lupino-unpublished-badge"><i class="fas fa-eye-slash"></i> Non publié</div>
+								}
+							</div>
+							<div class="card-body lupino-card-body d-flex flex-column">
+								<h5 class="card-title lupino-character-name">{{ character.name }}</h5>
+								<h6 class="lupino-character-owner">créateur : {{ character.owner.name }}</h6>
+								<div class="lupino-character-stats">
+									<div class="lupino-stat-row">
+										<span class="lupino-stat-label">Level:</span>
+										<span class="lupino-stat-value">{{ character.level }}</span>
+									</div>
+									<div class="lupino-stat-row">
+										<span class="lupino-stat-label">Race:</span>
+										<span class="lupino-stat-value">{{ character.race }}</span>
+									</div>
+								</div>
+								<div class="mt-auto lupino-card-actions">
+									<a [routerLink]="['/character', character._id]" class="btn lupino-view-btn w-100 mb-2">
+										<i class="fas fa-eye me-2"></i>Voir la fiche
+									</a>
+									@if (isMyCharacterPage) {
+										<button class="btn lupino-delete-btn w-100" (click)="openDeleteModal(character)">
+											<i class="fas fa-trash me-2"></i>Supprimer
+										</button>
+									}
+								</div>
+							</div>
+						</div>
+					</div>
+				}
+			</div>
+		}
+	} @else {
+		<div class="lupino-loading">
+			<div class="lupino-spinner"></div>
+			<p class="lupino-loading-text">Chargement des personnages...</p>
+		</div>
+	}
 </div>

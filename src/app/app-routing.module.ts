@@ -14,7 +14,7 @@ import { CampagneDetailComponent } from './components/Campaigns/campagne-detail/
 import { MentionsLegalesComponent } from './components/pages/mentions-legales/mentions-legales.component';
 import { ConfidentialiteComponent } from './components/pages/confidentialite/confidentialite.component';
 import { LoreComponent } from './components/pages/lore/lore.component';
-import { ProfilComponent } from './components/UserGestion/profil/profil.component';
+import { EditProfilComponent } from './components/UserGestion/edit-profil/edit-profil.component';
 import { AuthGuard } from './services/auth/auth.guard';
 import { AdminGuard } from './services/auth/admin.guard';
 import { UserListComponent } from './components/UserGestion/list/user-list.component';
@@ -41,7 +41,7 @@ const routes: Routes = [
 	{ path: 'politique-confidentialite', component: ConfidentialiteComponent },
 	{ path: 'lore', component: LoreComponent },
 	{ path: 'explorer', component: LoreComponent },
-	{ path: 'profil', component: ProfilComponent, canActivate: [AuthGuard] },
+	{ path: 'profil', component: EditProfilComponent, canActivate: [AuthGuard] },
 	{ path: 'user-list', component: UserListComponent, canActivate: [AdminGuard] },
 	{ path: 'forgot-password', component: PasswordForgottenComponent, canActivate: [NoAuthGuard] }, // Redirection pour la page de mot de passe oublié
 	{ path: 'reset-password', component: ResetPasswordComponent, canActivate: [NoAuthGuard] }, // Redirection pour la page de réinitialisation du mot de passe

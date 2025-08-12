@@ -1,98 +1,333 @@
-/* Styles pour le conteneur principal */
-.container {
-    margin-top: 20px; /* Marge supérieure pour espacer le contenu */
+/* Container principal */
+.lupino-container {
+	padding: 2rem 0;
+	min-height: 100vh;
+	font-family: 'Cinzel', serif;
 }
 
-/* Bouton de création de personnage */
-.btn-success {
-    background-color: #FFB65F; /* Couleur d'arrière-plan du bouton */
-    color: #621503; /* Couleur du texte */
-    border: none; /* Pas de bordure */
-    transition: background-color 0.3s, color 0.3s; /* Transition pour effet de survol */
+/* État vide */
+.lupino-empty-state {
+	text-align: center;
+	padding: 4rem 2rem;
+	background: rgba(255, 255, 255, 0.1);
+	border: 2px dashed var(--lupino-primary);
+	border-radius: 20px;
+	margin: 2rem 0;
 }
 
-.btn-success:hover {
-    background-color: #f0a35a; /* Couleur d'arrière-plan sur survol */
-    color: #ffffff; /* Changer la couleur du texte au survol */
+.lupino-empty-icon {
+	font-size: 5rem;
+	color: var(--lupino-primary);
+	margin-bottom: 1.5rem;
+	opacity: 0.8;
 }
 
-/* Styles pour les cartes de personnage */
-.character-card {
-    background-color: #fff; /* Couleur de fond blanche pour les cartes */
-    border: 1px solid #ddd; /* Bordure légère */
-    border-radius: 10px; /* Bordures arrondies */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Ombre pour effet de profondeur */
-    margin-bottom: 20px; /* Espacement entre les cartes */
-    transition: transform 0.3s; /* Transition pour effet de zoom */
+.lupino-empty-text {
+	font-size: 1.5rem;
+	color: var(--lupino-primary);
+	font-weight: 600;
+	text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
 }
 
-.character-card:hover {
-    transform: scale(1.05); /* Agrandir légèrement la carte sur survol */
+/* Bouton de création */
+.lupino-create-btn {
+	background: linear-gradient(45deg, var(--lupino-primary), #b8941f) !important;
+	color: var(--lupino-dark) !important;
+	border: 2px solid var(--lupino-primary) !important;
+	padding: 0.8rem 2rem;
+	border-radius: 10px;
+	font-weight: bold;
+	font-size: 1.1rem;
+	transition: all 0.3s ease;
+	text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
 }
 
-/* Styles pour l'image de la carte */
-.card-img img {
-    border-top-left-radius: 10px; /* Arrondi pour le coin supérieur gauche */
-    border-top-right-radius: 10px; /* Arrondi pour le coin supérieur droit */
-    max-height: 200px; /* Hauteur maximale de l'image */
-    object-fit: cover; /* Ajustement de l'image */
+.lupino-create-btn:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
+	background: linear-gradient(45deg, #b8941f, var(--lupino-primary)) !important;
+	color: var(--lupino-dark) !important;
+	border-color: var(--lupino-primary) !important;
 }
 
-/* Styles pour le corps de la carte */
-.card-body {
-    padding: 15px; /* Espacement intérieur */
+/* Cards de personnages */
+.lupino-character-card {
+	background: rgba(255, 255, 255, 0.95) !important;
+	border: 3px solid var(--lupino-primary) !important;
+	border-radius: 15px !important;
+	box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+	transition: all 0.4s ease;
+	overflow: hidden;
+	position: relative;
 }
 
-/* Styles pour le bouton d'action */
-.btn-primary {
-    background-color: #621503; /* Couleur d'arrière-plan principale */
-    border: none; /* Pas de bordure */
+.lupino-character-card:hover {
+	transform: translateY(-8px) scale(1.02);
+	box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+	border-color: #b8941f !important;
 }
 
-.btn-danger {
-    background-color: #f44336; /* Couleur d'arrière-plan rouge */
-    border: none; /* Pas de bordure */
+.lupino-character-card::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 4px;
+	background: linear-gradient(90deg, var(--lupino-primary), #b8941f, var(--lupino-primary));
+	z-index: 1;
 }
 
-.btn-danger:hover {
-    background-color: #e53935; /* Couleur d'arrière-plan sur survol */
+/* Container d'image */
+.lupino-card-img-container {
+	position: relative;
+	height: 200px;
+	overflow: hidden;
+	background: linear-gradient(45deg, var(--lupino-secondary), var(--lupino-accent));
 }
 
-/* Styles pour le texte de chargement */
-.loading-text {
-    color: #621503; /* Couleur principale pour le texte de chargement */
-    text-align: center; /* Centrer le texte */
-    margin-top: 20px; /* Marge supérieure */
-    font-size: 1.2em; /* Taille de la police */
+.lupino-character-img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: top;
+	transition: all 0.3s ease;
 }
 
-.loading-message {
-    font-size: 18px; /* Taille de la police */
-    color: #FFB65F; /* Couleur du texte */
-    text-align: center; /* Centrer le texte */
-    margin: 20px 0; /* Marge pour espacer le message */
-    font-weight: bold; /* Gras pour le texte */
+.lupino-character-card:hover .lupino-character-img {
+	transform: scale(1.1);
 }
 
-.no-character-message {
-    font-size: 20px; /* Taille de la police pour le message d'absence */
-    color: #FFCA8C; /* Couleur du texte */
-    text-align: center; /* Centrer le texte */
-    margin: 20px 0; /* Marge pour espacer le message */
-    font-weight: bold; /* Gras pour le texte */
-    background-color: #621503; /* Fond pour le message */
-    padding: 15px; /* Padding pour espacer le texte du bord */
-    border-radius: 8px; /* Coins arrondis */
+/* Badge non publié */
+.lupino-unpublished-badge {
+	position: absolute;
+	top: 0.5rem;
+	right: 0.5rem;
+	background: var(--lupino-danger);
+	color: white;
+	padding: 0.25rem 0.5rem;
+	border-radius: 15px;
+	font-size: 0.8rem;
+	font-weight: bold;
+	z-index: 2;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
-.not-published {
-    border: 2px solid #ffc107; /* Jaune doré */
-    background-color: #fff3cd; /* Jaune clair */
-    color: #856404; /* Texte marron pour un meilleur contraste */
+/* Corps de la carte */
+.lupino-card-body {
+	padding: 1.5rem !important;
+	background: rgba(255, 255, 255, 0.98);
 }
 
-h6{
-    font-size: 0.8em; /* Taille de la police */
-    font-weight: 400;
-    font-style: italic;
+.lupino-character-name {
+	font-size: 1.4rem;
+	font-weight: bold;
+	color: var(--lupino-dark);
+	margin-bottom: 0.5rem;
+	text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.lupino-character-owner {
+	font-size: 0.9rem;
+	color: var(--lupino-accent) !important;
+	font-style: italic;
+	margin-bottom: 1rem;
+	font-weight: 500;
+}
+
+/* Statistiques du personnage */
+.lupino-character-stats {
+	background: rgba(212, 175, 55, 0.1);
+	padding: 1rem;
+	border-radius: 8px;
+	margin-bottom: 1.5rem;
+	border-left: 4px solid var(--lupino-primary);
+}
+
+.lupino-stat-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 0.5rem;
+}
+
+.lupino-stat-row:last-child {
+	margin-bottom: 0;
+}
+
+.lupino-stat-label {
+	font-weight: bold;
+	color: var(--lupino-dark);
+	font-size: 0.9rem;
+}
+
+.lupino-stat-value {
+	color: var(--lupino-accent);
+	font-weight: 600;
+	font-size: 0.9rem;
+}
+
+/* Actions des cartes */
+.lupino-card-actions {
+	margin-top: auto;
+}
+
+.lupino-view-btn {
+	background: linear-gradient(45deg, var(--lupino-secondary), var(--lupino-accent)) !important;
+	color: var(--lupino-primary) !important;
+	border: 2px solid var(--lupino-primary) !important;
+	padding: 0.7rem 1.5rem;
+	border-radius: 8px;
+	font-weight: bold;
+	transition: all 0.3s ease;
+	text-transform: none;
+	font-size: 0.95rem;
+}
+
+.lupino-view-btn:hover {
+	background: linear-gradient(45deg, var(--lupino-accent), #4a2c17) !important;
+	transform: translateY(-2px);
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+	color: var(--lupino-primary) !important;
+	border-color: var(--lupino-primary) !important;
+}
+
+.lupino-delete-btn {
+	background: linear-gradient(45deg, var(--lupino-danger), #6b1e2a) !important;
+	color: white !important;
+	border: 2px solid var(--lupino-danger) !important;
+	padding: 0.7rem 1.5rem;
+	border-radius: 8px;
+	font-weight: bold;
+	font-size: 0.95rem;
+	transition: all 0.3s ease;
+}
+
+.lupino-delete-btn:hover {
+	background: linear-gradient(45deg, #6b1e2a, var(--lupino-danger)) !important;
+	color: white !important;
+	transform: translateY(-2px);
+	box-shadow: 0 5px 15px rgba(139, 38, 53, 0.4);
+}
+
+/* Card non publiée */
+.lupino-not-published {
+	opacity: 0.7;
+	filter: grayscale(30%);
+	border-color: var(--lupino-accent) !important;
+}
+
+.lupino-not-published::before {
+	background: linear-gradient(90deg, var(--lupino-accent), var(--lupino-danger), var(--lupino-accent));
+}
+
+/* Loading state */
+.lupino-loading {
+	text-align: center;
+	padding: 4rem 2rem;
+	color: var(--lupino-primary);
+}
+
+.lupino-spinner {
+	width: 60px;
+	height: 60px;
+	margin: 0 auto 1.5rem;
+	border: 4px solid rgba(212, 175, 55, 0.2);
+	border-left: 4px solid var(--lupino-primary);
+	border-radius: 50%;
+	animation: lupino-spin 1s linear infinite;
+}
+
+@keyframes lupino-spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+.lupino-loading-text {
+	font-size: 1.2rem;
+	color: var(--lupino-primary);
+	font-weight: 600;
+	text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+	.lupino-container {
+		padding: 1rem 0;
+	}
+
+	.lupino-empty-state {
+		padding: 3rem 1rem;
+	}
+
+	.lupino-empty-icon {
+		font-size: 3.5rem;
+	}
+
+	.lupino-empty-text {
+		font-size: 1.2rem;
+	}
+
+	.lupino-card-img-container {
+		height: 160px;
+	}
+
+	.lupino-character-name {
+		font-size: 1.2rem;
+	}
+
+	.lupino-card-body {
+		padding: 1rem !important;
+	}
+
+	.lupino-character-stats {
+		padding: 0.8rem;
+	}
+}
+
+@media (max-width: 576px) {
+	.lupino-character-card {
+		margin: 0 0.5rem 1rem 0.5rem;
+	}
+
+	.lupino-card-img-container {
+		height: 140px;
+	}
+
+	.lupino-create-btn {
+		padding: 0.6rem 1.5rem;
+		font-size: 1rem;
+	}
+}
+
+/* Animation d'apparition des cartes */
+.lupino-character-card {
+	animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+	from {
+		opacity: 0;
+		transform: translateY(30px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.sticky-filter {
+	position: fixed;
+	top: 10rem;
+	width: 250px;
+	padding: 1rem;
+	background: rgba(255 255 255 / 0.9);
+	border: 2px solid var(--lupino-primary);
+	border-radius: 12px;
+	height: fit-content;
 }

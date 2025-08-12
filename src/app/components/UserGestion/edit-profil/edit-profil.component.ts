@@ -9,12 +9,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { switchMap, take } from 'rxjs/operators';
 
 @Component({
-    selector: 'profil',
-    templateUrl: './profil.component.html',
-    styleUrls: ['./profil.component.css'],
-    standalone: false
+	selector: 'edit-profil',
+	templateUrl: './edit-profil.component.html',
+	styleUrls: ['./edit-profil.component.css'],
+	standalone: false,
 })
-export class ProfilComponent implements OnInit {
+export class EditProfilComponent implements OnInit {
 	user$: Observable<UserPublicData>;
 
 	profileForm: FormGroup;

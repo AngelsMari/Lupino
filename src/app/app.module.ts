@@ -39,12 +39,13 @@ import { FooterComponent } from './components/footer/footer.component';
 import { ConfidentialiteComponent } from './components/pages/confidentialite/confidentialite.component';
 import { MentionsLegalesComponent } from './components/pages/mentions-legales/mentions-legales.component';
 import { LoreComponent } from './components/pages/lore/lore.component';
-import { ProfilComponent } from './components/UserGestion/profil/profil.component';
+import { EditProfilComponent } from './components/UserGestion/edit-profil/edit-profil.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './auth.interceptor';
 registerLocaleData(localeFr, 'fr');
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSliderModule } from '@angular/material/slider';
 import { UserListComponent } from './components/UserGestion/list/user-list.component';
 import { AdminGuard } from './services/auth/admin.guard';
 import { UserService } from './services/LupinoApi/user.service';
@@ -58,6 +59,10 @@ import { UtilitaireComponentComponent } from './components/ItemsComponents/utili
 import { ContenantComponentComponent } from './components/ItemsComponents/contenant-component/contenant-component.component';
 import { BazarComponentComponent } from './components/ItemsComponents/bazar-component/bazar-component.component';
 import { FilterListPipe } from './pipes/filter-list.pipe';
+
+export function initApp(authService: AuthService) {
+	return () => authService.autoLogin();
+}
 
 @NgModule({
 	declarations: [
@@ -88,7 +93,7 @@ import { FilterListPipe } from './pipes/filter-list.pipe';
 		ConfidentialiteComponent,
 		MentionsLegalesComponent,
 		LoreComponent,
-		ProfilComponent,
+		EditProfilComponent,
 		UserListComponent,
 		PasswordForgottenComponent,
 		ResetPasswordComponent,
@@ -105,6 +110,7 @@ import { FilterListPipe } from './pipes/filter-list.pipe';
 		BrowserAnimationsModule,
 		MatButtonModule,
 		MatInputModule,
+		MatSliderModule,
 		AppRoutingModule,
 		HttpClientModule,
 		ReactiveFormsModule,

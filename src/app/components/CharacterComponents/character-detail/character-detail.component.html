@@ -1,286 +1,379 @@
-<div class="container">
-  <div class="row mb-4">
-    @if (user_id == character?.owner?._id) {
-      <div class="col-md-12">
-        <!-- Bouton pour Modifier Bouton pour jouer -->
-        @if (!sessionActive) {
-          <a routerLink="/create-character/{{ character?._id }}/" class="btn btn-primary">Modifier</a>
-        }
-        <div class="session-controls">
-          @if (!sessionActive) {
-            <button class="btn btn-success" (click)="startSession()">Lancer une session</button>
-          }
-          @if (sessionActive) {
-            <button class="btn btn-danger" (click)="endSession()">Fin de session</button>
-          }
-        </div>
-        <!-- Bouton pour rendre public ou privé -->
-        <button class="btn" [ngClass]="character?.isPublic ? 'btn-warning' : 'btn-secondary'" (click)="toggleVisibility()">
-          {{ character?.isPublic ? 'Rendre Privé' : 'Rendre Public' }}
-        </button>
-      </div>
-    }
-    <div class="col-md-4">
-      <img src="{{ character?.imageUrl }}" alt="{{ character?.name }}" class="img-fluid" />
-    </div>
-    <div class="col-md-8">
-      <h1>{{ character?.name }}</h1>
-      <h6>Crée par : {{ character?.owner?.name }}</h6>
-      @if (sessionActive) {
-        <div class="health-mana-section">
-          <div class="health-mana-controls">
-            <!-- Points de vie (HP) -->
-            <div class="hp-section">
-              <label>Points de vie actuels :</label>
-              <div class="input-group">
-                <input type="number" class="form-control" [formControl]="$any(characterForm).controls['current_hp']" readonly />
-                <span class="input-group-text" id="basic-addon2">/ {{ character?.max_hp }}</span>
-                @if (sessionActive) {
-                  <div class="input-group-append">
-                    <button class="btn btn-outline-success" (click)="modifyHp('max')"><i class="bi bi-suit-heart-fill"></i> Full</button>
-                    <button class="btn btn-outline-success" (click)="modifyHp(10)"><i class="bi bi-suit-heart-fill"></i> +10</button>
-                    <button class="btn btn-outline-success" (click)="modifyHp(5)"><i class="bi bi-suit-heart-fill"></i> +5</button>
-                    <button class="btn btn-outline-success" (click)="modifyHp(1)"><i class="bi bi-suit-heart-fill"></i> +1</button>
-                    <button class="btn btn-outline-danger" (click)="modifyHp(-1)">
-                      <i class="bi bi-suit-heart"></i>
-                      -1
-                    </button>
-                    <button class="btn btn-outline-danger" (click)="modifyHp(-5)">
-                      <i class="bi bi-suit-heart"></i>
-                      -5
-                    </button>
-                    <button class="btn btn-outline-danger" (click)="modifyHp(-10)">
-                      <i class="bi bi-suit-heart"></i>
-                      -10
-                    </button>
-                  </div>
-                }
-              </div>
-            </div>
-            <!-- Mana -->
-            <div class="mana-section">
-              <label>Mana actuel :</label>
-              <div class="input-group">
-                <input type="number" class="form-control" [formControl]="$any(characterForm).controls['current_mana']" readonly />
-                <span class="input-group-text" id="basic-addon2">/ {{ character?.max_mana }}</span>
-                @if (sessionActive) {
-                  <div class="input-group-append">
-                    <button class="btn btn-outline-primary" (click)="modifyMana('max')">
-                      <i class="bi bi-star-fill"></i>
-                      Full
-                    </button>
-                    <button class="btn btn-outline-primary" (click)="modifyMana(10)">
-                      <i class="bi bi-star-fill"></i>
-                      +10
-                    </button>
-                    <button class="btn btn-outline-primary" (click)="modifyMana(5)">
-                      <i class="bi bi-star-fill"></i>
-                      +5
-                    </button>
-                    <button class="btn btn-outline-primary" (click)="modifyMana(1)">
-                      <i class="bi bi-star-fill"></i>
-                      +1
-                    </button>
-                    <button class="btn btn-outline-secondary" (click)="modifyMana(-1)">
-                      <i class="bi bi-star"></i>
-                      -1
-                    </button>
-                    <button class="btn btn-outline-secondary" (click)="modifyMana(-5)">
-                      <i class="bi bi-star"></i>
-                      -5
-                    </button>
-                    <button class="btn btn-outline-secondary" (click)="modifyMana(-10)">
-                      <i class="bi bi-star"></i>
-                      -10
-                    </button>
-                  </div>
-                }
-              </div>
-            </div>
-          </div>
-        </div>
-      }
-      <div class="infoPrincipal">
-        <p><strong>Level :</strong> {{ character?.level }}</p>
-        <p><strong>Race :</strong> {{ character?.race }}</p>
-        @if (!sessionActive) {
-          <p><strong>HP :</strong> {{ character?.current_hp }} / {{ character?.max_hp }}</p>
-        }
-        @if (!sessionActive) {
-          <p><strong>Mana :</strong> {{ character?.current_mana }} / {{ character?.max_mana }}</p>
-        }
-        <p><strong>Sexe :</strong> {{ character?.sexe }}</p>
-        <p><strong>Yeux :</strong> {{ character?.eyes }}</p>
-        <p><strong>Cheveux :</strong> {{ character?.hair }}</p>
-        <p><strong>Âge :</strong> {{ character?.age }}</p>
-        <p><strong>Couleur de peau :</strong> {{ character?.skincolor }}</p>
-        <p><strong>Taille :</strong> {{ character?.height }}</p>
-        <p><strong>Poids :</strong> {{ character?.weight }}</p>
-      </div>
-    </div>
-  </div>
+<div class="main-container">
+	@if (character$ | async; as character) {
+		<!-- En-tête du personnage -->
+		<div class="character-header">
+			<div class="row align-items-center">
+				<!-- Contrôles du propriétaire -->
 
-  <!-- Onglets -->
-  <ul class="nav nav-tabs" id="myTab" role="tablist">
-    <li class="nav-item" role="presentation">
-      <a class="nav-link active" id="stats-tab" data-bs-toggle="tab" href="#stats" role="tab" aria-controls="stats" aria-selected="true"
-        >Statistiques</a
-        >
-      </li>
-      <li class="nav-item" role="presentation">
-        <a class="nav-link" id="traits-tab" data-bs-toggle="tab" href="#traits" role="tab" aria-controls="traits" aria-selected="false">Traits</a>
-      </li>
-      <li class="nav-item" role="presentation">
-        <a class="nav-link" id="masteries-tab" data-bs-toggle="tab" href="#masteries" role="tab" aria-controls="masteries" aria-selected="false"
-          >Maîtrises et Langues</a
-          >
-        </li>
-        <li class="nav-item" role="presentation">
-          <a class="nav-link" id="skills-tab" data-bs-toggle="tab" href="#skills" role="tab" aria-controls="skills" aria-selected="false"
-            >Compétences</a
-            >
-          </li>
-          <li class="nav-item" role="presentation">
-            <a class="nav-link" id="equipment-tab" data-bs-toggle="tab" href="#equipment" role="tab" aria-controls="equipment" aria-selected="false"
-              >Équipement</a
-              >
-            </li>
-            <li class="nav-item" role="presentation">
-              <a class="nav-link" id="backstory-tab" data-bs-toggle="tab" href="#backstory" role="tab" aria-controls="backstory" aria-selected="false"
-                >Histoire</a
-                >
-              </li>
-            </ul>
+				@if (currentUser$ | async; as user) {
+					@if (user._id == character.owner._id) {
+						<div class="col-12 mb-3">
+							<div class="control-buttons">
+								@if (!sessionActive) {
+									<a routerLink="/create-character/{{ character?._id }}/" class="btn btn-custom btn-modify">
+										<i class="bi bi-pencil-square"></i> Modifier
+									</a>
 
-            <!-- Contenu des Onglets -->
-            <div class="tab-content" id="myTabContent">
-              <!-- Onglet Statistiques -->
-              <div class="tab-pane fade show active" id="stats" role="tabpanel" aria-labelledby="stats-tab">
-                <table class="table table-striped-vertical" id="statistique">
-                  <thead>
-                    <tr>
-                      <th>Force</th>
-                      <th>Agilité</th>
-                      <th>Endurance</th>
-                      <th>Social</th>
-                      <th>Mental</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>
-                        {{ character?.strength }} <small>({{ bonuses['strength'] }})</small>
-                      </td>
-                      <td>
-                        {{ character?.agility }} <small>({{ bonuses['agility'] }})</small>
-                      </td>
-                      <td>
-                        {{ character?.endurance }} <small>({{ bonuses['endurance'] }})</small>
-                      </td>
-                      <td>
-                        {{ character?.social }} <small>({{ bonuses['social'] }})</small>
-                      </td>
-                      <td>
-                        {{ character?.mental }} <small>({{ bonuses['mental'] }})</small>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+									<button class="btn btn-custom btn-session" (click)="startSession()">
+										<i class="bi bi-play-fill"></i> Lancer une session
+									</button>
+								} @else {
+									<button class="btn btn-custom btn-danger" (click)="endSession()">
+										<i class="bi bi-stop-fill"></i> Fin de session
+									</button>
+								}
 
-                <table class="table table-striped-vertical">
-                  <thead>
-                    <tr>
-                      <th>Constitution</th>
-                      <th>Résilience</th>
-                      <th>Réflexe</th>
-                      <th>Charisme</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>{{ secondaryStats?.constitution }}</td>
-                      <td>{{ secondaryStats?.resilience }}</td>
-                      <td>{{ secondaryStats?.reflex }}</td>
-                      <td>{{ secondaryStats?.charisma }}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+								<button
+									class="btn btn-custom"
+									[ngClass]="character?.isPublic ? 'btn-visibility-private' : 'btn-visibility-public'"
+									(click)="onToggleVisibility()"
+								>
+									<i class="bi" [ngClass]="character?.isPublic ? 'bi-eye-slash' : 'bi-eye'"></i>
+									{{ character?.isPublic ? 'Rendre Privé' : 'Rendre Public' }}
+								</button>
+							</div>
+						</div>
+					}
+				}
 
-              <!-- Onglet Traits -->
-              <div class="tab-pane fade" id="traits" role="tabpanel" aria-labelledby="traits-tab">
-                <div class="row">
-                  <div class="col-md-6">
-                    <h2>Trait positif</h2>
-                    <p [innerHTML]="formatText(character?.positive_trait)"></p>
-                  </div>
-                  <div class="col-md-6">
-                    <h2>Trait négatif</h2>
-                    <p [innerHTML]="formatText(character?.negative_trait)"></p>
-                  </div>
-                </div>
-              </div>
+				<!-- Portrait du personnage -->
+				<div class="col-lg-4 col-md-5 text-center">
+					<div class="portrait-container">
+						<img src="{{ character?.imageUrl }}" alt="{{ character?.name }}" class="character-portrait img-fluid" />
+					</div>
+				</div>
 
-              <!-- Onglet Maîtrises et Langues -->
-              <div class="tab-pane fade" id="masteries" role="tabpanel" aria-labelledby="masteries-tab">
-                <div class="row">
-                  <div class="col-md-7">
-                    <h4>Maîtrises</h4>
-                    <ul class="list-inline">
-                      @for (mastery of character?.masteries; track mastery) {
-                        <li class="list-inline-item">{{ mastery }}</li>
-                      }
-                    </ul>
-                  </div>
-                  <div class="col-md-5">
-                    <h4>Langues</h4>
-                    <ul class="list-inline">
-                      @for (language of character?.languages; track language) {
-                        <li class="list-inline-item">{{ language }}</li>
-                      }
-                    </ul>
-                  </div>
-                </div>
-              </div>
+				<!-- Informations principales -->
+				<div class="col-lg-8 col-md-7">
+					<h1 class="character-title">{{ character?.name }}</h1>
+					<h6 class="creator-info"><i class="bi bi-person-badge"></i> Créé par : {{ character?.owner?.name }}</h6>
 
-              <!-- Onglet Compétences -->
-              <div class="tab-pane fade" id="skills" role="tabpanel" aria-labelledby="skills-tab">
-                <table class="table" id="competence">
-                  <thead>
-                    <tr>
-                      <th>Description</th>
-                      <th>Effet</th>
-                      <th>Coût</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @for (skill of character?.skills; track skill) {
-                      <tr>
-                        <td>
-                          <strong>{{ skill.name }}</strong> <br />
-                          {{ skill.description }}
-                        </td>
-                        <td>{{ skill.effects }}</td>
-                        <td>{{ skill.cost }}</td>
-                      </tr>
-                    }
-                  </tbody>
-                </table>
-              </div>
+					<!-- Section HP/Mana en session -->
+					@if (sessionActive) {
+						<div class="health-mana-section">
+							<!-- Points de vie -->
+							<div class="stat-bar hp-bar">
+								<div class="d-flex justify-content-between align-items-center mb-2">
+									<label class="stat-label"> <i class="bi bi-heart-fill text-danger"></i> Points de vie </label>
+									<span class="stat-value">{{ character?.current_hp }} / {{ character?.max_hp }}</span>
+								</div>
+								<div class="progress mb-2">
+									<div class="progress-bar bg-danger" [style.width.%]="(character.current_hp / character.max_hp) * 100"></div>
+								</div>
+								<div class="stat-controls">
+									<button class="btn stat-btn hp-btn-positive" (click)="modifyHp('max')">
+										<i class="bi bi-heart-fill"></i> Full
+									</button>
+									<button class="btn stat-btn hp-btn-positive" (click)="modifyHp(10)">+10</button>
+									<button class="btn stat-btn hp-btn-positive" (click)="modifyHp(5)">+5</button>
+									<button class="btn stat-btn hp-btn-positive" (click)="modifyHp(1)">+1</button>
+									<button class="btn stat-btn hp-btn-negative" (click)="modifyHp(-1)">-1</button>
+									<button class="btn stat-btn hp-btn-negative" (click)="modifyHp(-5)">-5</button>
+									<button class="btn stat-btn hp-btn-negative" (click)="modifyHp(-10)">-10</button>
+								</div>
+							</div>
 
-              <!-- Onglet Équipement -->
-              <div class="tab-pane fade" id="equipment" role="tabpanel" aria-labelledby="equipment-tab">
-                <p><strong>Pièce d'or :</strong> {{ character?.gold }}</p>
-                <p [innerHTML]="character?.inventory"></p>
-              </div>
+							<!-- Mana -->
+							<div class="stat-bar mana-bar">
+								<div class="d-flex justify-content-between align-items-center mb-2">
+									<label class="stat-label"> <i class="bi bi-star-fill text-primary"></i> Mana </label>
+									<span class="stat-value">{{ character?.current_mana }} / {{ character?.max_mana }}</span>
+								</div>
+								<div class="progress mb-2">
+									<div class="progress-bar bg-primary" [style.width.%]="(character.current_mana / character.max_mana) * 100"></div>
+								</div>
+								<div class="stat-controls">
+									<button class="btn stat-btn mana-btn-positive" (click)="modifyMana('max')">
+										<i class="bi bi-star-fill"></i> Full
+									</button>
+									<button class="btn stat-btn mana-btn-positive" (click)="modifyMana(10)">+10</button>
+									<button class="btn stat-btn mana-btn-positive" (click)="modifyMana(5)">+5</button>
+									<button class="btn stat-btn mana-btn-positive" (click)="modifyMana(1)">+1</button>
+									<button class="btn stat-btn mana-btn-negative" (click)="modifyMana(-1)">-1</button>
+									<button class="btn stat-btn mana-btn-negative" (click)="modifyMana(-5)">-5</button>
+									<button class="btn stat-btn mana-btn-negative" (click)="modifyMana(-10)">-10</button>
+								</div>
+							</div>
+						</div>
+					}
 
-              <!-- Onglet Histoire -->
-              <div class="tab-pane fade" id="backstory" role="tabpanel" aria-labelledby="backstory-tab">
-                <div [innerHTML]="formatText(character?.backstory)" class="backstoryContainer"></div>
-              </div>
-            </div>
+					<!-- Informations de base -->
+					<div class="info-grid">
+						<div class="info-item">
+							<strong><i class="bi bi-trophy"></i> Level :</strong> {{ character?.level }}
+						</div>
+						<div class="info-item">
+							<strong><i class="bi bi-person"></i> Race :</strong> {{ character?.race }}
+						</div>
+						<div class="info-item" *ngIf="!sessionActive">
+							<strong><i class="bi bi-heart"></i> HP :</strong> {{ character?.current_hp }} / {{ character?.max_hp }}
+						</div>
+						<div class="info-item" *ngIf="!sessionActive">
+							<strong><i class="bi bi-star"></i> Mana :</strong> {{ character?.current_mana }} / {{ character?.max_mana }}
+						</div>
+						<div class="info-item">
+							<strong><i class="bi bi-gender-ambiguous"></i> Sexe :</strong> {{ character?.sexe }}
+						</div>
+						<div class="info-item">
+							<strong><i class="bi bi-eye"></i> Yeux :</strong> {{ character?.eyes }}
+						</div>
+						<div class="info-item">
+							<strong><i class="bi bi-scissors"></i> Cheveux :</strong> {{ character?.hair }}
+						</div>
+						<div class="info-item">
+							<strong><i class="bi bi-calendar"></i> Âge :</strong> {{ character?.age }}
+						</div>
+						<div class="info-item">
+							<strong><i class="bi bi-palette"></i> Couleur de peau :</strong> {{ character?.skincolor }}
+						</div>
+						<div class="info-item">
+							<strong><i class="bi bi-arrows-vertical"></i> Taille :</strong> {{ character?.height }}
+						</div>
+						<div class="info-item">
+							<strong><i class="bi bi-speedometer"></i> Poids :</strong> {{ character?.weight }}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
-            @if (!sessionActive) {
-              <a routerLink="/characters" class="btn btn-secondary mt-3">Retour à la liste</a>
-            }
-          </div>
+		<!-- Onglets -->
+		<ul class="nav nav-tabs custom-tabs" id="characterTabs" role="tablist">
+			<li class="nav-item" role="presentation">
+				<button
+					class="nav-link active"
+					id="stats-tab"
+					data-bs-toggle="tab"
+					data-bs-target="#stats"
+					type="button"
+					role="tab"
+					aria-controls="stats"
+					aria-selected="true"
+				>
+					<i class="bi bi-bar-chart-fill"></i> Statistiques
+				</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button
+					class="nav-link"
+					id="traits-tab"
+					data-bs-toggle="tab"
+					data-bs-target="#traits"
+					type="button"
+					role="tab"
+					aria-controls="traits"
+					aria-selected="false"
+				>
+					<i class="bi bi-bookmark-heart"></i> Traits
+				</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button
+					class="nav-link"
+					id="masteries-tab"
+					data-bs-toggle="tab"
+					data-bs-target="#masteries"
+					type="button"
+					role="tab"
+					aria-controls="masteries"
+					aria-selected="false"
+				>
+					<i class="bi bi-award"></i> Maîtrises & Langues
+				</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button
+					class="nav-link"
+					id="skills-tab"
+					data-bs-toggle="tab"
+					data-bs-target="#skills"
+					type="button"
+					role="tab"
+					aria-controls="skills"
+					aria-selected="false"
+				>
+					<i class="bi bi-lightning-charge"></i> Compétences
+				</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button
+					class="nav-link"
+					id="equipment-tab"
+					data-bs-toggle="tab"
+					data-bs-target="#equipment"
+					type="button"
+					role="tab"
+					aria-controls="equipment"
+					aria-selected="false"
+				>
+					<i class="bi bi-backpack"></i> Équipement
+				</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button
+					class="nav-link"
+					id="backstory-tab"
+					data-bs-toggle="tab"
+					data-bs-target="#backstory"
+					type="button"
+					role="tab"
+					aria-controls="backstory"
+					aria-selected="false"
+				>
+					<i class="bi bi-book"></i> Histoire
+				</button>
+			</li>
+		</ul>
+
+		<!-- Contenu des onglets -->
+		<div class="tab-content" id="characterTabsContent">
+			<!-- Onglet Statistiques -->
+			<div class="tab-pane fade show active" id="stats" role="tabpanel" aria-labelledby="stats-tab">
+				<div class="stats-section">
+					@if (bonuses$ | async; as bonuses) {
+						<h3 class="section-title"><i class="bi bi-bar-chart-fill"></i> Caractéristiques Principales</h3>
+						<table class="stats-table">
+							<thead>
+								<tr>
+									<th><i class="bi bi-hammer"></i> Force</th>
+									<th><i class="bi bi-wind"></i> Agilité</th>
+									<th><i class="bi bi-shield"></i> Endurance</th>
+									<th><i class="bi bi-chat-dots"></i> Social</th>
+									<th><i class="bi bi-brain"></i> Mental</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>
+										{{ character?.strength }}
+										<span class="stat-bonus">({{ bonuses['strength'] }})</span>
+									</td>
+									<td>
+										{{ character?.agility }}
+										<span class="stat-bonus">({{ bonuses['agility'] }})</span>
+									</td>
+									<td>
+										{{ character?.endurance }}
+										<span class="stat-bonus">({{ bonuses['endurance'] }})</span>
+									</td>
+									<td>
+										{{ character?.social }}
+										<span class="stat-bonus">({{ bonuses['social'] }})</span>
+									</td>
+									<td>
+										{{ character?.mental }}
+										<span class="stat-bonus">({{ bonuses['mental'] }})</span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					}
+
+					@if (secondaryStats$ | async; as secondaryStats) {
+						<h3 class="section-title"><i class="bi bi-speedometer2"></i> Caractéristiques Secondaires</h3>
+						<table class="stats-table">
+							<thead>
+								<tr>
+									<th><i class="bi bi-heart-pulse"></i> Constitution</th>
+									<th><i class="bi bi-shield-check"></i> Résilience</th>
+									<th><i class="bi bi-lightning"></i> Réflexe</th>
+									<th><i class="bi bi-star"></i> Charisme</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>{{ secondaryStats?.constitution }}</td>
+									<td>{{ secondaryStats?.resilience }}</td>
+									<td>{{ secondaryStats?.reflex }}</td>
+									<td>{{ secondaryStats?.charisma }}</td>
+								</tr>
+							</tbody>
+						</table>
+					}
+				</div>
+			</div>
+
+			<!-- Onglet Traits -->
+			<div class="tab-pane fade" id="traits" role="tabpanel" aria-labelledby="traits-tab">
+				<div class="traits-container">
+					<div class="trait-card positive-trait">
+						<h4 class="trait-title"><i class="bi bi-plus-circle-fill text-success"></i> Trait Positif</h4>
+						<div class="trait-content" [innerHTML]="formatText(character.positive_trait)"></div>
+					</div>
+					<div class="trait-card negative-trait">
+						<h4 class="trait-title"><i class="bi bi-dash-circle-fill text-danger"></i> Trait Négatif</h4>
+						<div class="trait-content" [innerHTML]="formatText(character.negative_trait)"></div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Onglet Maîtrises et Langues -->
+			<div class="tab-pane fade" id="masteries" role="tabpanel" aria-labelledby="masteries-tab">
+				<div class="row">
+					<div class="col-lg-7">
+						<h4 class="section-title"><i class="bi bi-award-fill"></i> Maîtrises</h4>
+						<div class="mastery-list">
+							<span class="mastery-badge" *ngFor="let mastery of character?.masteries">
+								<i class="bi bi-check-circle"></i> {{ mastery }}
+							</span>
+						</div>
+					</div>
+					<div class="col-lg-5">
+						<h4 class="section-title"><i class="bi bi-translate"></i> Langues</h4>
+						<div class="language-list">
+							<span class="language-badge" *ngFor="let language of character?.languages">
+								<i class="bi bi-chat-square-text"></i> {{ language }}
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Onglet Compétences -->
+			<div class="tab-pane fade" id="skills" role="tabpanel" aria-labelledby="skills-tab">
+				<h3 class="section-title"><i class="bi bi-lightning-charge-fill"></i> Compétences</h3>
+				<div class="skills-grid">
+					<div class="skill-card" *ngFor="let skill of character?.skills">
+						<div class="skill-header">
+							<h5 class="skill-name"><i class="bi bi-gem"></i> {{ skill.name }}</h5>
+							<span class="skill-cost"> <i class="bi bi-coin"></i> {{ skill.cost }} </span>
+						</div>
+						<p class="skill-description">{{ skill.description }}</p>
+						<div class="skill-effects">
+							<strong><i class="bi bi-magic"></i> Effet :</strong> {{ skill.effects }}
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Onglet Équipement -->
+			<div class="tab-pane fade" id="equipment" role="tabpanel" aria-labelledby="equipment-tab">
+				<div class="equipment-section">
+					<div class="gold-display">
+						<h4>
+							<i class="bi bi-coin text-warning"></i>
+							Richesse : <span class="gold-amount">{{ character?.gold }}</span> pièces d'or
+						</h4>
+					</div>
+					<div class="inventory-section">
+						<h4 class="section-title"><i class="bi bi-bag-fill"></i> Inventaire</h4>
+						<div class="inventory-content" [innerHTML]="character?.inventory"></div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Onglet Histoire -->
+			<div class="tab-pane fade" id="backstory" role="tabpanel" aria-labelledby="backstory-tab">
+				<div class="backstory-section">
+					<h3 class="section-title"><i class="bi bi-book-half"></i> Histoire du Personnage</h3>
+					<div class="backstory-content" [innerHTML]="formatText(character.backstory)"></div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Bouton de retour -->
+		<div class="back-section" *ngIf="!sessionActive">
+			<a routerLink="/characters" class="btn btn-custom btn-back"> <i class="bi bi-arrow-left-circle"></i> Retour à la liste </a>
+		</div>
+	}
+</div>

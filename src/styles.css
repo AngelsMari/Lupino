@@ -1,4 +1,26 @@
 /* You can add global styles to this file, and also import other style files */
+/* Variables CSS Lupino */
+:root {
+	--lupino-primary: #d4af37;
+	--lupino-secondary: #8b4513;
+	--lupino-dark: #2c1810;
+	--lupino-light: #d2b48c;
+	--lupino-accent: #6b3410;
+	--lupino-danger: #8b2635;
+	--lupino-success: #2d5016;
+}
+
+:root {
+	--primary-gold: #d4af37;
+	--dark-brown: #8b4513;
+	--light-brown: #deb887;
+	--cream: #f5f5dc;
+	--dark-red: #8b0000;
+	--forest-green: #228b22;
+	--royal-blue: #4169e1;
+	--shadow-dark: rgba(0, 0, 0, 0.3);
+	--shadow-light: rgba(255, 255, 255, 0.1);
+}
 
 * {
 	margin: 0;
@@ -9,8 +31,7 @@
 body {
 	font-family: 'Raleway', sans-serif;
 	color: #333;
-	background-color: #f3d8b9 !important;
-
+	background: linear-gradient(180deg, #4a2c17 0%, #8b4513 30%, #d2b48c 100%);
 	line-height: 1.6;
 }
 
@@ -67,4 +88,12 @@ quill-editor {
 
 .ql-editor.ql-blank {
 	min-height: 200px;
+}
+.mdc-slider__track {
+	background: var(--lupino-primary) !important;
+	border-radius: 4px;
+}
+
+.mat-mdc-slider {
+	width: 90% !important;
 }
