@@ -173,44 +173,6 @@
 	margin-top: auto;
 }
 
-.lupino-view-btn {
-	background: linear-gradient(45deg, var(--lupino-secondary), var(--lupino-accent)) !important;
-	color: var(--lupino-primary) !important;
-	border: 2px solid var(--lupino-primary) !important;
-	padding: 0.7rem 1.5rem;
-	border-radius: 8px;
-	font-weight: bold;
-	transition: all 0.3s ease;
-	text-transform: none;
-	font-size: 0.95rem;
-}
-
-.lupino-view-btn:hover {
-	background: linear-gradient(45deg, var(--lupino-accent), #4a2c17) !important;
-	transform: translateY(-2px);
-	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-	color: var(--lupino-primary) !important;
-	border-color: var(--lupino-primary) !important;
-}
-
-.lupino-delete-btn {
-	background: linear-gradient(45deg, var(--lupino-danger), #6b1e2a) !important;
-	color: white !important;
-	border: 2px solid var(--lupino-danger) !important;
-	padding: 0.7rem 1.5rem;
-	border-radius: 8px;
-	font-weight: bold;
-	font-size: 0.95rem;
-	transition: all 0.3s ease;
-}
-
-.lupino-delete-btn:hover {
-	background: linear-gradient(45deg, #6b1e2a, var(--lupino-danger)) !important;
-	color: white !important;
-	transform: translateY(-2px);
-	box-shadow: 0 5px 15px rgba(139, 38, 53, 0.4);
-}
-
 /* Card non publiée */
 .lupino-not-published {
 	opacity: 0.7;

@@ -9,7 +9,7 @@ import { BehaviorSubject, catchError, combineLatest, map, Observable, of, shareR
 @Component({
 	selector: 'app-arme-component',
 	templateUrl: './arme-component.component.html',
-	styleUrl: './arme-component.component.css',
+	styleUrls: ['./arme-component.component.css', '../../../../assets/styles/items.css'],
 	standalone: false,
 })
 export class ArmeComponentComponent {
@@ -73,5 +73,9 @@ export class ArmeComponentComponent {
 				console.log('Modale fermée:', reason);
 			},
 		);
+	}
+
+	trackByFn(index: number, item: any): any {
+		return item.id || index;
 	}
 }

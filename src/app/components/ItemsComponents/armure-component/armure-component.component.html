@@ -1,135 +1,300 @@
-<!-- Armes -->
-<!-- Barre de recherche -->
-<div class="search-container">
-	<input type="text" class="search-input ng-untouched ng-pristine ng-valid" placeholder="Rechercher une armure..." [(ngModel)]="searchText" />
-	@if ((isAdmin$ | async) && !isInCharacterCreation) {
-		<div>
-			<button class="add-button" (click)="openCreateArmureModal()"><i class="bi bi-sign-intersection-fill"></i> Ajouter une armure</button>
+<div class="items-catalog-container">
+	<!-- En-tête avec barre de recherche et bouton d'ajout -->
+	<div class="catalog-header">
+		<div class="search-section">
+			<div class="search-container">
+				<div class="search-input-wrapper">
+					<i class="bi bi-search search-icon"></i>
+					<input type="text" class="search-input" placeholder="Rechercher une armure..." [(ngModel)]="searchText" />
+					@if (searchText) {
+						<button class="clear-search" (click)="searchText = ''">
+							<i class="bi bi-x-circle"></i>
+						</button>
+					}
+				</div>
+			</div>
+
+			@if ((isAdmin$ | async) && !isInCharacterCreation) {
+				<div class="admin-controls">
+					<button class="add-item-btn" (click)="openCreateArmureModal()">
+						<i class="bi bi-plus-circle"></i>
+						<span>Ajouter une armure</span>
+					</button>
+				</div>
+			}
+		</div>
+	</div>
+
+	<!-- Section Armures Légères -->
+	@if (filteredArmuresLeg$ | async | filterList: searchText : filterFn; as filteredArmuresLeg) {
+		<div class="item-section">
+			<div class="section-header">
+				<h2 class="section-title">
+					<i class="bi bi-shield"></i>
+					Armures Légères
+					<span class="item-count">({{ filteredArmuresLeg.length }})</span>
+				</h2>
+			</div>
+
+			<!-- Version Desktop - Table -->
+			<div class="desktop-view d-none d-lg-block">
+				<div class="table-wrapper">
+					<table class="items-table">
+						<thead>
+							<tr>
+								<th class="col-name"><i class="bi bi-tag"></i> Armures</th>
+								<th class="col-description"><i class="bi bi-card-text"></i> Description</th>
+								<th class="col-stats"><i class="bi bi-bar-chart"></i> Statistiques</th>
+								<th class="col-price"><i class="bi bi-coin"></i> Prix</th>
+							</tr>
+						</thead>
+						<tbody>
+							@for (item of filteredArmuresLeg; track trackByFn($index, item)) {
+								<tr class="item-row">
+									<td class="item-name">
+										<div class="name-cell">
+											<div class="item-icon light-armor">
+												<i class="bi bi-shield"></i>
+											</div>
+											<span class="name-text">{{ item.nom }}</span>
+										</div>
+									</td>
+									<td class="item-description">
+										<div class="description-text">{{ item.description }}</div>
+									</td>
+									<td class="item-stats">
+										<span class="stats-value">{{ item.statistiques }}</span>
+									</td>
+									<td class="item-price">
+										<span class="price-value">
+											<i class="bi bi-coin text-warning"></i>
+											{{ item.prix }}
+										</span>
+									</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<!-- Version Mobile - Cards -->
+			<div class="mobile-view d-lg-none">
+				<div class="items-grid">
+					@for (item of filteredArmuresLeg; track trackByFn($index, item)) {
+						<div class="item-card light-armor">
+							<div class="card-header">
+								<div class="item-icon">
+									<i class="bi bi-shield"></i>
+								</div>
+								<h5 class="item-name">{{ item.nom }}</h5>
+								<span class="armor-type-badge light">Légère</span>
+							</div>
+							<div class="card-body">
+								<div class="item-detail">
+									<i class="bi bi-card-text"></i>
+									<strong>Description:</strong>
+									<span>{{ item.description }}</span>
+								</div>
+								<div class="item-stats-section">
+									<div class="stat">
+										<i class="bi bi-bar-chart text-info"></i>
+										<span class="stat-label">Statistiques:</span>
+										<span class="stat-value stats">{{ item.statistiques }}</span>
+									</div>
+									<div class="stat">
+										<i class="bi bi-coin text-warning"></i>
+										<span class="stat-label">Prix:</span>
+										<span class="stat-value price">{{ item.prix }}</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					}
+				</div>
+			</div>
+		</div>
+	}
+
+	<!-- Section Armures Intermédiaires -->
+	@if (filteredArmuresInter$ | async | filterList: searchText : filterFn; as filteredArmuresInter) {
+		<div class="item-section">
+			<div class="section-header">
+				<h2 class="section-title">
+					<i class="bi bi-shield-fill"></i>
+					Armures Intermédiaires
+					<span class="item-count">({{ filteredArmuresInter.length }})</span>
+				</h2>
+			</div>
+
+			<!-- Version Desktop -->
+			<div class="desktop-view d-none d-lg-block">
+				<div class="table-wrapper">
+					<table class="items-table">
+						<thead>
+							<tr>
+								<th class="col-name"><i class="bi bi-tag"></i> Armures</th>
+								<th class="col-description"><i class="bi bi-card-text"></i> Description</th>
+								<th class="col-stats"><i class="bi bi-bar-chart"></i> Statistiques</th>
+								<th class="col-price"><i class="bi bi-coin"></i> Prix</th>
+							</tr>
+						</thead>
+						<tbody>
+							@for (item of filteredArmuresInter; track trackByFn($index, item)) {
+								<tr class="item-row">
+									<td class="item-name">
+										<div class="name-cell">
+											<div class="item-icon medium-armor">
+												<i class="bi bi-shield-fill"></i>
+											</div>
+											<span class="name-text">{{ item.nom }}</span>
+										</div>
+									</td>
+									<td class="item-description">
+										<div class="description-text">{{ item.description }}</div>
+									</td>
+									<td class="item-stats">
+										<span class="stats-value">{{ item.statistiques }}</span>
+									</td>
+									<td class="item-price">
+										<span class="price-value">
+											<i class="bi bi-coin text-warning"></i>
+											{{ item.prix }}
+										</span>
+									</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<!-- Version Mobile -->
+			<div class="mobile-view d-lg-none">
+				<div class="items-grid">
+					@for (item of filteredArmuresInter; track trackByFn($index, item)) {
+						<div class="item-card medium-armor">
+							<div class="card-header">
+								<div class="item-icon">
+									<i class="bi bi-shield-fill"></i>
+								</div>
+								<h5 class="item-name">{{ item.nom }}</h5>
+								<span class="armor-type-badge medium">Intermédiaire</span>
+							</div>
+							<div class="card-body">
+								<div class="item-detail">
+									<i class="bi bi-card-text"></i>
+									<strong>Description:</strong>
+									<span>{{ item.description }}</span>
+								</div>
+								<div class="item-stats-section">
+									<div class="stat">
+										<i class="bi bi-bar-chart text-info"></i>
+										<span class="stat-label">Statistiques:</span>
+										<span class="stat-value stats">{{ item.statistiques }}</span>
+									</div>
+									<div class="stat">
+										<i class="bi bi-coin text-warning"></i>
+										<span class="stat-label">Prix:</span>
+										<span class="stat-value price">{{ item.prix }}</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					}
+				</div>
+			</div>
+		</div>
+	}
+
+	<!-- Section Armures Lourdes -->
+	@if (filteredArmuresLourdes$ | async | filterList: searchText : filterFn; as filteredArmuresLourdes) {
+		<div class="item-section">
+			<div class="section-header">
+				<h2 class="section-title">
+					<i class="bi bi-shield-check"></i>
+					Armures Lourdes
+					<span class="item-count">({{ filteredArmuresLourdes.length }})</span>
+				</h2>
+			</div>
+
+			<!-- Version Desktop -->
+			<div class="desktop-view d-none d-lg-block">
+				<div class="table-wrapper">
+					<table class="items-table">
+						<thead>
+							<tr>
+								<th class="col-name"><i class="bi bi-tag"></i> Armures</th>
+								<th class="col-description"><i class="bi bi-card-text"></i> Description</th>
+								<th class="col-stats"><i class="bi bi-bar-chart"></i> Statistiques</th>
+								<th class="col-price"><i class="bi bi-coin"></i> Prix</th>
+							</tr>
+						</thead>
+						<tbody>
+							@for (item of filteredArmuresLourdes; track trackByFn($index, item)) {
+								<tr class="item-row">
+									<td class="item-name">
+										<div class="name-cell">
+											<div class="item-icon heavy-armor">
+												<i class="bi bi-shield-check"></i>
+											</div>
+											<span class="name-text">{{ item.nom }}</span>
+										</div>
+									</td>
+									<td class="item-description">
+										<div class="description-text">{{ item.description }}</div>
+									</td>
+									<td class="item-stats">
+										<span class="stats-value">{{ item.statistiques }}</span>
+									</td>
+									<td class="item-price">
+										<span class="price-value">
+											<i class="bi bi-coin text-warning"></i>
+											{{ item.prix }}
+										</span>
+									</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<!-- Version Mobile -->
+			<div class="mobile-view d-lg-none">
+				<div class="items-grid">
+					@for (item of filteredArmuresLourdes; track trackByFn($index, item)) {
+						<div class="item-card heavy-armor">
+							<div class="card-header">
+								<div class="item-icon">
+									<i class="bi bi-shield-check"></i>
+								</div>
+								<h5 class="item-name">{{ item.nom }}</h5>
+								<span class="armor-type-badge heavy">Lourde</span>
+							</div>
+							<div class="card-body">
+								<div class="item-detail">
+									<i class="bi bi-card-text"></i>
+									<strong>Description:</strong>
+									<span>{{ item.description }}</span>
+								</div>
+								<div class="item-stats-section">
+									<div class="stat">
+										<i class="bi bi-bar-chart text-info"></i>
+										<span class="stat-label">Statistiques:</span>
+										<span class="stat-value stats">{{ item.statistiques }}</span>
+									</div>
+									<div class="stat">
+										<i class="bi bi-coin text-warning"></i>
+										<span class="stat-label">Prix:</span>
+										<span class="stat-value price">{{ item.prix }}</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					}
+				</div>
+			</div>
 		</div>
 	}
 </div>
-
-<!-- Armes corps à corps -->
-@if (filteredArmuresLeg$ | async | filterList: searchText : filterFn; as filteredArmuresLeg) {
-	<h2>Armure légère</h2>
-
-	<div class="d-none d-lg-block">
-		<table class="table">
-			<thead>
-				<tr>
-					<th>Armures</th>
-					<th>Description</th>
-					<th>Statistique</th>
-					<th>Prix</th>
-				</tr>
-			</thead>
-
-			<tbody>
-				@for (item of filteredArmuresLeg; track item) {
-					<tr>
-						<td>{{ item.nom }}</td>
-						<td>{{ item.description }}</td>
-						<td>{{ item.statistiques }}</td>
-						<td>{{ item.prix }}</td>
-					</tr>
-				}
-			</tbody>
-		</table>
-	</div>
-
-	<div class="container d-md-none">
-		@for (item of filteredArmuresLeg; track item) {
-			<div class="card mb-3">
-				<div class="card-body">
-					<h5 class="card-title">{{ item.nom }}</h5>
-					<p class="card-text"><strong>Description :</strong> {{ item.description }}</p>
-					<p class="card-text"><strong>Statistiques :</strong> {{ item.statistiques }}</p>
-					<p class="card-text"><strong>Prix :</strong> {{ item.prix }}</p>
-				</div>
-			</div>
-		}
-	</div>
-}
-
-@if (filteredArmuresInter$ | async | filterList: searchText : filterFn; as filteredArmuresInter) {
-	<h2>Armure intermédiaire</h2>
-
-	<div class="d-none d-lg-block">
-		<table class="table">
-			<thead>
-				<tr>
-					<th>Armures</th>
-					<th>Description</th>
-					<th>Statistique</th>
-					<th>Prix</th>
-				</tr>
-			</thead>
-
-			<tbody>
-				@for (item of filteredArmuresInter; track item) {
-					<tr>
-						<td>{{ item.nom }}</td>
-						<td>{{ item.description }}</td>
-						<td>{{ item.statistiques }}</td>
-						<td>{{ item.prix }}</td>
-					</tr>
-				}
-			</tbody>
-		</table>
-	</div>
-
-	<div class="container d-md-none">
-		@for (item of filteredArmuresInter; track item) {
-			<div class="card mb-3">
-				<div class="card-body">
-					<h5 class="card-title">{{ item.nom }}</h5>
-					<p class="card-text"><strong>Description :</strong> {{ item.description }}</p>
-					<p class="card-text"><strong>Statistiques :</strong> {{ item.statistiques }}</p>
-					<p class="card-text"><strong>Prix :</strong> {{ item.prix }}</p>
-				</div>
-			</div>
-		}
-	</div>
-}
-
-@if (filteredArmuresLourdes$ | async | filterList: searchText : filterFn; as filteredArmuresLourdes) {
-	<h2>Armure lourde</h2>
-
-	<div class="d-none d-lg-block">
-		<table class="table">
-			<thead>
-				<tr>
-					<th>Armures</th>
-					<th>Description</th>
-					<th>Statistique</th>
-					<th>Prix</th>
-				</tr>
-			</thead>
-
-			<tbody>
-				@for (item of filteredArmuresLourdes; track item) {
-					<tr>
-						<td>{{ item.nom }}</td>
-						<td>{{ item.description }}</td>
-						<td>{{ item.statistiques }}</td>
-						<td>{{ item.prix }}</td>
-					</tr>
-				}
-			</tbody>
-		</table>
-	</div>
-
-	<div class="container d-md-none">
-		<h2>Armures lourde</h2>
-		@for (item of filteredArmuresLourdes; track item) {
-			<div class="card mb-3">
-				<div class="card-body">
-					<h5 class="card-title">{{ item.nom }}</h5>
-					<p class="card-text"><strong>Description :</strong> {{ item.description }}</p>
-					<p class="card-text"><strong>Statistiques :</strong> {{ item.statistiques }}</p>
-					<p class="card-text"><strong>Prix :</strong> {{ item.prix }}</p>
-				</div>
-			</div>
-		}
-	</div>
-}

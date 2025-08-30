@@ -9,7 +9,7 @@ import { catchError, combineLatest, map, Observable, of, shareReplay, tap } from
 @Component({
 	selector: 'app-armure-component',
 	templateUrl: './armure-component.component.html',
-	styleUrl: './armure-component.component.css',
+	styleUrls: ['./armure-component.component.css', '../../../../assets/styles/items.css'],
 	standalone: false,
 })
 export class ArmureComponent {
@@ -98,5 +98,8 @@ export class ArmureComponent {
 				console.log('Modale fermée:', reason);
 			},
 		);
+	}
+	trackByFn(index: number, item: any): any {
+		return item.id || index;
 	}
 }

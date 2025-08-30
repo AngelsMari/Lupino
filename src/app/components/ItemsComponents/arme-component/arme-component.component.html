@@ -1,203 +1,440 @@
-<!-- Armes -->
-<!-- Barre de recherche -->
-<div class="search-container">
-	<input type="text" class="search-input ng-untouched ng-pristine ng-valid" placeholder="Rechercher une arme..." [(ngModel)]="searchText" />
-	@if ((isAdmin$ | async) && !isInCharacterCreation) {
-		<div>
-			<button class="add-button" (click)="openCreateArmeModal()"><i class="bi bi-sign-intersection-fill"></i> Ajouter une arme</button>
+<div class="items-catalog-container">
+	<!-- En-tête avec barre de recherche et bouton d'ajout -->
+	<div class="catalog-header">
+		<div class="search-section">
+			<div class="search-container">
+				<div class="search-input-wrapper">
+					<i class="bi bi-search search-icon"></i>
+					<input type="text" class="search-input" placeholder="Rechercher une arme..." [(ngModel)]="searchText" />
+					<button class="clear-search" *ngIf="searchText" (click)="searchText = ''">
+						<i class="bi bi-x-circle"></i>
+					</button>
+				</div>
+			</div>
+
+			@if ((isAdmin$ | async) && !isInCharacterCreation) {
+				<div class="admin-controls">
+					<button class="add-item-btn" (click)="openCreateArmeModal()">
+						<i class="bi bi-plus-circle"></i>
+						<span>Ajouter une arme</span>
+					</button>
+				</div>
+			}
+		</div>
+	</div>
+
+	<!-- Section Armes Corps à Corps -->
+	@if (armesCac$ | async | filterList: searchText : filterFn; as filteredArmesCac) {
+		<div class="item-section">
+			<div class="section-header">
+				<h2 class="section-title">
+					<i class="bi bi-sword"></i>
+					Armes Corps à Corps
+					<span class="item-count">({{ filteredArmesCac.length }})</span>
+				</h2>
+			</div>
+
+			<!-- Version Desktop - Table -->
+			<div class="desktop-view d-none d-lg-block">
+				<div class="table-wrapper">
+					<table class="items-table">
+						<thead>
+							<tr>
+								<th class="col-name"><i class="bi bi-tag"></i> Armes</th>
+								<th class="col-type"><i class="bi bi-diagram-3"></i> Type</th>
+								<th class="col-effects"><i class="bi bi-magic"></i> Effets</th>
+								<th class="col-damage"><i class="bi bi-lightning"></i> Dégâts</th>
+								<th class="col-price"><i class="bi bi-coin"></i> Prix</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="item-row" *ngFor="let item of filteredArmesCac; trackBy: trackByFn">
+								<td class="item-name">
+									<div class="name-cell">
+										<div class="item-icon">
+											<i class="bi bi-sword"></i>
+										</div>
+										<span class="name-text">{{ item.nom }}</span>
+									</div>
+								</td>
+								<td class="item-type">
+									<span class="type-badge">{{ item.type }}</span>
+								</td>
+								<td class="item-effects">
+									<div class="effects-text">{{ item.effet }}</div>
+								</td>
+								<td class="item-damage">
+									<span class="damage-value">{{ item.degats }}</span>
+								</td>
+								<td class="item-price">
+									<span class="price-value">
+										<i class="bi bi-coin text-warning"></i>
+										{{ item.prix }}
+									</span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<!-- Version Mobile - Cards -->
+			<div class="mobile-view d-lg-none">
+				<div class="items-grid">
+					<div class="item-card" *ngFor="let item of filteredArmesCac; trackBy: trackByFn">
+						<div class="card-header">
+							<div class="item-icon">
+								<i class="bi bi-sword"></i>
+							</div>
+							<h5 class="item-name">{{ item.nom }}</h5>
+							<span class="item-type-badge">{{ item.type }}</span>
+						</div>
+						<div class="card-body">
+							<div class="item-detail">
+								<i class="bi bi-magic"></i>
+								<strong>Effets:</strong>
+								<span>{{ item.effet }}</span>
+							</div>
+							<div class="item-stats">
+								<div class="stat">
+									<i class="bi bi-lightning text-danger"></i>
+									<span class="stat-label">Dégâts:</span>
+									<span class="stat-value damage">{{ item.degats }}</span>
+								</div>
+								<div class="stat">
+									<i class="bi bi-coin text-warning"></i>
+									<span class="stat-label">Prix:</span>
+									<span class="stat-value price">{{ item.prix }}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	}
+
+	<!-- Section Armes à Distance -->
+	@if (distance$ | async | filterList: searchText : filterFn; as filteredDistance) {
+		<div class="item-section">
+			<div class="section-header">
+				<h2 class="section-title">
+					<i class="bi bi-bullseye"></i>
+					Armes à Distance
+					<span class="item-count">({{ (distance$ | async | filterList: searchText : filterFn)?.length || 0 }})</span>
+				</h2>
+			</div>
+
+			<!-- Version Desktop -->
+			<div class="desktop-view d-none d-lg-block">
+				<div class="table-wrapper">
+					<table class="items-table">
+						<thead>
+							<tr>
+								<th class="col-name"><i class="bi bi-tag"></i> Armes</th>
+								<th class="col-type"><i class="bi bi-diagram-3"></i> Type</th>
+								<th class="col-effects"><i class="bi bi-magic"></i> Effets</th>
+								<th class="col-range"><i class="bi bi-arrows-angle-expand"></i> Portée</th>
+								<th class="col-damage"><i class="bi bi-lightning"></i> Dégâts</th>
+								<th class="col-price"><i class="bi bi-coin"></i> Prix</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="item-row" *ngFor="let item of distance$ | async | filterList: searchText : filterFn; trackBy: trackByFn">
+								<td class="item-name">
+									<div class="name-cell">
+										<div class="item-icon">
+											<i class="bi bi-bullseye"></i>
+										</div>
+										<span class="name-text">{{ item.nom }}</span>
+									</div>
+								</td>
+								<td class="item-type">
+									<span class="type-badge">{{ item.type }}</span>
+								</td>
+								<td class="item-effects">
+									<div class="effects-text">{{ item.effet }}</div>
+								</td>
+								<td class="item-range">
+									<span class="range-value">{{ item.portee }}</span>
+								</td>
+								<td class="item-damage">
+									<span class="damage-value">{{ item.degats }}</span>
+								</td>
+								<td class="item-price">
+									<span class="price-value">
+										<i class="bi bi-coin text-warning"></i>
+										{{ item.prix }}
+									</span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<!-- Version Mobile -->
+			<div class="mobile-view d-lg-none">
+				<div class="items-grid">
+					<div class="item-card" *ngFor="let item of distance$ | async | filterList: searchText : filterFn; trackBy: trackByFn">
+						<div class="card-header">
+							<div class="item-icon">
+								<i class="bi bi-bullseye"></i>
+							</div>
+							<h5 class="item-name">{{ item.nom }}</h5>
+							<span class="item-type-badge">{{ item.type }}</span>
+						</div>
+						<div class="card-body">
+							<div class="item-detail">
+								<i class="bi bi-magic"></i>
+								<strong>Effets:</strong>
+								<span>{{ item.effet }}</span>
+							</div>
+							<div class="item-stats">
+								<div class="stat">
+									<i class="bi bi-arrows-angle-expand text-info"></i>
+									<span class="stat-label">Portée:</span>
+									<span class="stat-value range">{{ item.portee }}</span>
+								</div>
+								<div class="stat">
+									<i class="bi bi-lightning text-danger"></i>
+									<span class="stat-label">Dégâts:</span>
+									<span class="stat-value damage">{{ item.degats }}</span>
+								</div>
+								<div class="stat">
+									<i class="bi bi-coin text-warning"></i>
+									<span class="stat-label">Prix:</span>
+									<span class="stat-value price">{{ item.prix }}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+
+	<!-- Section Explosifs -->
+	@if (explosif$ | async | filterList: searchText : filterFn; as explosiveWeapons) {
+		<div class="item-section">
+			<div class="section-header">
+				<h2 class="section-title">
+					<i class="bi bi-bomb"></i>
+					Explosifs
+					<span class="item-count">({{ (explosif$ | async | filterList: searchText : filterFn)?.length || 0 }})</span>
+				</h2>
+			</div>
+
+			<!-- Version Desktop -->
+			<div class="desktop-view d-none d-lg-block">
+				<div class="table-wrapper">
+					<table class="items-table">
+						<thead>
+							<tr>
+								<th class="col-name"><i class="bi bi-tag"></i> Armes</th>
+								<th class="col-effects"><i class="bi bi-magic"></i> Effets</th>
+								<th class="col-range"><i class="bi bi-arrow-up-right-circle"></i> Rayon</th>
+								<th class="col-damage"><i class="bi bi-lightning"></i> Dégâts</th>
+								<th class="col-price"><i class="bi bi-coin"></i> Prix</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="item-row" *ngFor="let item of explosif$ | async | filterList: searchText : filterFn; trackBy: trackByFn">
+								<td class="item-name">
+									<div class="name-cell">
+										<div class="item-icon explosive">
+											<i class="bi bi-bomb"></i>
+										</div>
+										<span class="name-text">{{ item.nom }}</span>
+									</div>
+								</td>
+								<td class="item-effects">
+									<div class="effects-text">{{ item.effet }}</div>
+								</td>
+								<td class="item-range">
+									<span class="range-value">{{ item.portee }}</span>
+								</td>
+								<td class="item-damage">
+									<span class="damage-value">{{ item.degats }}</span>
+								</td>
+								<td class="item-price">
+									<span class="price-value">
+										<i class="bi bi-coin text-warning"></i>
+										{{ item.prix }}
+									</span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<!-- Version Mobile -->
+			<div class="mobile-view d-lg-none">
+				<div class="items-grid">
+					<div class="item-card explosive" *ngFor="let item of explosif$ | async | filterList: searchText : filterFn; trackBy: trackByFn">
+						<div class="card-header">
+							<div class="item-icon">
+								<i class="bi bi-bomb"></i>
+							</div>
+							<h5 class="item-name">{{ item.nom }}</h5>
+						</div>
+						<div class="card-body">
+							<div class="item-detail">
+								<i class="bi bi-magic"></i>
+								<strong>Effets:</strong>
+								<span>{{ item.effet }}</span>
+							</div>
+							<div class="item-stats">
+								<div class="stat">
+									<i class="bi bi-arrow-up-right-circle text-warning"></i>
+									<span class="stat-label">Rayon:</span>
+									<span class="stat-value range">{{ item.portee }}</span>
+								</div>
+								<div class="stat">
+									<i class="bi bi-lightning text-danger"></i>
+									<span class="stat-label">Dégâts:</span>
+									<span class="stat-value damage">{{ item.degats }}</span>
+								</div>
+								<div class="stat">
+									<i class="bi bi-coin text-warning"></i>
+									<span class="stat-label">Prix:</span>
+									<span class="stat-value price">{{ item.prix }}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+
+	<!-- Section Armes de Siège -->
+	@if (siege$ | async | filterList: searchText : filterFn; as siegeWeapons) {
+		<div class="item-section">
+			<div class="section-header">
+				<h2 class="section-title">
+					<i class="bi bi-building"></i>
+					Armes de Siège
+					<span class="item-count">({{ (siege$ | async | filterList: searchText : filterFn)?.length || 0 }})</span>
+				</h2>
+			</div>
+
+			<!-- Version Desktop -->
+			<div class="desktop-view d-none d-lg-block">
+				<div class="table-wrapper">
+					<table class="items-table siege-table">
+						<thead>
+							<tr>
+								<th class="col-name"><i class="bi bi-tag"></i> Armes</th>
+								<th class="col-effects"><i class="bi bi-magic"></i> Effets</th>
+								<th class="col-range"><i class="bi bi-arrows-angle-expand"></i> Portée</th>
+								<th class="col-damage"><i class="bi bi-lightning"></i> Dégâts</th>
+								<th class="col-price"><i class="bi bi-coin"></i> Prix</th>
+								<th class="col-ammo"><i class="bi bi-circle"></i> Munitions</th>
+								<th class="col-ammo-price"><i class="bi bi-coin"></i> Prix Munitions</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="item-row" *ngFor="let item of siege$ | async | filterList: searchText : filterFn; trackBy: trackByFn">
+								<td class="item-name">
+									<div class="name-cell">
+										<div class="item-icon siege">
+											<i class="bi bi-building"></i>
+										</div>
+										<span class="name-text">{{ item.nom }}</span>
+									</div>
+								</td>
+								<td class="item-effects">
+									<div class="effects-text">{{ item.effet }}</div>
+								</td>
+								<td class="item-range">
+									<span class="range-value">{{ item.portee }}</span>
+								</td>
+								<td class="item-damage">
+									<span class="damage-value">{{ item.degats }}</span>
+								</td>
+								<td class="item-price">
+									<span class="price-value">
+										<i class="bi bi-coin text-warning"></i>
+										{{ item.prix }}
+									</span>
+								</td>
+								<td class="weapon-ammo">
+									<span class="ammo-value">{{ item.munitions }}</span>
+								</td>
+								<td class="weapon-ammo-price">
+									<span class="price-value">
+										<i class="bi bi-coin text-warning"></i>
+										{{ item.prixMunitions }}
+									</span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<!-- Version Mobile -->
+			<div class="mobile-view d-lg-none">
+				<div class="items-grid">
+					<div class="item-card siege" *ngFor="let item of siege$ | async | filterList: searchText : filterFn; trackBy: trackByFn">
+						<div class="card-header">
+							<div class="item-icon">
+								<i class="bi bi-building"></i>
+							</div>
+							<h5 class="item-name">{{ item.nom }}</h5>
+						</div>
+						<div class="card-body">
+							<div class="item-detail">
+								<i class="bi bi-magic"></i>
+								<strong>Effets:</strong>
+								<span>{{ item.effet }}</span>
+							</div>
+							<div class="item-stats">
+								<div class="stat">
+									<i class="bi bi-arrows-angle-expand text-info"></i>
+									<span class="stat-label">Portée:</span>
+									<span class="stat-value range">{{ item.portee }}</span>
+								</div>
+								<div class="stat">
+									<i class="bi bi-lightning text-danger"></i>
+									<span class="stat-label">Dégâts:</span>
+									<span class="stat-value damage">{{ item.degats }}</span>
+								</div>
+								<div class="stat">
+									<i class="bi bi-coin text-warning"></i>
+									<span class="stat-label">Prix:</span>
+									<span class="stat-value price">{{ item.prix }}</span>
+								</div>
+								<div class="stat">
+									<i class="bi bi-circle text-secondary"></i>
+									<span class="stat-label">Munitions:</span>
+									<span class="stat-value">{{ item.munitions }}</span>
+								</div>
+								<div class="stat">
+									<i class="bi bi-coin text-warning"></i>
+									<span class="stat-label">Prix Munitions:</span>
+									<span class="stat-value price">{{ item.prixMunitions }}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+
+	<!-- Message si aucun résultat -->
+	<!-- <div class="no-results" *ngIf="searchText && !hasResults()">
+		<div class="no-results-content">
+			<i class="bi bi-search"></i>
+			<h3>Aucune arme trouvée</h3>
+			<p>Essayez avec des termes de recherche différents</p>
+			<button class="btn-clear-search" (click)="searchText = ''">
+				<i class="bi bi-arrow-clockwise"></i>
+				Effacer la recherche
+			</button>
+		</div>
+	</div> -->
 </div>
-
-<!-- Armes corps à corps -->
-@if (armesCac$ | async | filterList: searchText : filterFn; as filteredArmesCac) {
-	<h2>Armes corps à corps</h2>
-
-	<div class="d-none d-lg-block">
-		<table class="table">
-			<thead>
-				<tr>
-					<th>Armes</th>
-					<th>Type</th>
-					<th>Effets</th>
-					<th>Dégâts</th>
-					<th>Prix</th>
-				</tr>
-			</thead>
-			<tbody>
-				@for (item of filteredArmesCac; track item) {
-					<tr>
-						<td>{{ item.nom }}</td>
-						<td>{{ item.type }}</td>
-						<td>{{ item.effet }}</td>
-						<td>{{ item.degats }}</td>
-						<td>{{ item.prix }}</td>
-					</tr>
-				}
-			</tbody>
-		</table>
-	</div>
-
-	<div class="d-lg-none">
-		<div class="card-container">
-			@for (item of filteredArmesCac; track item) {
-				<div class="card">
-					<div class="card-body">
-						<h5 class="card-title">{{ item.nom }}</h5>
-						<p class="card-text"><strong>Type:</strong> {{ item.type }}</p>
-						<p class="card-text"><strong>Effets:</strong> {{ item.effet }}</p>
-						<p class="card-text"><strong>Dégâts:</strong> {{ item.degats }}</p>
-						<p class="card-text"><strong>Prix:</strong> {{ item.prix }}</p>
-					</div>
-				</div>
-			}
-		</div>
-	</div>
-}
-
-<!-- Armes à distance -->
-@if (distance$ | async; as filteredDistance) {
-	<h2>Armes à distance</h2>
-
-	<div class="d-none d-lg-block">
-		<table class="table">
-			<thead>
-				<tr>
-					<th>Armes</th>
-					<th>Type</th>
-					<th>Effets</th>
-					<th>Portée</th>
-					<th>Dégâts</th>
-					<th>Prix</th>
-				</tr>
-			</thead>
-			<tbody>
-				@for (item of distance$ | async | filterList: searchText : filterFn; track item) {
-					<tr>
-						<td>{{ item.nom }}</td>
-						<td>{{ item.type }}</td>
-						<td>{{ item.effet }}</td>
-						<td>{{ item.portee }}</td>
-						<td>{{ item.degats }}</td>
-						<td>{{ item.prix }}</td>
-					</tr>
-				}
-			</tbody>
-		</table>
-	</div>
-
-	<div class="d-lg-none">
-		<div class="card-container">
-			@for (item of distance$ | async | filterList: searchText : filterFn; track item) {
-				<div class="card">
-					<div class="card-body">
-						<h5 class="card-title">{{ item.nom }}</h5>
-						<p class="card-text"><strong>Type:</strong> {{ item.type }}</p>
-						<p class="card-text"><strong>Effets:</strong> {{ item.effet }}</p>
-						<p class="card-text"><strong>Portée:</strong> {{ item.portee }}</p>
-						<p class="card-text"><strong>Dégâts:</strong> {{ item.degats }}</p>
-						<p class="card-text"><strong>Prix:</strong> {{ item.prix }}</p>
-					</div>
-				</div>
-			}
-		</div>
-	</div>
-}
-
-<!-- Explosifs -->
-@if (explosif$ | async; as filteredExplosif) {
-	<h2>Explosifs</h2>
-
-	<div class="d-none d-lg-block">
-		<table class="table">
-			<thead>
-				<tr>
-					<th>Armes</th>
-					<th>Effets</th>
-					<th>Rayon</th>
-					<th>Dégâts</th>
-					<th>Prix</th>
-				</tr>
-			</thead>
-			<tbody>
-				@for (item of explosif$ | async | filterList: searchText : filterFn; track item) {
-					<tr>
-						<td>{{ item.nom }}</td>
-						<td>{{ item.effet }}</td>
-						<td>{{ item.portee }}</td>
-						<td>{{ item.degats }}</td>
-						<td>{{ item.prix }}</td>
-					</tr>
-				}
-			</tbody>
-		</table>
-	</div>
-
-	<div class="d-lg-none">
-		<div class="card-container">
-			@for (item of explosif$ | async | filterList: searchText : filterFn; track item) {
-				<div class="card">
-					<div class="card-body">
-						<h5 class="card-title">{{ item.nom }}</h5>
-						<p class="card-text"><strong>Effets:</strong> {{ item.effet }}</p>
-						<p class="card-text"><strong>Rayon:</strong> {{ item.portee }}</p>
-						<p class="card-text"><strong>Dégâts:</strong> {{ item.degats }}</p>
-						<p class="card-text"><strong>Prix:</strong> {{ item.prix }}</p>
-					</div>
-				</div>
-			}
-		</div>
-	</div>
-}
-
-<!-- Armes de siège -->
-@if (siege$ | async; as filteredSiege) {
-	<h2>Armes de siège</h2>
-
-	<div class="d-none d-lg-block">
-		<table class="table">
-			<thead>
-				<tr>
-					<th>Armes</th>
-					<th>Effets</th>
-					<th>Portée</th>
-					<th>Dégâts</th>
-					<th>Prix</th>
-					<th>Munitions</th>
-					<th>Prix des munitions</th>
-				</tr>
-			</thead>
-			<tbody>
-				@for (item of siege$ | async | filterList: searchText : filterFn; track item) {
-					<tr>
-						<td>{{ item.nom }}</td>
-						<td>{{ item.effet }}</td>
-						<td>{{ item.portee }}</td>
-						<td>{{ item.degats }}</td>
-						<td>{{ item.prix }}</td>
-						<td>{{ item.munitions }}</td>
-						<td>{{ item.prixMunitions }}</td>
-					</tr>
-				}
-			</tbody>
-		</table>
-	</div>
-
-	<div class="d-lg-none">
-		<div class="card-container">
-			@for (item of siege$ | async | filterList: searchText : filterFn; track item) {
-				<div class="card">
-					<div class="card-body">
-						<h5 class="card-title">{{ item.nom }}</h5>
-						<p class="card-text"><strong>Effets:</strong> {{ item.effet }}</p>
-						<p class="card-text"><strong>Portée:</strong> {{ item.portee }}</p>
-						<p class="card-text"><strong>Dégâts:</strong> {{ item.degats }}</p>
-						<p class="card-text"><strong>Prix:</strong> {{ item.prix }}</p>
-						<p class="card-text"><strong>Munitions:</strong> {{ item.munitions }}</p>
-						<p class="card-text"><strong>Prix des munitions:</strong> {{ item.prixMunitions }}</p>
-					</div>
-				</div>
-			}
-		</div>
-	</div>
-}

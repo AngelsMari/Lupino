@@ -1,0 +1,722 @@
+/* Container principal */
+.items-catalog-container {
+	padding: 30px;
+	max-width: 1400px;
+	margin: 0 auto;
+	color: var(--cream);
+}
+
+/* En-tête du catalogue */
+.catalog-header {
+	margin-bottom: 40px;
+}
+
+.search-section {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 30px;
+	flex-wrap: wrap;
+}
+
+/* Barre de recherche */
+.search-container {
+	flex: 1;
+	max-width: 500px;
+}
+
+.search-input-wrapper {
+	position: relative;
+	display: flex;
+	align-items: center;
+}
+
+.search-input {
+	width: 100%;
+	padding: 15px 50px 15px 50px;
+	border: 2px solid var(--primary-gold);
+	border-radius: 50px;
+	background: rgba(139, 69, 19, 0.2);
+	color: var(--cream);
+	font-size: 1.1rem;
+	font-weight: 500;
+	backdrop-filter: blur(5px);
+	transition: all 0.3s ease;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.search-input:focus {
+	outline: none;
+	border-color: #ffd700;
+	background: rgba(139, 69, 19, 0.3);
+	box-shadow:
+		0 8px 25px rgba(0, 0, 0, 0.4),
+		0 0 20px rgba(255, 215, 0, 0.3);
+	transform: translateY(-2px);
+}
+
+.search-input::placeholder {
+	color: var(--light-brown);
+	opacity: 0.8;
+}
+
+.search-icon {
+	position: absolute;
+	left: 18px;
+	color: var(--primary-gold);
+	font-size: 1.2rem;
+	z-index: 1;
+}
+
+.clear-search {
+	position: absolute;
+	right: 15px;
+	background: none;
+	border: none;
+	color: var(--light-brown);
+	font-size: 1.2rem;
+	cursor: pointer;
+	padding: 5px;
+	border-radius: 50%;
+	transition: all 0.2s ease;
+	z-index: 1;
+}
+
+.clear-search:hover {
+	color: var(--primary-gold);
+	background: rgba(212, 175, 55, 0.1);
+}
+
+/* Bouton d'ajout */
+.admin-controls {
+	display: flex;
+	gap: 15px;
+}
+
+.add-item-btn {
+	background: linear-gradient(135deg, var(--forest-green), #32cd32);
+	color: white;
+	border: 2px solid var(--forest-green);
+	border-radius: 25px;
+	padding: 12px 25px;
+	font-weight: bold;
+	font-size: 1rem;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	box-shadow: 0 5px 15px rgba(34, 139, 34, 0.3);
+	text-decoration: none;
+}
+
+.add-item-btn:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 8px 25px rgba(34, 139, 34, 0.5);
+	background: linear-gradient(135deg, #32cd32, var(--forest-green));
+	color: white;
+}
+
+/* Sections d'armes */
+.item-section {
+	margin-bottom: 50px;
+	background: rgba(139, 69, 19, 0.1);
+	border-radius: 20px;
+	padding: 30px;
+	border: 1px solid var(--primary-gold);
+	backdrop-filter: blur(5px);
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.section-header {
+	margin-bottom: 30px;
+	border-bottom: 2px solid var(--primary-gold);
+	padding-bottom: 15px;
+}
+
+.section-title {
+	color: var(--primary-gold);
+	font-size: 2rem;
+	font-weight: bold;
+	margin: 0;
+	display: flex;
+	align-items: center;
+	gap: 15px;
+	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.item-count {
+	font-size: 1.2rem;
+	color: var(--light-brown);
+	font-weight: normal;
+	opacity: 0.8;
+}
+
+/* Tables desktop */
+.table-wrapper {
+	overflow-x: auto;
+	border-radius: 15px;
+	box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+.items-table {
+	width: 100%;
+	border-collapse: separate;
+	border-spacing: 0;
+	background: rgba(0, 0, 0, 0.3);
+	border-radius: 15px;
+	overflow: hidden;
+}
+
+.items-table thead tr {
+	background: linear-gradient(135deg, var(--primary-gold), #b8860b);
+}
+
+.items-table th {
+	padding: 18px 15px;
+	color: var(--dark-brown);
+	font-weight: bold;
+	font-size: 1rem;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	text-align: left;
+	border-bottom: 2px solid var(--dark-brown);
+	position: relative;
+}
+
+.items-table th i {
+	margin-right: 8px;
+}
+
+.item-row {
+	transition: all 0.3s ease;
+	border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.item-row:hover {
+	background: rgba(139, 69, 19, 0.4);
+	transform: scale(1.01);
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.item-row:last-child {
+	border-bottom: none;
+}
+
+.items-table td {
+	padding: 16px 15px;
+	color: var(--cream);
+	vertical-align: middle;
+}
+
+/* Cellules spécifiques */
+.name-cell {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.item-icon {
+	width: 35px;
+	height: 35px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 1.2rem;
+	color: white;
+	background: linear-gradient(135deg, var(--weapon-melee), #cd853f);
+	box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+.item-icon.explosive {
+	background: linear-gradient(135deg, var(--weapon-explosive), #ff7f50);
+}
+
+.item-icon.siege {
+	background: linear-gradient(135deg, var(--weapon-siege), #a0522d);
+}
+
+.name-text {
+	font-weight: bold;
+	font-size: 1.1rem;
+	color: var(--primary-gold);
+}
+
+.type-badge {
+	background: rgba(70, 130, 180, 0.3);
+	color: var(--steel-blue);
+	padding: 6px 12px;
+	border-radius: 15px;
+	font-size: 0.9rem;
+	font-weight: bold;
+	border: 1px solid var(--steel-blue);
+}
+
+.effects-text {
+	max-width: 300px;
+	line-height: 1.4;
+	color: var(--cream);
+	font-size: 0.95rem;
+}
+
+.damage-value {
+	font-weight: bold;
+	font-size: 1.1rem;
+	color: #ff6b6b;
+	background: rgba(255, 107, 107, 0.2);
+	padding: 4px 8px;
+	border-radius: 8px;
+	border: 1px solid #ff6b6b;
+}
+
+.range-value {
+	font-weight: bold;
+	color: var(--steel-blue);
+	background: rgba(70, 130, 180, 0.2);
+	padding: 4px 8px;
+	border-radius: 8px;
+	border: 1px solid var(--steel-blue);
+}
+
+.price-value {
+	font-weight: bold;
+	color: var(--primary-gold);
+	display: flex;
+	align-items: center;
+	gap: 5px;
+}
+
+.ammo-value {
+	color: var(--light-brown);
+	font-weight: 500;
+}
+
+/* Grille mobile */
+.items-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+	gap: 25px;
+}
+
+.item-card {
+	background: rgba(0, 0, 0, 0.4);
+	border-radius: 15px;
+	border: 2px solid var(--primary-gold);
+	overflow: hidden;
+	transition: all 0.3s ease;
+	backdrop-filter: blur(5px);
+	box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+	position: relative;
+}
+
+.item-card::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 3px;
+	background: linear-gradient(90deg, var(--weapon-melee), var(--primary-gold));
+}
+
+.item-card.explosive::before {
+	background: linear-gradient(90deg, var(--weapon-explosive), #ff7f50);
+}
+
+.item-card.siege::before {
+	background: linear-gradient(90deg, var(--weapon-siege), #a0522d);
+}
+
+.item-card:hover {
+	transform: translateY(-8px);
+	box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+	border-color: #ffd700;
+}
+
+.item-card .card-header {
+	background: rgba(139, 69, 19, 0.3);
+	padding: 20px;
+	border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+	display: flex;
+	align-items: center;
+	gap: 15px;
+}
+
+.item-card .item-icon {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 1.3rem;
+	color: white;
+	background: linear-gradient(135deg, var(--weapon-melee), #cd853f);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+	flex-shrink: 0;
+}
+
+.item-card .item-name {
+	color: var(--primary-gold);
+	font-size: 1.2rem;
+	font-weight: bold;
+	margin: 0;
+	flex: 1;
+}
+
+.item-type-badge {
+	background: rgba(70, 130, 180, 0.3);
+	color: var(--steel-blue);
+	padding: 4px 10px;
+	border-radius: 12px;
+	font-size: 0.8rem;
+	font-weight: bold;
+	border: 1px solid var(--steel-blue);
+	flex-shrink: 0;
+}
+
+.item-card .card-body {
+	padding: 20px;
+}
+
+.item-detail {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	margin-bottom: 20px;
+	padding: 15px;
+	background: rgba(139, 69, 19, 0.2);
+	border-radius: 10px;
+	border-left: 3px solid var(--primary-gold);
+}
+
+.item-detail i {
+	color: var(--primary-gold);
+	font-size: 1.1rem;
+	margin-top: 2px;
+	flex-shrink: 0;
+}
+
+.item-detail strong {
+	color: var(--primary-gold);
+	margin-right: 8px;
+}
+
+.item-detail span {
+	color: var(--cream);
+	line-height: 1.4;
+	flex: 1;
+}
+
+.item-stats {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 12px;
+}
+
+.stat {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 10px 12px;
+	background: rgba(0, 0, 0, 0.3);
+	border-radius: 8px;
+	border: 1px solid rgba(212, 175, 55, 0.2);
+	transition: all 0.2s ease;
+}
+
+.stat:hover {
+	background: rgba(0, 0, 0, 0.5);
+	border-color: var(--primary-gold);
+}
+
+.stat i {
+	font-size: 1rem;
+	flex-shrink: 0;
+}
+
+.stat-label {
+	font-size: 0.85rem;
+	color: var(--light-brown);
+	font-weight: 500;
+}
+
+.stat-value {
+	font-weight: bold;
+	color: var(--cream);
+	margin-left: auto;
+}
+
+.stat-value.damage {
+	color: #ff6b6b;
+}
+
+.stat-value.range {
+	color: var(--steel-blue);
+}
+
+.stat-value.price {
+	color: var(--primary-gold);
+}
+
+/* Table spéciale pour les armes de siège */
+.siege-table {
+	font-size: 0.9rem;
+}
+
+.siege-table th,
+.siege-table td {
+	padding: 12px 10px;
+}
+
+.col-name {
+	width: 15%;
+}
+.col-type {
+	width: 10%;
+}
+.col-effects {
+	width: 25%;
+}
+.col-range {
+	width: 10%;
+}
+.col-damage {
+	width: 10%;
+}
+.col-price {
+	width: 10%;
+}
+.col-ammo {
+	width: 10%;
+}
+.col-ammo-price {
+	width: 10%;
+}
+
+/* Section "Aucun résultat" */
+.no-results {
+	text-align: center;
+	padding: 60px 20px;
+	color: var(--light-brown);
+}
+
+.no-results-content {
+	max-width: 400px;
+	margin: 0 auto;
+}
+
+.no-results i {
+	font-size: 4rem;
+	color: var(--primary-gold);
+	margin-bottom: 20px;
+	opacity: 0.6;
+}
+
+.no-results h3 {
+	color: var(--primary-gold);
+	font-size: 1.8rem;
+	margin-bottom: 15px;
+}
+
+.no-results p {
+	font-size: 1.1rem;
+	margin-bottom: 30px;
+	opacity: 0.8;
+}
+
+.btn-clear-search {
+	background: linear-gradient(135deg, var(--primary-gold), #b8860b);
+	color: var(--dark-brown);
+	border: none;
+	border-radius: 25px;
+	padding: 12px 25px;
+	font-weight: bold;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+}
+
+.btn-clear-search:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
+	background: linear-gradient(135deg, #ffd700, var(--primary-gold));
+}
+
+/* Animations */
+@keyframes fadeInUp {
+	from {
+		opacity: 0;
+		transform: translateY(30px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.item-section {
+	animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes shimmer {
+	0% {
+		background-position: -200% 0;
+	}
+	100% {
+		background-position: 200% 0;
+	}
+}
+
+.section-title::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+	background-size: 200% 100%;
+	animation: shimmer 3s infinite;
+	pointer-events: none;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+	.items-catalog-container {
+		padding: 20px;
+	}
+
+	.search-section {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 20px;
+	}
+
+	.search-container {
+		max-width: 100%;
+	}
+}
+
+@media (max-width: 768px) {
+	.items-catalog-container {
+		padding: 15px;
+	}
+
+	.item-section {
+		padding: 20px;
+		margin-bottom: 30px;
+	}
+
+	.section-title {
+		font-size: 1.5rem;
+		flex-wrap: wrap;
+		gap: 10px;
+	}
+
+	.search-input {
+		padding: 12px 45px 12px 45px;
+		font-size: 1rem;
+	}
+
+	.add-item-btn {
+		justify-content: center;
+		width: 100%;
+	}
+
+	.items-grid {
+		grid-template-columns: 1fr;
+		gap: 20px;
+	}
+
+	.item-stats {
+		grid-template-columns: 1fr;
+		gap: 10px;
+	}
+}
+
+@media (max-width: 576px) {
+	.item-card .card-header {
+		flex-wrap: wrap;
+		gap: 10px;
+	}
+
+	.item-card .item-name {
+		font-size: 1.1rem;
+	}
+
+	.item-detail {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 8px;
+	}
+
+	.search-input {
+		padding: 10px 40px 10px 40px;
+	}
+
+	.section-title {
+		font-size: 1.3rem;
+	}
+
+	.no-results i {
+		font-size: 3rem;
+	}
+
+	.no-results h3 {
+		font-size: 1.5rem;
+	}
+}
+
+/* Effets de survol spéciaux pour les différents types d'armes */
+.item-row:hover .item-icon {
+	transform: rotate(10deg) scale(1.1);
+	box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Styles spéciaux pour les catégories d'armes */
+.item-section:nth-child(2) .item-icon {
+	background: linear-gradient(135deg, var(--weapon-melee), #cd853f);
+}
+
+.item-section:nth-child(3) .item-icon {
+	background: linear-gradient(135deg, var(--weapon-ranged), #5f9ea0);
+}
+
+.item-section:nth-child(4) .item-icon {
+	background: linear-gradient(135deg, var(--weapon-explosive), #ff7f50);
+}
+
+.item-section:nth-child(5) .item-icon {
+	background: linear-gradient(135deg, var(--weapon-siege), #a0522d);
+}
+
+/* Effets de loading pour le contenu dynamique */
+.item-section[data-loading='true'] {
+	opacity: 0.6;
+	pointer-events: none;
+}
+
+.item-section[data-loading='true']::after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 40px;
+	height: 40px;
+	margin: -20px 0 0 -20px;
+	border: 3px solid var(--primary-gold);
+	border-top-color: transparent;
+	border-radius: 50%;
+	animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+	to {
+		transform: rotate(360deg);
+	}
+}

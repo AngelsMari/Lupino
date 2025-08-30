@@ -526,6 +526,9 @@ export class CreateCharacterComponent {
 					this.router.navigate(['/character', this.characterId]);
 				});
 			} else {
+				if (!this.characterForm.value._id) {
+					delete this.characterForm.value._id;
+				}
 				this.characterService.createCharacter(this.characterForm.value).subscribe((data) => {
 					if (Object(data)['result'] == 'ERROR') {
 						// Handle error

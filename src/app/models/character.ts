@@ -6,6 +6,8 @@ export interface Character {
 	owner: UserPublicData;
 	imageUrl: string;
 	isPNJ: boolean;
+	type: string; // Ajout du champ pour le type de personnage //ENUM ['Jouable', 'PNJ', 'Monstre', 'Monture', 'Compagnon']
+	lien: string; // Un lien entre une invoc / Transfo et sa fiche mère
 	name: string;
 	age: string; // Ajout du champ pour l'âge
 	level: number;

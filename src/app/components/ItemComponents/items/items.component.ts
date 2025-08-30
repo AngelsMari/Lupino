@@ -49,19 +49,11 @@ export class ItemsComponent {
 	) {}
 
 	ngOnInit(): void {
-		this.loadContenants();
 		this.checkIfAdmin();
 
 		if (this.router.url.startsWith('/create-character')) {
 			this.isInCharacterCreation = true;
 		}
-	}
-
-	private loadContenants(): void {
-		this.contenants$ = this.contenantService.getContenant().pipe(
-			catchError(() => of([])),
-			shareReplay(1),
-		);
 	}
 
 	private checkIfAdmin(): void {

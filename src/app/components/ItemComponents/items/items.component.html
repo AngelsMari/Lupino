@@ -1,29 +1,35 @@
 <div class="container">
 	<ul class="nav nav-tabs" id="itemsTabs" role="tablist">
 		<li class="nav-item" role="presentation">
-			<button class="nav-link" [class.active]="activeTab === 'armes'" id="armes-tab" (click)="setActiveTab('armes')">Armes</button>
+			<button class="lupino-view-btn" [class.active]="activeTab === 'armes'" id="armes-tab" (click)="setActiveTab('armes')">Armes</button>
 		</li>
 		<li>
-			<button class="nav-link" [class.active]="activeTab === 'armures'" id="armures-tab" (click)="setActiveTab('armures')">Armures</button>
+			<button class="lupino-view-btn" [class.active]="activeTab === 'armures'" id="armures-tab" (click)="setActiveTab('armures')">
+				Armures
+			</button>
 		</li>
 		<li>
-			<button class="nav-link" [class.active]="activeTab === 'potions'" id="potion-tab" (click)="setActiveTab('potions')">Potions</button>
+			<button class="lupino-view-btn" [class.active]="activeTab === 'potions'" id="potion-tab" (click)="setActiveTab('potions')">
+				Potions
+			</button>
 		</li>
 		<li>
-			<button class="nav-link" [class.active]="activeTab === 'poisons'" id="poison-tab" (click)="setActiveTab('poisons')">Poisons</button>
+			<button class="lupino-view-btn" [class.active]="activeTab === 'poisons'" id="poison-tab" (click)="setActiveTab('poisons')">
+				Poisons
+			</button>
 		</li>
 		<li>
-			<button class="nav-link" [class.active]="activeTab === 'contenants'" id="contenants-tab" (click)="setActiveTab('contenants')">
+			<button class="lupino-view-btn" [class.active]="activeTab === 'contenants'" id="contenants-tab" (click)="setActiveTab('contenants')">
 				Contenants
 			</button>
 		</li>
 		<li>
-			<button class="nav-link" [class.active]="activeTab === 'utilitaires'" id="utilitaire-tab" (click)="setActiveTab('utilitaires')">
+			<button class="lupino-view-btn" [class.active]="activeTab === 'utilitaires'" id="utilitaire-tab" (click)="setActiveTab('utilitaires')">
 				Utilitaires
 			</button>
 		</li>
 		<li>
-			<button class="nav-link" [class.active]="activeTab === 'autres'" id="autres-tab" (click)="setActiveTab('autres')">Autres</button>
+			<button class="lupino-view-btn" [class.active]="activeTab === 'autres'" id="autres-tab" (click)="setActiveTab('autres')">Autres</button>
 		</li>
 	</ul>
 

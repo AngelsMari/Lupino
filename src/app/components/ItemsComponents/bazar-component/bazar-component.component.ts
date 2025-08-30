@@ -8,7 +8,7 @@ import { catchError, combineLatest, map, Observable, of, shareReplay } from 'rxj
 @Component({
 	selector: 'app-bazar-component',
 	templateUrl: './bazar-component.component.html',
-	styleUrl: './bazar-component.component.css',
+	styleUrls: ['./bazar-component.component.css', '../../../../assets/styles/items.css'],
 	standalone: false,
 })
 export class BazarComponentComponent {
