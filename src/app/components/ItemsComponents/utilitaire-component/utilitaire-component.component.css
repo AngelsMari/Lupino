@@ -1,150 +1,45 @@
-.search-input {
-	width: 100%;
-	max-width: 400px; /* Largeur maximale */
-	padding: 10px 20px; /* Espacement interne */
-	margin: 20px 20px 20px 0; /* Espacement externe */
-	font-size: 16px; /* Taille du texte */
-	border: 2px solid #ccc; /* Bordure */
-	border-radius: 25px; /* Bords arrondis */
-	outline: none; /* Enlève le contour par défaut */
-	transition: all 0.3s ease; /* Animation lors de l'interaction */
-	background-color: #f5ede5; /* Fond en accord avec ta palette */
-	box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Légère ombre pour effet 3D */
+/* === UTILITAIRES === */
+:host {
+	--util-orange: #FF8C00;
+	--util-brown: #8B4513;
+	--util-gray: #696969;
 }
 
-.search-input:focus {
-	border-color: #e3a477; /* Change la couleur de la bordure au focus */
-	box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2); /* Accentue l'ombre au focus */
+.item-icon.utilitaire {
+	background: linear-gradient(135deg, var(--util-orange), var(--util-brown));
 }
 
-.search-input::placeholder {
-	color: #888; /* Couleur du texte placeholder */
-	font-style: italic; /* Style en italique pour le placeholder */
-}
-.search-container {
-	display: flex;
-	justify-content: space-between; /* Aligne l'input et le bouton à gauche et à droite */
-	align-items: center;
-	margin-bottom: 20px;
+.utilitaire-card::before {
+	background: linear-gradient(90deg, var(--util-orange), var(--util-brown));
 }
 
-.add-button {
-	padding: 10px 20px;
-	font-size: 16px;
-	background-color: #621503; /* Couleur de fond en harmonie avec ta palette */
-	color: #ffb65f;
-	border: none;
-	border-radius: 25px; /* Bords arrondis pour correspondre à l'input */
-	cursor: pointer;
-	transition:
-		background-color 0.3s ease,
-		box-shadow 0.3s ease; /* Transition douce */
-	box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Ombre pour effet de relief */
+.utilitaires-grid {
+	grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
 }
 
-.add-button:hover {
-	background-color: #ffb65f; /* Couleur plus sombre au survol */
-	box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2); /* Ombre renforcée au survol */
-	color: #621503;
+.utilitaire-card .item-type-badge {
+	background: rgba(255, 140, 0, 0.3);
+	color: var(--util-orange);
+	border: 1px solid var(--util-orange);
 }
 
-.add-button:focus {
-	outline: none;
-	box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2); /* Renforcement de l'effet focus */
+/* Stats sur une seule ligne pour mobile utilitaires */
+.utilitaire-card .item-stats-section {
+	display: block;
 }
 
-/* Style de la barre de navigation */
-.nav-tabs {
-	border-bottom: 2px solid #ddd;
-	background-color: #621503;
-	padding: 10px;
-	border-radius: 8px;
-	display: flex;
-	justify-content: space-between;
+.col-name {
+	width: 25%;
 }
 
-/* Style pour chaque onglet */
-.nav-tabs .nav-link {
-	color: #ffb65f;
-	border: 1px solid transparent;
-	border-radius: 5px;
-	padding: 10px 20px;
-	font-weight: bold;
-	transition: all 0.3s ease;
+.col-effects {
+	width: 50%;
 }
 
-/* Onglet actif */
-.nav-tabs .nav-link.active {
-	background-color: #ffb65f;
-	color: #621503;
-	border-color: #6c757d;
-	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+.col-price {
+	width: 25%;
 }
 
-/* Survol des onglets */
-.nav-tabs .nav-link:hover {
-	background-color: #e9ecef;
-	border-color: #ddd;
-	color: #343a40;
-}
-
-/* Changement de couleur au clic */
-.nav-tabs .nav-link:focus {
-	background-color: #adb5bd;
-	outline: none;
-	color: white;
-}
-
-/* Responsive - Adaptation sur petit écran */
-@media (max-width: 768px) {
-	.nav-tabs {
-		flex-wrap: wrap;
-	}
-
-	.nav-tabs .nav-link {
-		margin-bottom: 5px;
-		flex: 1 0 100%;
-		text-align: center;
-	}
-}
-
-.card-container {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: space-between; /* Espacement égal entre les cartes */
-	margin: 1rem 0; /* Marge autour de la carte */
-}
-
-.card {
-	flex: 1 1 calc(50% - 1rem); /* 2 cartes par ligne */
-	margin: 0.5rem; /* Espacement entre les cartes */
-	border: 1px solid #ccc; /* Bordure gris clair */
-	border-radius: 0.5rem; /* Coins arrondis */
-	box-shadow:
-		0 2px 8px rgba(0, 0, 0, 0.2),
-		inset 0 1px 5px rgba(255, 255, 255, 0.5); /* Ombre externe et interne */
-	transition: transform 0.2s; /* Animation pour l'effet de survol */
-}
-
-.card:hover {
-	transform: scale(1.05); /* Agrandissement au survol */
-}
-
-.card-body {
-	padding: 1rem; /* Espacement interne */
-}
-
-.card-title {
-	font-size: 1.25rem; /* Taille de la police du titre */
-	font-weight: bold; /* Gras pour le titre */
-	margin-bottom: 0.5rem; /* Marge en bas du titre */
-}
-
-.card-text {
-	font-size: 0.9rem; /* Taille de la police pour le texte */
-	margin-bottom: 0.5rem; /* Marge en bas du texte */
-}
-
-.card-text strong {
-	color: #333; /* Couleur pour le texte fort */
+.item-row:hover .item-icon.utilitaire {
+	box-shadow: 0 5px 20px rgba(255, 140, 0, 0.5);
 }

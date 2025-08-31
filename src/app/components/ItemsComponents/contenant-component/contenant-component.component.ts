@@ -8,7 +8,7 @@ import { catchError, Observable, of, shareReplay } from 'rxjs';
 @Component({
 	selector: 'app-contenant-component',
 	templateUrl: './contenant-component.component.html',
-	styleUrl: './contenant-component.component.css',
+	styleUrls: ['./contenant-component.component.css', '../../../../assets/styles/items.css'],
 	standalone: false,
 })
 export class ContenantComponentComponent {

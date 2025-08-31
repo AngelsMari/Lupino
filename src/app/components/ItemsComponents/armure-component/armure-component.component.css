@@ -1,0 +1,94 @@
+/* Variables spécifiques aux armures */
+:host {
+	--armor-light: #87CEEB;
+	--armor-medium: #4682B4;
+	--armor-heavy: #2F4F4F;
+}
+
+/* Icônes des armures */
+.item-icon.light-armor {
+	background: linear-gradient(135deg, var(--armor-light), #B0E0E6);
+}
+
+.item-icon.medium-armor {
+	background: linear-gradient(135deg, var(--armor-medium), #6495ED);
+}
+
+.item-icon.heavy-armor {
+	background: linear-gradient(135deg, var(--armor-heavy), #696969);
+}
+
+/* Cards spécifiques */
+.item-card.light-armor::before {
+	background: linear-gradient(90deg, var(--armor-light), #B0E0E6);
+}
+
+.item-card.medium-armor::before {
+	background: linear-gradient(90deg, var(--armor-medium), #6495ED);
+}
+
+.item-card.heavy-armor::before {
+	background: linear-gradient(90deg, var(--armor-heavy), #696969);
+}
+
+/* Badges de type pour armures */
+.armor-type-badge.light {
+	background: rgba(135, 206, 235, 0.3);
+	color: var(--armor-light);
+	border: 1px solid var(--armor-light);
+}
+
+.armor-type-badge.medium {
+	background: rgba(70, 130, 180, 0.3);
+	color: var(--armor-medium);
+	border: 1px solid var(--armor-medium);
+}
+
+.armor-type-badge.heavy {
+	background: rgba(47, 79, 79, 0.3);
+	color: #A9A9A9;
+	border: 1px solid #A9A9A9;
+}
+
+/* Valeurs spécifiques aux armures */
+.stats-value {
+	font-weight: bold;
+	color: #4ECDC4;
+	background: rgba(78, 205, 196, 0.2);
+	padding: 4px 8px;
+	border-radius: 8px;
+	border: 1px solid #4ECDC4;
+}
+
+.stat-value.stats {
+	color: #4ECDC4;
+}
+
+/* Colonnes pour armures */
+.col-name {
+	width: 20%;
+}
+
+.col-description {
+	width: 45%;
+}
+
+.col-stats {
+	width: 20%;
+}
+
+.col-price {
+	width: 15%;
+}
+
+.col-name {
+	width: 25%;
+}
+
+.col-effects {
+	width: 50%;
+}
+
+.col-price {
+	width: 25%;
+}

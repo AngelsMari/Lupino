@@ -1,3 +1,17 @@
+/* Variables CSS communes */
+:root {
+	--primary-gold: #D4AF37;
+	--dark-brown: #8B4513;
+	--light-brown: #DEB887;
+	--cream: #F5F5DC;
+	--dark-red: #8B0000;
+	--steel-blue: #4682B4;
+	--forest-green: #228B22;
+	--fire-orange: #FF4500;
+	--shadow-dark: rgba(0, 0, 0, 0.3);
+	--shadow-light: rgba(255, 255, 255, 0.1);
+}
+
 /* Container principal */
 .items-catalog-container {
 	padding: 30px;
@@ -47,11 +61,10 @@
 
 .search-input:focus {
 	outline: none;
-	border-color: #ffd700;
+	border-color: #FFD700;
 	background: rgba(139, 69, 19, 0.3);
-	box-shadow:
-		0 8px 25px rgba(0, 0, 0, 0.4),
-		0 0 20px rgba(255, 215, 0, 0.3);
+	box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4),
+	0 0 20px rgba(255, 215, 0, 0.3);
 	transform: translateY(-2px);
 }
 
@@ -94,7 +107,7 @@
 }
 
 .add-item-btn {
-	background: linear-gradient(135deg, var(--forest-green), #32cd32);
+	background: linear-gradient(135deg, var(--forest-green), #32CD32);
 	color: white;
 	border: 2px solid var(--forest-green);
 	border-radius: 25px;
@@ -113,11 +126,11 @@
 .add-item-btn:hover {
 	transform: translateY(-3px);
 	box-shadow: 0 8px 25px rgba(34, 139, 34, 0.5);
-	background: linear-gradient(135deg, #32cd32, var(--forest-green));
+	background: linear-gradient(135deg, #32CD32, var(--forest-green));
 	color: white;
 }
 
-/* Sections d'armes */
+/* Sections d'items */
 .item-section {
 	margin-bottom: 50px;
 	background: rgba(139, 69, 19, 0.1);
@@ -143,6 +156,7 @@
 	align-items: center;
 	gap: 15px;
 	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+	position: relative;
 }
 
 .item-count {
@@ -169,7 +183,7 @@
 }
 
 .items-table thead tr {
-	background: linear-gradient(135deg, var(--primary-gold), #b8860b);
+	background: linear-gradient(135deg, var(--primary-gold), #B8860B);
 }
 
 .items-table th {
@@ -209,7 +223,7 @@
 	vertical-align: middle;
 }
 
-/* Cellules spécifiques */
+/* Cellules communes */
 .name-cell {
 	display: flex;
 	align-items: center;
@@ -225,16 +239,7 @@
 	justify-content: center;
 	font-size: 1.2rem;
 	color: white;
-	background: linear-gradient(135deg, var(--weapon-melee), #cd853f);
 	box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-}
-
-.item-icon.explosive {
-	background: linear-gradient(135deg, var(--weapon-explosive), #ff7f50);
-}
-
-.item-icon.siege {
-	background: linear-gradient(135deg, var(--weapon-siege), #a0522d);
 }
 
 .name-text {
@@ -243,40 +248,18 @@
 	color: var(--primary-gold);
 }
 
-.type-badge {
-	background: rgba(70, 130, 180, 0.3);
-	color: var(--steel-blue);
-	padding: 6px 12px;
-	border-radius: 15px;
-	font-size: 0.9rem;
-	font-weight: bold;
-	border: 1px solid var(--steel-blue);
-}
-
 .effects-text {
-	max-width: 300px;
+	max-width: 400px;
 	line-height: 1.4;
 	color: var(--cream);
 	font-size: 0.95rem;
 }
 
-.damage-value {
-	font-weight: bold;
-	font-size: 1.1rem;
-	color: #ff6b6b;
-	background: rgba(255, 107, 107, 0.2);
-	padding: 4px 8px;
-	border-radius: 8px;
-	border: 1px solid #ff6b6b;
-}
-
-.range-value {
-	font-weight: bold;
-	color: var(--steel-blue);
-	background: rgba(70, 130, 180, 0.2);
-	padding: 4px 8px;
-	border-radius: 8px;
-	border: 1px solid var(--steel-blue);
+.description-text {
+	max-width: 400px;
+	line-height: 1.4;
+	color: var(--cream);
+	font-size: 0.95rem;
 }
 
 .price-value {
@@ -285,14 +268,10 @@
 	display: flex;
 	align-items: center;
 	gap: 5px;
+	font-size: 1.1rem;
 }
 
-.ammo-value {
-	color: var(--light-brown);
-	font-weight: 500;
-}
-
-/* Grille mobile */
+/* Grilles mobiles communes */
 .items-grid {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -317,21 +296,12 @@
 	left: 0;
 	right: 0;
 	height: 3px;
-	background: linear-gradient(90deg, var(--weapon-melee), var(--primary-gold));
-}
-
-.item-card.explosive::before {
-	background: linear-gradient(90deg, var(--weapon-explosive), #ff7f50);
-}
-
-.item-card.siege::before {
-	background: linear-gradient(90deg, var(--weapon-siege), #a0522d);
 }
 
 .item-card:hover {
 	transform: translateY(-8px);
 	box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
-	border-color: #ffd700;
+	border-color: #FFD700;
 }
 
 .item-card .card-header {
@@ -352,7 +322,6 @@
 	justify-content: center;
 	font-size: 1.3rem;
 	color: white;
-	background: linear-gradient(135deg, var(--weapon-melee), #cd853f);
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 	flex-shrink: 0;
 }
@@ -366,13 +335,10 @@
 }
 
 .item-type-badge {
-	background: rgba(70, 130, 180, 0.3);
-	color: var(--steel-blue);
-	padding: 4px 10px;
-	border-radius: 12px;
+	padding: 4px 12px;
+	border-radius: 15px;
 	font-size: 0.8rem;
 	font-weight: bold;
-	border: 1px solid var(--steel-blue);
 	flex-shrink: 0;
 }
 
@@ -409,7 +375,7 @@
 	flex: 1;
 }
 
-.item-stats {
+.item-stats-section {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	gap: 12px;
@@ -448,51 +414,8 @@
 	margin-left: auto;
 }
 
-.stat-value.damage {
-	color: #ff6b6b;
-}
-
-.stat-value.range {
-	color: var(--steel-blue);
-}
-
 .stat-value.price {
 	color: var(--primary-gold);
-}
-
-/* Table spéciale pour les armes de siège */
-.siege-table {
-	font-size: 0.9rem;
-}
-
-.siege-table th,
-.siege-table td {
-	padding: 12px 10px;
-}
-
-.col-name {
-	width: 15%;
-}
-.col-type {
-	width: 10%;
-}
-.col-effects {
-	width: 25%;
-}
-.col-range {
-	width: 10%;
-}
-.col-damage {
-	width: 10%;
-}
-.col-price {
-	width: 10%;
-}
-.col-ammo {
-	width: 10%;
-}
-.col-ammo-price {
-	width: 10%;
 }
 
 /* Section "Aucun résultat" */
@@ -527,7 +450,7 @@
 }
 
 .btn-clear-search {
-	background: linear-gradient(135deg, var(--primary-gold), #b8860b);
+	background: linear-gradient(135deg, var(--primary-gold), #B8860B);
 	color: var(--dark-brown);
 	border: none;
 	border-radius: 25px;
@@ -544,10 +467,10 @@
 .btn-clear-search:hover {
 	transform: translateY(-3px);
 	box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
-	background: linear-gradient(135deg, #ffd700, var(--primary-gold));
+	background: linear-gradient(135deg, #FFD700, var(--primary-gold));
 }
 
-/* Animations */
+/* Animations communes */
 @keyframes fadeInUp {
 	from {
 		opacity: 0;
@@ -561,28 +484,6 @@
 
 .item-section {
 	animation: fadeInUp 0.6s ease-out;
-}
-
-@keyframes shimmer {
-	0% {
-		background-position: -200% 0;
-	}
-	100% {
-		background-position: 200% 0;
-	}
-}
-
-.section-title::after {
-	content: '';
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-	background-size: 200% 100%;
-	animation: shimmer 3s infinite;
-	pointer-events: none;
 }
 
 /* Responsive Design */
@@ -630,10 +531,10 @@
 
 	.items-grid {
 		grid-template-columns: 1fr;
-		gap: 20px;
+		gap: 15px;
 	}
 
-	.item-stats {
+	.item-stats-section {
 		grid-template-columns: 1fr;
 		gap: 10px;
 	}
@@ -672,51 +573,13 @@
 	}
 }
 
-/* Effets de survol spéciaux pour les différents types d'armes */
+/* Effets de survol communs */
 .item-row:hover .item-icon {
 	transform: rotate(10deg) scale(1.1);
 	box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
 }
 
-/* Styles spéciaux pour les catégories d'armes */
-.item-section:nth-child(2) .item-icon {
-	background: linear-gradient(135deg, var(--weapon-melee), #cd853f);
-}
-
-.item-section:nth-child(3) .item-icon {
-	background: linear-gradient(135deg, var(--weapon-ranged), #5f9ea0);
-}
-
-.item-section:nth-child(4) .item-icon {
-	background: linear-gradient(135deg, var(--weapon-explosive), #ff7f50);
-}
-
-.item-section:nth-child(5) .item-icon {
-	background: linear-gradient(135deg, var(--weapon-siege), #a0522d);
-}
-
-/* Effets de loading pour le contenu dynamique */
-.item-section[data-loading='true'] {
-	opacity: 0.6;
-	pointer-events: none;
-}
-
-.item-section[data-loading='true']::after {
-	content: '';
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	width: 40px;
-	height: 40px;
-	margin: -20px 0 0 -20px;
-	border: 3px solid var(--primary-gold);
-	border-top-color: transparent;
-	border-radius: 50%;
-	animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-	to {
-		transform: rotate(360deg);
-	}
+.item-card:hover .item-icon {
+	transform: scale(1.1);
+	box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
 }

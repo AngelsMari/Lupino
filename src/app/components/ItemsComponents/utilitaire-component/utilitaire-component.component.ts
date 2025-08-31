@@ -3,12 +3,12 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreateUtilitaireComponent } from 'app/components/modal/create-utilitaire/create-utilitaire.component';
 import { Utilitaire } from 'app/models/items/utilitaire';
 import { UtilitaireService } from 'app/services/LupinoApi/items/utilitaire.service';
-import { catchError, combineLatest, map, Observable, of, shareReplay } from 'rxjs';
+import { catchError, Observable, of, shareReplay } from 'rxjs';
 
 @Component({
 	selector: 'app-utilitaire-component',
 	templateUrl: './utilitaire-component.component.html',
-	styleUrl: './utilitaire-component.component.css',
+	styleUrls: ['./utilitaire-component.component.css', '../../../../assets/styles/items.css'],
 	standalone: false,
 })
 export class UtilitaireComponentComponent {
@@ -17,16 +17,15 @@ export class UtilitaireComponentComponent {
 
 	utilitaireService = inject(UtilitaireService);
 	modalService = inject(NgbModal);
-
-	filterFn = (item: Utilitaire, search: string) =>
-		item.nom.toLowerCase().includes(search) || item.effet.toLowerCase().includes(search) || item.prix?.toString().includes(search);
-
 	utilitaire$!: Observable<Utilitaire[]>;
 	searchText = '';
 
 	constructor() {
 		this.loadUtilitaires();
 	}
+
+	filterFn = (item: Utilitaire, search: string) =>
+		item.nom.toLowerCase().includes(search) || item.effet.toLowerCase().includes(search) || item.prix?.toString().includes(search);
 
 	onSearchChange(value: string | null) {
 		if (value === null) {

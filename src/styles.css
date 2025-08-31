@@ -18,10 +18,6 @@
 	--fire-orange: #ff4500;
 	--shadow-dark: rgba(0, 0, 0, 0.3);
 	--shadow-light: rgba(255, 255, 255, 0.1);
-	--weapon-melee: #cd853f;
-	--weapon-ranged: #4682b4;
-	--weapon-explosive: #ff6347;
-	--weapon-siege: #8b4513;
 }
 
 * {
@@ -42,6 +38,7 @@ body {
 	background-color: #f3d8b9;
 	border-color: #621503 !important;
 }
+
 .table thead th {
 	color: #621503 !important;
 }
@@ -91,6 +88,7 @@ quill-editor {
 .ql-editor.ql-blank {
 	min-height: 200px;
 }
+
 .mdc-slider__track {
 	background: var(--lupino-primary) !important;
 	border-radius: 4px;

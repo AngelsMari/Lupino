@@ -1,0 +1,131 @@
+/* Variables spécifiques aux armes */
+:host {
+	--weapon-melee: #CD853F;
+	--weapon-ranged: #4682B4;
+	--weapon-explosive: #FF6347;
+	--weapon-siege: #8B4513;
+}
+
+/* Icônes des armes */
+.item-icon.melee {
+	background: linear-gradient(135deg, var(--weapon-melee), #DEB887);
+}
+
+.item-icon.ranged {
+	background: linear-gradient(135deg, var(--weapon-ranged), #87CEEB);
+}
+
+.item-icon.explosive {
+	background: linear-gradient(135deg, var(--weapon-explosive), #FF7F50);
+}
+
+.item-icon.siege {
+	background: linear-gradient(135deg, var(--weapon-siege), #A0522D);
+}
+
+/* Badges de type pour armes */
+.weapon-type-badge {
+	background: rgba(70, 130, 180, 0.3);
+	color: var(--weapon-ranged);
+	border: 1px solid var(--weapon-ranged);
+}
+
+/* Cards spécifiques */
+.weapon-card::before {
+	background: linear-gradient(90deg, var(--weapon-melee), var(--primary-gold));
+}
+
+.weapon-card.ranged::before {
+	background: linear-gradient(90deg, var(--weapon-ranged), #87CEEB);
+}
+
+.weapon-card.explosive::before {
+	background: linear-gradient(90deg, var(--weapon-explosive), #FF7F50);
+}
+
+.weapon-card.siege::before {
+	background: linear-gradient(90deg, var(--weapon-siege), #A0522D);
+}
+
+/* Valeurs spécifiques aux armes */
+.damage-value {
+	font-weight: bold;
+	font-size: 1.1rem;
+	color: #FF6B6B;
+	background: rgba(255, 107, 107, 0.2);
+	padding: 4px 8px;
+	border-radius: 8px;
+	border: 1px solid #FF6B6B;
+}
+
+.range-value {
+	font-weight: bold;
+	color: var(--weapon-ranged);
+	background: rgba(70, 130, 180, 0.2);
+	padding: 4px 8px;
+	border-radius: 8px;
+	border: 1px solid var(--weapon-ranged);
+}
+
+.stat-value.damage {
+	color: #FF6B6B;
+}
+
+.stat-value.range {
+	color: var(--weapon-ranged);
+}
+
+/* Colonnes pour différents types d'armes */
+.weapons-table .col-name {
+	width: 15%;
+}
+
+.weapons-table .col-type {
+	width: 10%;
+}
+
+.weapons-table .col-effects {
+	width: 25%;
+}
+
+.weapons-table .col-range {
+	width: 10%;
+}
+
+.weapons-table .col-damage {
+	width: 10%;
+}
+
+.weapons-table .col-price {
+	width: 10%;
+}
+
+.weapons-table .col-ammo {
+	width: 10%;
+}
+
+.weapons-table .col-ammo-price {
+	width: 10%;
+}
+
+/* Spécialisation pour table de siège */
+.siege-table {
+	font-size: 0.9rem;
+}
+
+.siege-table th,
+.siege-table td {
+	padding: 12px 10px;
+}
+
+.col-name {
+	width: 25%;
+}
+
+.col-effects {
+	width: 50%;
+}
+
+.col-price {
+	width: 25%;
+}

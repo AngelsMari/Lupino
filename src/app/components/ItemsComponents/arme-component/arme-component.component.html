@@ -5,10 +5,13 @@
 			<div class="search-container">
 				<div class="search-input-wrapper">
 					<i class="bi bi-search search-icon"></i>
-					<input type="text" class="search-input" placeholder="Rechercher une arme..." [(ngModel)]="searchText" />
-					<button class="clear-search" *ngIf="searchText" (click)="searchText = ''">
-						<i class="bi bi-x-circle"></i>
-					</button>
+					<input [(ngModel)]="searchText" class="search-input" placeholder="Rechercher une arme..."
+						   type="text" />
+					@if (searchText) {
+						<button (click)="searchText = ''" class="clear-search">
+							<i class="bi bi-x-circle"></i>
+						</button>
+					}
 				</div>
 			</div>
 
@@ -39,40 +42,42 @@
 				<div class="table-wrapper">
 					<table class="items-table">
 						<thead>
-							<tr>
-								<th class="col-name"><i class="bi bi-tag"></i> Armes</th>
-								<th class="col-type"><i class="bi bi-diagram-3"></i> Type</th>
-								<th class="col-effects"><i class="bi bi-magic"></i> Effets</th>
-								<th class="col-damage"><i class="bi bi-lightning"></i> Dégâts</th>
-								<th class="col-price"><i class="bi bi-coin"></i> Prix</th>
-							</tr>
+						<tr>
+							<th class="col-name"><i class="bi bi-tag"></i> Armes</th>
+							<th class="col-type"><i class="bi bi-diagram-3"></i> Type</th>
+							<th class="col-effects"><i class="bi bi-magic"></i> Effets</th>
+							<th class="col-damage"><i class="bi bi-lightning"></i> Dégâts</th>
+							<th class="col-price"><i class="bi bi-coin"></i> Prix</th>
+						</tr>
 						</thead>
 						<tbody>
-							<tr class="item-row" *ngFor="let item of filteredArmesCac; trackBy: trackByFn">
-								<td class="item-name">
-									<div class="name-cell">
-										<div class="item-icon">
-											<i class="bi bi-sword"></i>
+							@for (item of filteredArmesCac; track trackByFn($index, item)) {
+								<tr class="item-row">
+									<td class="item-name">
+										<div class="name-cell">
+											<div class="item-icon melee">
+												<i class="bi bi-sword"></i>
+											</div>
+											<span class="name-text">{{ item.nom }}</span>
 										</div>
-										<span class="name-text">{{ item.nom }}</span>
-									</div>
-								</td>
-								<td class="item-type">
-									<span class="type-badge">{{ item.type }}</span>
-								</td>
-								<td class="item-effects">
-									<div class="effects-text">{{ item.effet }}</div>
-								</td>
-								<td class="item-damage">
-									<span class="damage-value">{{ item.degats }}</span>
-								</td>
-								<td class="item-price">
+									</td>
+									<td class="item-type">
+										<span class="type-badge">{{ item.type }}</span>
+									</td>
+									<td class="item-effects">
+										<div class="effects-text">{{ item.effet }}</div>
+									</td>
+									<td class="item-damage">
+										<span class="damage-value">{{ item.degats }}</span>
+									</td>
+									<td class="item-price">
 									<span class="price-value">
 										<i class="bi bi-coin text-warning"></i>
 										{{ item.prix }}
 									</span>
-								</td>
-							</tr>
+									</td>
+								</tr>
+							}
 						</tbody>
 					</table>
 				</div>
@@ -81,34 +86,36 @@
 			<!-- Version Mobile - Cards -->
 			<div class="mobile-view d-lg-none">
 				<div class="items-grid">
-					<div class="item-card" *ngFor="let item of filteredArmesCac; trackBy: trackByFn">
-						<div class="card-header">
-							<div class="item-icon">
-								<i class="bi bi-sword"></i>
-							</div>
-							<h5 class="item-name">{{ item.nom }}</h5>
-							<span class="item-type-badge">{{ item.type }}</span>
-						</div>
-						<div class="card-body">
-							<div class="item-detail">
-								<i class="bi bi-magic"></i>
-								<strong>Effets:</strong>
-								<span>{{ item.effet }}</span>
-							</div>
-							<div class="item-stats">
-								<div class="stat">
-									<i class="bi bi-lightning text-danger"></i>
-									<span class="stat-label">Dégâts:</span>
-									<span class="stat-value damage">{{ item.degats }}</span>
+					@for (item of filteredArmesCac; track trackByFn($index, item)) {
+						<div class="item-card">
+							<div class="card-header">
+								<div class="item-icon melee">
+									<i class="bi bi-sword"></i>
 								</div>
-								<div class="stat">
-									<i class="bi bi-coin text-warning"></i>
-									<span class="stat-label">Prix:</span>
-									<span class="stat-value price">{{ item.prix }}</span>
+								<h5 class="item-name">{{ item.nom }}</h5>
+								<span class="item-type-badge">{{ item.type }}</span>
+							</div>
+							<div class="card-body">
+								<div class="item-detail">
+									<i class="bi bi-magic"></i>
+									<strong>Effets:</strong>
+									<span>{{ item.effet }}</span>
+								</div>
+								<div class="item-stats">
+									<div class="stat">
+										<i class="bi bi-lightning text-danger"></i>
+										<span class="stat-label">Dégâts:</span>
+										<span class="stat-value damage">{{ item.degats }}</span>
+									</div>
+									<div class="stat">
+										<i class="bi bi-coin text-warning"></i>
+										<span class="stat-label">Prix:</span>
+										<span class="stat-value price">{{ item.prix }}</span>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
+					}
 				</div>
 			</div>
 		</div>
@@ -121,7 +128,8 @@
 				<h2 class="section-title">
 					<i class="bi bi-bullseye"></i>
 					Armes à Distance
-					<span class="item-count">({{ (distance$ | async | filterList: searchText : filterFn)?.length || 0 }})</span>
+					<span class="item-count">({{ (distance$ | async | filterList: searchText : filterFn)?.length || 0 }}
+						)</span>
 				</h2>
 			</div>
 
@@ -130,44 +138,46 @@
 				<div class="table-wrapper">
 					<table class="items-table">
 						<thead>
-							<tr>
-								<th class="col-name"><i class="bi bi-tag"></i> Armes</th>
-								<th class="col-type"><i class="bi bi-diagram-3"></i> Type</th>
-								<th class="col-effects"><i class="bi bi-magic"></i> Effets</th>
-								<th class="col-range"><i class="bi bi-arrows-angle-expand"></i> Portée</th>
-								<th class="col-damage"><i class="bi bi-lightning"></i> Dégâts</th>
-								<th class="col-price"><i class="bi bi-coin"></i> Prix</th>
-							</tr>
+						<tr>
+							<th class="col-name"><i class="bi bi-tag"></i> Armes</th>
+							<th class="col-type"><i class="bi bi-diagram-3"></i> Type</th>
+							<th class="col-effects"><i class="bi bi-magic"></i> Effets</th>
+							<th class="col-range"><i class="bi bi-arrows-angle-expand"></i> Portée</th>
+							<th class="col-damage"><i class="bi bi-lightning"></i> Dégâts</th>
+							<th class="col-price"><i class="bi bi-coin"></i> Prix</th>
+						</tr>
 						</thead>
 						<tbody>
-							<tr class="item-row" *ngFor="let item of distance$ | async | filterList: searchText : filterFn; trackBy: trackByFn">
-								<td class="item-name">
-									<div class="name-cell">
-										<div class="item-icon">
-											<i class="bi bi-bullseye"></i>
+							@for (item of filteredDistance; track trackByFn($index, item)) {
+								<tr class="item-row">
+									<td class="item-name">
+										<div class="name-cell">
+											<div class="item-icon ranged">
+												<i class="bi bi-bullseye"></i>
+											</div>
+											<span class="name-text">{{ item.nom }}</span>
 										</div>
-										<span class="name-text">{{ item.nom }}</span>
-									</div>
-								</td>
-								<td class="item-type">
-									<span class="type-badge">{{ item.type }}</span>
-								</td>
-								<td class="item-effects">
-									<div class="effects-text">{{ item.effet }}</div>
-								</td>
-								<td class="item-range">
-									<span class="range-value">{{ item.portee }}</span>
-								</td>
-								<td class="item-damage">
-									<span class="damage-value">{{ item.degats }}</span>
-								</td>
-								<td class="item-price">
+									</td>
+									<td class="item-type">
+										<span class="type-badge">{{ item.type }}</span>
+									</td>
+									<td class="item-effects">
+										<div class="effects-text">{{ item.effet }}</div>
+									</td>
+									<td class="item-range">
+										<span class="range-value">{{ item.portee }}</span>
+									</td>
+									<td class="item-damage">
+										<span class="damage-value">{{ item.degats }}</span>
+									</td>
+									<td class="item-price">
 									<span class="price-value">
 										<i class="bi bi-coin text-warning"></i>
 										{{ item.prix }}
 									</span>
-								</td>
-							</tr>
+									</td>
+								</tr>
+							}
 						</tbody>
 					</table>
 				</div>
@@ -176,39 +186,41 @@
 			<!-- Version Mobile -->
 			<div class="mobile-view d-lg-none">
 				<div class="items-grid">
-					<div class="item-card" *ngFor="let item of distance$ | async | filterList: searchText : filterFn; trackBy: trackByFn">
-						<div class="card-header">
-							<div class="item-icon">
-								<i class="bi bi-bullseye"></i>
+					@for (item of filteredDistance; track trackByFn($index, item)) {
+						<div class="item-card">
+							<div class="card-header">
+								<div class="item-icon ranged">
+									<i class="bi bi-bullseye"></i>
+								</div>
+								<h5 class="item-name">{{ item.nom }}</h5>
+								<span class="item-type-badge">{{ item.type }}</span>
 							</div>
-							<h5 class="item-name">{{ item.nom }}</h5>
-							<span class="item-type-badge">{{ item.type }}</span>
+							<div class="card-body">
+								<div class="item-detail">
+									<i class="bi bi-magic"></i>
+									<strong>Effets:</strong>
+									<span>{{ item.effet }}</span>
+								</div>
+								<div class="item-stats">
+									<div class="stat">
+										<i class="bi bi-arrows-angle-expand text-info"></i>
+										<span class="stat-label">Portée:</span>
+										<span class="stat-value range">{{ item.portee }}</span>
+									</div>
+									<div class="stat">
+										<i class="bi bi-lightning text-danger"></i>
+										<span class="stat-label">Dégâts:</span>
+										<span class="stat-value damage">{{ item.degats }}</span>
+									</div>
+									<div class="stat">
+										<i class="bi bi-coin text-warning"></i>
+										<span class="stat-label">Prix:</span>
+										<span class="stat-value price">{{ item.prix }}</span>
+									</div>
+								</div>
+							</div>
 						</div>
-						<div class="card-body">
-							<div class="item-detail">
-								<i class="bi bi-magic"></i>
-								<strong>Effets:</strong>
-								<span>{{ item.effet }}</span>
-							</div>
-							<div class="item-stats">
-								<div class="stat">
-									<i class="bi bi-arrows-angle-expand text-info"></i>
-									<span class="stat-label">Portée:</span>
-									<span class="stat-value range">{{ item.portee }}</span>
-								</div>
-								<div class="stat">
-									<i class="bi bi-lightning text-danger"></i>
-									<span class="stat-label">Dégâts:</span>
-									<span class="stat-value damage">{{ item.degats }}</span>
-								</div>
-								<div class="stat">
-									<i class="bi bi-coin text-warning"></i>
-									<span class="stat-label">Prix:</span>
-									<span class="stat-value price">{{ item.prix }}</span>
-								</div>
-							</div>
-						</div>
-					</div>
+					}
 				</div>
 			</div>
 		</div>
@@ -221,7 +233,8 @@
 				<h2 class="section-title">
 					<i class="bi bi-bomb"></i>
 					Explosifs
-					<span class="item-count">({{ (explosif$ | async | filterList: searchText : filterFn)?.length || 0 }})</span>
+					<span class="item-count">({{ (explosif$ | async | filterList: searchText : filterFn)?.length || 0 }}
+						)</span>
 				</h2>
 			</div>
 
@@ -230,40 +243,42 @@
 				<div class="table-wrapper">
 					<table class="items-table">
 						<thead>
-							<tr>
-								<th class="col-name"><i class="bi bi-tag"></i> Armes</th>
-								<th class="col-effects"><i class="bi bi-magic"></i> Effets</th>
-								<th class="col-range"><i class="bi bi-arrow-up-right-circle"></i> Rayon</th>
-								<th class="col-damage"><i class="bi bi-lightning"></i> Dégâts</th>
-								<th class="col-price"><i class="bi bi-coin"></i> Prix</th>
-							</tr>
+						<tr>
+							<th class="col-name"><i class="bi bi-tag"></i> Armes</th>
+							<th class="col-effects"><i class="bi bi-magic"></i> Effets</th>
+							<th class="col-range"><i class="bi bi-arrow-up-right-circle"></i> Rayon</th>
+							<th class="col-damage"><i class="bi bi-lightning"></i> Dégâts</th>
+							<th class="col-price"><i class="bi bi-coin"></i> Prix</th>
+						</tr>
 						</thead>
 						<tbody>
-							<tr class="item-row" *ngFor="let item of explosif$ | async | filterList: searchText : filterFn; trackBy: trackByFn">
-								<td class="item-name">
-									<div class="name-cell">
-										<div class="item-icon explosive">
-											<i class="bi bi-bomb"></i>
+							@for (item of explosiveWeapons; track trackByFn($index, item)) {
+								<tr class="item-row">
+									<td class="item-name">
+										<div class="name-cell">
+											<div class="item-icon explosive">
+												<i class="bi bi-bomb"></i>
+											</div>
+											<span class="name-text">{{ item.nom }}</span>
 										</div>
-										<span class="name-text">{{ item.nom }}</span>
-									</div>
-								</td>
-								<td class="item-effects">
-									<div class="effects-text">{{ item.effet }}</div>
-								</td>
-								<td class="item-range">
-									<span class="range-value">{{ item.portee }}</span>
-								</td>
-								<td class="item-damage">
-									<span class="damage-value">{{ item.degats }}</span>
-								</td>
-								<td class="item-price">
+									</td>
+									<td class="item-effects">
+										<div class="effects-text">{{ item.effet }}</div>
+									</td>
+									<td class="item-range">
+										<span class="range-value">{{ item.portee }}</span>
+									</td>
+									<td class="item-damage">
+										<span class="damage-value">{{ item.degats }}</span>
+									</td>
+									<td class="item-price">
 									<span class="price-value">
 										<i class="bi bi-coin text-warning"></i>
 										{{ item.prix }}
 									</span>
-								</td>
-							</tr>
+									</td>
+								</tr>
+							}
 						</tbody>
 					</table>
 				</div>
@@ -272,38 +287,40 @@
 			<!-- Version Mobile -->
 			<div class="mobile-view d-lg-none">
 				<div class="items-grid">
-					<div class="item-card explosive" *ngFor="let item of explosif$ | async | filterList: searchText : filterFn; trackBy: trackByFn">
-						<div class="card-header">
-							<div class="item-icon">
-								<i class="bi bi-bomb"></i>
+					@for (item of explosiveWeapons; track trackByFn($index, item)) {
+						<div class="item-card explosive">
+							<div class="card-header">
+								<div class="item-icon">
+									<i class="bi bi-bomb"></i>
+								</div>
+								<h5 class="item-name">{{ item.nom }}</h5>
 							</div>
-							<h5 class="item-name">{{ item.nom }}</h5>
+							<div class="card-body">
+								<div class="item-detail">
+									<i class="bi bi-magic"></i>
+									<strong>Effets:</strong>
+									<span>{{ item.effet }}</span>
+								</div>
+								<div class="item-stats">
+									<div class="stat">
+										<i class="bi bi-arrow-up-right-circle text-warning"></i>
+										<span class="stat-label">Rayon:</span>
+										<span class="stat-value range">{{ item.portee }}</span>
+									</div>
+									<div class="stat">
+										<i class="bi bi-lightning text-danger"></i>
+										<span class="stat-label">Dégâts:</span>
+										<span class="stat-value damage">{{ item.degats }}</span>
+									</div>
+									<div class="stat">
+										<i class="bi bi-coin text-warning"></i>
+										<span class="stat-label">Prix:</span>
+										<span class="stat-value price">{{ item.prix }}</span>
+									</div>
+								</div>
+							</div>
 						</div>
-						<div class="card-body">
-							<div class="item-detail">
-								<i class="bi bi-magic"></i>
-								<strong>Effets:</strong>
-								<span>{{ item.effet }}</span>
-							</div>
-							<div class="item-stats">
-								<div class="stat">
-									<i class="bi bi-arrow-up-right-circle text-warning"></i>
-									<span class="stat-label">Rayon:</span>
-									<span class="stat-value range">{{ item.portee }}</span>
-								</div>
-								<div class="stat">
-									<i class="bi bi-lightning text-danger"></i>
-									<span class="stat-label">Dégâts:</span>
-									<span class="stat-value damage">{{ item.degats }}</span>
-								</div>
-								<div class="stat">
-									<i class="bi bi-coin text-warning"></i>
-									<span class="stat-label">Prix:</span>
-									<span class="stat-value price">{{ item.prix }}</span>
-								</div>
-							</div>
-						</div>
-					</div>
+					}
 				</div>
 			</div>
 		</div>
@@ -316,7 +333,8 @@
 				<h2 class="section-title">
 					<i class="bi bi-building"></i>
 					Armes de Siège
-					<span class="item-count">({{ (siege$ | async | filterList: searchText : filterFn)?.length || 0 }})</span>
+					<span class="item-count">({{ (siege$ | async | filterList: searchText : filterFn)?.length || 0 }}
+						)</span>
 				</h2>
 			</div>
 
@@ -325,51 +343,53 @@
 				<div class="table-wrapper">
 					<table class="items-table siege-table">
 						<thead>
-							<tr>
-								<th class="col-name"><i class="bi bi-tag"></i> Armes</th>
-								<th class="col-effects"><i class="bi bi-magic"></i> Effets</th>
-								<th class="col-range"><i class="bi bi-arrows-angle-expand"></i> Portée</th>
-								<th class="col-damage"><i class="bi bi-lightning"></i> Dégâts</th>
-								<th class="col-price"><i class="bi bi-coin"></i> Prix</th>
-								<th class="col-ammo"><i class="bi bi-circle"></i> Munitions</th>
-								<th class="col-ammo-price"><i class="bi bi-coin"></i> Prix Munitions</th>
-							</tr>
+						<tr>
+							<th class="col-name"><i class="bi bi-tag"></i> Armes</th>
+							<th class="col-effects"><i class="bi bi-magic"></i> Effets</th>
+							<th class="col-range"><i class="bi bi-arrows-angle-expand"></i> Portée</th>
+							<th class="col-damage"><i class="bi bi-lightning"></i> Dégâts</th>
+							<th class="col-price"><i class="bi bi-coin"></i> Prix</th>
+							<th class="col-ammo"><i class="bi bi-circle"></i> Munitions</th>
+							<th class="col-ammo-price"><i class="bi bi-coin"></i> Prix Munitions</th>
+						</tr>
 						</thead>
 						<tbody>
-							<tr class="item-row" *ngFor="let item of siege$ | async | filterList: searchText : filterFn; trackBy: trackByFn">
-								<td class="item-name">
-									<div class="name-cell">
-										<div class="item-icon siege">
-											<i class="bi bi-building"></i>
+							@for (item of siegeWeapons; track trackByFn($index, item)) {
+								<tr class="item-row">
+									<td class="item-name">
+										<div class="name-cell">
+											<div class="item-icon siege">
+												<i class="bi bi-building"></i>
+											</div>
+											<span class="name-text">{{ item.nom }}</span>
 										</div>
-										<span class="name-text">{{ item.nom }}</span>
-									</div>
-								</td>
-								<td class="item-effects">
-									<div class="effects-text">{{ item.effet }}</div>
-								</td>
-								<td class="item-range">
-									<span class="range-value">{{ item.portee }}</span>
-								</td>
-								<td class="item-damage">
-									<span class="damage-value">{{ item.degats }}</span>
-								</td>
-								<td class="item-price">
+									</td>
+									<td class="item-effects">
+										<div class="effects-text">{{ item.effet }}</div>
+									</td>
+									<td class="item-range">
+										<span class="range-value">{{ item.portee }}</span>
+									</td>
+									<td class="item-damage">
+										<span class="damage-value">{{ item.degats }}</span>
+									</td>
+									<td class="item-price">
 									<span class="price-value">
 										<i class="bi bi-coin text-warning"></i>
 										{{ item.prix }}
 									</span>
-								</td>
-								<td class="weapon-ammo">
-									<span class="ammo-value">{{ item.munitions }}</span>
-								</td>
-								<td class="weapon-ammo-price">
+									</td>
+									<td class="weapon-ammo">
+										<span class="ammo-value">{{ item.munitions }}</span>
+									</td>
+									<td class="weapon-ammo-price">
 									<span class="price-value">
 										<i class="bi bi-coin text-warning"></i>
 										{{ item.prixMunitions }}
 									</span>
-								</td>
-							</tr>
+									</td>
+								</tr>
+							}
 						</tbody>
 					</table>
 				</div>
@@ -378,48 +398,50 @@
 			<!-- Version Mobile -->
 			<div class="mobile-view d-lg-none">
 				<div class="items-grid">
-					<div class="item-card siege" *ngFor="let item of siege$ | async | filterList: searchText : filterFn; trackBy: trackByFn">
-						<div class="card-header">
-							<div class="item-icon">
-								<i class="bi bi-building"></i>
+					@for (item of siegeWeapons; track trackByFn($index, item)) {
+						<div class="item-card siege">
+							<div class="card-header">
+								<div class="item-icon">
+									<i class="bi bi-building"></i>
+								</div>
+								<h5 class="item-name">{{ item.nom }}</h5>
 							</div>
-							<h5 class="item-name">{{ item.nom }}</h5>
+							<div class="card-body">
+								<div class="item-detail">
+									<i class="bi bi-magic"></i>
+									<strong>Effets:</strong>
+									<span>{{ item.effet }}</span>
+								</div>
+								<div class="item-stats">
+									<div class="stat">
+										<i class="bi bi-arrows-angle-expand text-info"></i>
+										<span class="stat-label">Portée:</span>
+										<span class="stat-value range">{{ item.portee }}</span>
+									</div>
+									<div class="stat">
+										<i class="bi bi-lightning text-danger"></i>
+										<span class="stat-label">Dégâts:</span>
+										<span class="stat-value damage">{{ item.degats }}</span>
+									</div>
+									<div class="stat">
+										<i class="bi bi-coin text-warning"></i>
+										<span class="stat-label">Prix:</span>
+										<span class="stat-value price">{{ item.prix }}</span>
+									</div>
+									<div class="stat">
+										<i class="bi bi-circle text-secondary"></i>
+										<span class="stat-label">Munitions:</span>
+										<span class="stat-value">{{ item.munitions }}</span>
+									</div>
+									<div class="stat">
+										<i class="bi bi-coin text-warning"></i>
+										<span class="stat-label">Prix Munitions:</span>
+										<span class="stat-value price">{{ item.prixMunitions }}</span>
+									</div>
+								</div>
+							</div>
 						</div>
-						<div class="card-body">
-							<div class="item-detail">
-								<i class="bi bi-magic"></i>
-								<strong>Effets:</strong>
-								<span>{{ item.effet }}</span>
-							</div>
-							<div class="item-stats">
-								<div class="stat">
-									<i class="bi bi-arrows-angle-expand text-info"></i>
-									<span class="stat-label">Portée:</span>
-									<span class="stat-value range">{{ item.portee }}</span>
-								</div>
-								<div class="stat">
-									<i class="bi bi-lightning text-danger"></i>
-									<span class="stat-label">Dégâts:</span>
-									<span class="stat-value damage">{{ item.degats }}</span>
-								</div>
-								<div class="stat">
-									<i class="bi bi-coin text-warning"></i>
-									<span class="stat-label">Prix:</span>
-									<span class="stat-value price">{{ item.prix }}</span>
-								</div>
-								<div class="stat">
-									<i class="bi bi-circle text-secondary"></i>
-									<span class="stat-label">Munitions:</span>
-									<span class="stat-value">{{ item.munitions }}</span>
-								</div>
-								<div class="stat">
-									<i class="bi bi-coin text-warning"></i>
-									<span class="stat-label">Prix Munitions:</span>
-									<span class="stat-value price">{{ item.prixMunitions }}</span>
-								</div>
-							</div>
-						</div>
-					</div>
+					}
 				</div>
 			</div>
 		</div>

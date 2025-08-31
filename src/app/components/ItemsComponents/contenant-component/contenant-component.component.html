@@ -1,45 +1,138 @@
-<div class="search-container">
-	<input type="text" class="search-input ng-untouched ng-pristine ng-valid" placeholder="Rechercher un contenant..." [(ngModel)]="searchText" />
-	@if ((isAdmin$ | async) && !isInCharacterCreation) {
-		<div>
-			<button class="add-button" (click)="openCreateContenantModal()"><i class="bi bi-sign-intersection-fill"></i> Ajouter un contenant</button>
-		</div>
-	}
-</div>
-
-@if (contenant$ | async | filterList: searchText : filterFn; as filteredContenants) {
-	<h2>Contenants</h2>
-
-	<div class="d-none d-lg-block">
-		<table class="table">
-			<thead>
-				<tr>
-					<th>Nom</th>
-					<th>Contenance</th>
-					<th>Prix</th>
-				</tr>
-			</thead>
-			<tbody>
-				@for (contenant of filteredContenants; track contenant) {
-					<tr>
-						<td>{{ contenant.nom }}</td>
-						<td>{{ contenant.contenance }}</td>
-						<td>{{ contenant.prix }}</td>
-					</tr>
-				}
-			</tbody>
-		</table>
-	</div>
-
-	<div class="container d-md-none">
-		@for (contenant of filteredContenants; track contenant) {
-			<div class="card mb-3">
-				<div class="card-body">
-					<h5 class="card-title">{{ contenant.nom }}</h5>
-					<p class="card-text"><strong>Contenance :</strong> {{ contenant.contenance }}</p>
-					<p class="card-text"><strong>Prix :</strong> {{ contenant.prix }}</p>
+<div class="items-catalog-container">
+	<!-- En-tête avec barre de recherche et bouton d'ajout -->
+	<div class="catalog-header">
+		<div class="search-section">
+			<div class="search-container">
+				<div class="search-input-wrapper">
+					<i class="bi bi-search search-icon"></i>
+					<input
+						[(ngModel)]="searchText"
+						class="search-input"
+						placeholder="Rechercher un contenant..."
+						type="text"
+					/>
+					@if (searchText) {
+						<button class="clear-search" (click)="searchText = ''">
+							<i class="bi bi-x-circle"></i>
+						</button>
+					}
 				</div>
 			</div>
-		}
+
+			@if ((isAdmin$ | async) && !isInCharacterCreation) {
+				<div class="admin-controls">
+					<button class="add-item-btn" (click)="openCreateContenantModal()">
+						<i class="bi bi-plus-circle"></i>
+						<span>Ajouter un contenant</span>
+					</button>
+				</div>
+			}
+		</div>
 	</div>
-}
+
+	<!-- Section Contenants -->
+	@if (contenant$ | async | filterList: searchText : filterFn; as filteredContenants) {
+		<div class="item-section">
+			<div class="section-header">
+				<h2 class="section-title">
+					<i class="bi bi-box-seam"></i>
+					Contenants & Récipients
+					<span class="item-count">({{ filteredContenants.length }})</span>
+				</h2>
+			</div>
+
+			<!-- Version Desktop - Table -->
+			<div class="desktop-view d-none d-lg-block">
+				<div class="table-wrapper">
+					<table class="items-table">
+						<thead>
+						<tr>
+							<th class="col-name">
+								<i class="bi bi-tag"></i> Nom
+							</th>
+							<th class="col-capacity">
+								<i class="bi bi-droplet"></i> Contenance
+							</th>
+							<th class="col-price">
+								<i class="bi bi-coin"></i> Prix
+							</th>
+						</tr>
+						</thead>
+						<tbody>
+							@for (contenant of filteredContenants; track contenant._id || $index) {
+								<tr class="item-row">
+									<td class="item-name">
+										<div class="name-cell">
+											<div class="item-icon container">
+												<i class="bi bi-box-seam"></i>
+											</div>
+											<span class="name-text">{{ contenant.nom }}</span>
+										</div>
+									</td>
+									<td class="item-capacity">
+                               <span class="capacity-value">
+                                  <i class="bi bi-droplet text-info"></i>
+								   {{ contenant.contenance }}
+                               </span>
+									</td>
+									<td class="item-price">
+                               <span class="price-value">
+                                  <i class="bi bi-coin text-warning"></i>
+								   {{ contenant.prix }}
+                               </span>
+									</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<!-- Version Mobile - Cards -->
+			<div class="mobile-view d-lg-none">
+				<div class="items-grid containers-grid">
+					@for (contenant of filteredContenants; track contenant._id || $index) {
+						<div class="item-card container-card">
+							<div class="card-header">
+								<div class="item-icon">
+									<i class="bi bi-box-seam"></i>
+								</div>
+								<h5 class="item-name">{{ contenant.nom }}</h5>
+								<span class="item-type-badge">Contenant</span>
+							</div>
+							<div class="card-body">
+								<div class="item-stats-section">
+									<div class="stat">
+										<i class="bi bi-droplet text-info"></i>
+										<span class="stat-label">Contenance:</span>
+										<span class="stat-value capacity">{{ contenant.contenance }}</span>
+									</div>
+									<div class="stat">
+										<i class="bi bi-coin text-warning"></i>
+										<span class="stat-label">Prix:</span>
+										<span class="stat-value price">{{ contenant.prix }}</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					}
+				</div>
+			</div>
+		</div>
+	}
+
+	<!-- Message si aucun résultat -->
+	<!--@if (searchText && !hasResults()) {
+		<div class="no-results">
+			<div class="no-results-content">
+				<i class="bi bi-box"></i>
+				<h3>Aucun contenant trouvé</h3>
+				<p>Essayez avec des termes de recherche différents</p>
+				<button class="btn-clear-search" (click)="searchText = ''">
+					<i class="bi bi-arrow-clockwise"></i>
+					Effacer la recherche
+				</button>
+			</div>
+		</div>
+	}-->
+</div>
