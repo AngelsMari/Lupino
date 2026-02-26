@@ -1,9 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
 /* Variables CSS Lupino */
 :root {
-	--lupino-primary: #d4af37;
+	--lupino-primary: #ffb65f;
 	--lupino-secondary: #8b4513;
 	--lupino-dark: #2c1810;
+	--lupino-gradient-light: #621503;
+	--lupino-gradient-dark: #2b0800;
 	--lupino-light: #d2b48c;
 	--lupino-accent: #6b3410;
 	--lupino-danger: #8b2635;

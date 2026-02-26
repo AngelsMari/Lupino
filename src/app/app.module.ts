@@ -2,7 +2,7 @@ import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { HttpClientModule } from '@angular/common/http'; // Assurez-vous que ceci est importé
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http'; // Assurez-vous que ceci est importé
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -40,9 +40,7 @@ import { ConfidentialiteComponent } from './components/pages/confidentialite/con
 import { MentionsLegalesComponent } from './components/pages/mentions-legales/mentions-legales.component';
 import { LoreComponent } from './components/pages/lore/lore.component';
 import { EditProfilComponent } from './components/UserGestion/edit-profil/edit-profil.component';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './auth.interceptor';
-registerLocaleData(localeFr, 'fr');
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSliderModule } from '@angular/material/slider';
@@ -59,6 +57,10 @@ import { UtilitaireComponentComponent } from './components/ItemsComponents/utili
 import { ContenantComponentComponent } from './components/ItemsComponents/contenant-component/contenant-component.component';
 import { BazarComponentComponent } from './components/ItemsComponents/bazar-component/bazar-component.component';
 import { FilterListPipe } from './pipes/filter-list.pipe';
+import { CharacterCardComponent } from './components/CharacterComponents/character-card/character-card.component';
+import { CharacterFiltersComponent } from './components/CharacterComponents/filter-character/character-filters.component';
+
+registerLocaleData(localeFr, 'fr');
 
 export function initApp(authService: AuthService) {
 	return () => authService.autoLogin();
@@ -104,6 +106,8 @@ export function initApp(authService: AuthService) {
 		UtilitaireComponentComponent,
 		ContenantComponentComponent,
 		BazarComponentComponent,
+		CharacterCardComponent,
+		CharacterFiltersComponent,
 	],
 	imports: [
 		BrowserModule,

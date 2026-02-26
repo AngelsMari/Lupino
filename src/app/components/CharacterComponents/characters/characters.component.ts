@@ -6,9 +6,8 @@ import { BehaviorSubject, combineLatest, filter, map, Observable, shareReplay, s
 import { Character } from '../../../models/character';
 import { CharacterService } from '../../../services/LupinoApi/character.service';
 import { DeleteCharacterModalComponent } from '../../modal/delete-character/delete-character.component';
-import { AuthService } from 'app/services/auth/auth.service';
 import { UserService } from 'app/services/LupinoApi/user.service';
-import { UserPublicData } from 'app/models/userpublicdata';
+import { CharacterFilters } from '../../../types/CharacterFilters';
 
 @Component({
 	selector: 'app-characters',
@@ -23,16 +22,29 @@ export class CharactersComponent {
 	characters$!: Observable<Character[]>;
 	isMyCharacterPage = this.router.url === '/mycharacters';
 
-	filters = {
-		ageRange: [0, 1000], // minAge = 0, maxAge = 1000
-		levelRange: [1, 10], // idem pour le level
-		races: [] as string[], // races sélectionnées
+	filters: CharacterFilters = {
+		publishedOnly: true,
+		upToDate: false,
+		mjApproved: false,
+		beginners: false,
+		hasImage: false,
+		levelRange: [1, 10],
+		ageRange: [0, 1000],
+		races: [],
+		selectedCampaign: '',
+		strengthRange: [30, 85],
+		agilityRange: [30, 85],
+		enduranceRange: [30, 85],
+		socialRange: [30, 85],
+		mentalRange: [30, 85],
 	};
 
 	// Toutes les races possibles (à ajuster selon ta data)
 	races = ['Humain', 'Elfe', 'Nain', 'Orc', 'Drakéide', 'Gobelin'];
 
 	filtersSubject$ = new BehaviorSubject(this.filters);
+	searchText = '';
+	searchSubject$ = new BehaviorSubject('');
 
 	constructor(
 		private characterService: CharacterService,
@@ -50,10 +62,16 @@ export class CharactersComponent {
 					const ageOk = !isNaN(ageNum) && ageNum >= filters.ageRange[0] && ageNum <= filters.ageRange[1];
 					const levelOk = character.level >= filters.levelRange[0] && character.level <= filters.levelRange[1];
 
-					// Pour la race aussi si tu veux filtrer par race
-					const raceOk = filters.races.length === 0 || filters.races.includes(character.race);
+					const agiOk = character.agility >= filters.agilityRange[0] && character.agility <= filters.agilityRange[1];
+					const forceOk = character.strength >= filters.strengthRange[0] && character.strength <= filters.strengthRange[1];
+					const mentalOk = character.mental >= filters.mentalRange[0] && character.mental <= filters.mentalRange[1];
+					const socialOk = character.social >= filters.socialRange[0] && character.social <= filters.socialRange[1];
+					const enduranceOk = character.endurance >= filters.enduranceRange[0] && character.endurance <= filters.enduranceRange[1];
 
-					return ageOk && levelOk && raceOk;
+					// Pour la race aussi si tu veux filtrer par race
+					//const raceOk = filters.races.length === 0 || filters.races.includes(character.race);
+
+					return ageOk && levelOk && forceOk && mentalOk && socialOk && enduranceOk && agiOk;
 				});
 			}),
 			shareReplay(1),
@@ -96,20 +114,15 @@ export class CharactersComponent {
 			.subscribe();
 	}
 
-	applyFilters() {
-		// Supposons que tu as un tableau characters en mémoire (ou tu récupères via observable)
-		// filtre les personnages selon les filtres sélectionnés
+	onFiltersChange(filters: CharacterFilters) {
+		if (filters) {
+			this.filters = { ...filters };
+			this.filtersSubject$.next(this.filters);
+		}
+	}
 
-		this.characters$ = this.characters$.pipe(
-			map((characters) =>
-				characters.filter((character) => {
-					const ageNum = parseInt(character.age.toString(), 10);
-
-					const ageOk = !isNaN(ageNum) && ageNum >= this.filters.ageRange[0] && ageNum <= this.filters.ageRange[1];
-					const levelOk = character.level >= this.filters.levelRange[0] && character.level <= this.filters.levelRange[1];
-					return ageOk && levelOk;
-				}),
-			),
-		);
+	onSearchChange(searchText: string) {
+		this.searchText = searchText || '';
+		this.searchSubject$.next(this.searchText);
 	}
 }
