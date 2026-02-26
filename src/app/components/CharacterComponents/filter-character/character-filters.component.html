@@ -1,0 +1,498 @@
+<div [ngClass]="{
+  'collapsed': filterState === 'collapsed',
+  'fully-open': filterState === 'fully-open'
+}" class="lupino-filters-sidebar">
+
+	<!-- Bouton vertical "Filtres" quand fermé -->
+	@if (filterState === 'collapsed') {
+		<button
+			(click)="openFilters()"
+			class="lupino-vertical-toggle"
+		>
+			<span class="vertical-text">Filtres</span>
+		</button>
+	}
+
+	<!-- Panel de filtres -->
+
+	@if (filterState !== 'collapsed') {
+
+		<div class="lupino-filters-panel">
+
+			<!-- En-tête avec recherche -->
+			<div class="lupino-filters-header">
+				<div class="search-container">
+					<i class="fas fa-search search-icon"></i>
+					<input
+						(input)="onSearchChange()"
+						[(ngModel)]="searchText"
+						class="lupino-search-input"
+						placeholder="Recherche......"
+						type="text"
+					/>
+					@if (searchText) {
+						<button (click)="clearSearch()" class="clear-search">
+							<i class="fas fa-times"></i>
+						</button>
+					}
+				</div>
+
+				<!-- Bouton pour fermer -->
+				<button (click)="closeFilters()" class="close-btn">
+					<i class="fas fa-times"></i>
+				</button>
+			</div>
+
+			<!-- Sections de filtres (visibles si fully-open) -->
+			@if (filterState === 'fully-open') {
+				<div class="filters-sections">
+
+					<!-- ========== CATÉGORIES ========== -->
+					<div class="filter-section">
+						<button
+							(click)="toggleSection('categories')"
+							[class.active]="isSectionOpen('categories')"
+							class="section-toggle"
+						>
+							Catégories
+						</button>
+
+						@if (isSectionOpen('categories')) {
+							<div class="section-content">
+
+								<!-- Admin: Personnages publiés -->
+								@if (showAdminFilters) {
+									<div class="admin-filter">
+										<div class="admin-badge">
+											<i class="fas fa-crown"></i> Admin
+										</div>
+										<label class="lupino-checkbox">
+											<input
+												(change)="onFilterChange()"
+												[(ngModel)]="filters.publishedOnly"
+												type="checkbox"
+											/>
+											<span>Publiés uniquement</span>
+										</label>
+									</div>
+								}
+
+								<label class="lupino-checkbox">
+									<input
+										(change)="onFilterChange()"
+										[(ngModel)]="filters.upToDate"
+										type="checkbox"
+									/>
+									<span>À jour</span>
+								</label>
+
+								<label class="lupino-checkbox">
+									<input
+										(change)="onFilterChange()"
+										[(ngModel)]="filters.mjApproved"
+										type="checkbox"
+									/>
+									<span>MJ approved</span>
+								</label>
+
+								<label class="lupino-checkbox">
+									<input
+										(change)="onFilterChange()"
+										[(ngModel)]="filters.beginners"
+										type="checkbox"
+									/>
+									<span>Débutants</span>
+								</label>
+
+								<label class="lupino-checkbox">
+									<input
+										(change)="onFilterChange()"
+										[(ngModel)]="filters.hasImage"
+										type="checkbox"
+									/>
+									<span>Avec image</span>
+								</label>
+							</div>
+						}
+					</div>
+
+					<!-- ========== NIVEAUX ========== -->
+					<div class="filter-section">
+						<button
+							(click)="toggleSection('levels')"
+							[class.active]="isSectionOpen('levels')"
+							class="section-toggle"
+						>
+							Niveaux
+						</button>
+
+						@if (isSectionOpen('levels')) {
+							<div class="section-content">
+								<div class="range-label">
+									Niveau {{ filters.levelRange[0] }} - {{ filters.levelRange[1] }}
+								</div>
+
+								<!-- Slider double pour min/max -->
+								<div class="dual-slider-container">
+									<input
+										type="range"
+										min="1"
+										max="10"
+										[(ngModel)]="filters.levelRange[0]"
+										(input)="onLevelMinChange()"
+										class="lupino-slider slider-min"
+									/>
+									<input
+										type="range"
+										min="1"
+										max="10"
+										[(ngModel)]="filters.levelRange[1]"
+										(input)="onLevelMaxChange()"
+										class="lupino-slider slider-max"
+									/>
+									<div class="slider-track"></div>
+									<div class="slider-range" [style.left.%]="getLevelRangeLeft()"
+										 [style.width.%]="getLevelRangeWidth()"></div>
+								</div>
+
+							</div>
+						}
+					</div>
+
+					<!-- ========== RACES ========== -->
+					<div class="filter-section">
+						<button
+							(click)="toggleSection('races')"
+							[class.active]="isSectionOpen('races')"
+							class="section-toggle"
+						>
+							Races
+							@if (filters.races.length > 0) {
+								<span class="filter-count">
+            ({{ filters.races.length }})
+          </span>
+							}
+						</button>
+
+						@if (isSectionOpen('races')) {
+							<div class="section-content races-content">
+								<div class="races-grid">
+									@for (race of availableRaces; track race) {
+										<label
+											class="lupino-checkbox race-checkbox"
+										>
+											<input
+												(change)="onRaceChange($event, race)"
+												[checked]="filters.races.includes(race)"
+												[value]="race"
+												type="checkbox"
+											/>
+											<span>{{ race }}</span>
+										</label>
+									}
+								</div>
+
+								<!-- Boutons actions rapides -->
+								<div class="race-actions">
+									<button
+										(click)="selectAllRaces()"
+										class="race-action-btn"
+									>
+										Tout sélectionner
+									</button>
+									@if (filters.races.length > 0) {
+										<button
+											(click)="clearRaces()"
+											class="race-action-btn"
+										>
+											Effacer
+										</button>
+									}
+								</div>
+							</div>
+						}
+					</div>
+
+					<!-- ========== CAMPAGNES ========== -->
+					<!--<div class="filter-section">
+						<button
+							(click)="toggleSection('campaigns')"
+							[class.active]="isSectionOpen('campaigns')"
+							class="section-toggle"
+						>
+							Campagnes
+						</button>
+
+						@if (isSectionOpen('campaigns')) {
+							<div class="section-content campaigns-content">
+								<label class="lupino-radio">
+									<input
+										(change)="onFilterChange()"
+										[(ngModel)]="filters.selectedCampaign"
+										name="campaign"
+										type="radio"
+										value=""
+									/>
+									<span>Toutes les campagnes</span>
+								</label>
+
+								<div class="campaigns-list">
+									<label
+										*ngFor="let campaign of availableCampaigns"
+										class="lupino-radio campaign-item"
+									>
+										<input
+											(change)="onFilterChange()"
+											[(ngModel)]="filters.selectedCampaign"
+											[value]="campaign.id"
+											name="campaign"
+											type="radio"
+										/>
+										<span class="campaign-name">
+                <i class="fas fa-book-open"></i>
+											{{ campaign.name }}
+              </span>
+									</label>
+								</div>
+							</div>
+						}
+					</div>-->
+
+					<!-- ========== ÂGE ========== -->
+					<div class="filter-section">
+						<button
+							(click)="toggleSection('age')"
+							[class.active]="isSectionOpen('age')"
+							class="section-toggle"
+						>
+							Âge
+						</button>
+
+						@if (isSectionOpen('age')) {
+							<div class="section-content">
+								<div class="range-label">
+									{{ filters.ageRange[0] }} - {{ filters.ageRange[1] }} ans
+								</div>
+
+								<!-- Slider double pour min/max -->
+								<div class="dual-slider-container">
+									<input
+										type="range"
+										min="0"
+										max="1000"
+										step="10"
+										[(ngModel)]="filters.ageRange[0]"
+										(input)="onAgeMinChange()"
+										class="lupino-slider slider-min"
+									/>
+									<input
+										type="range"
+										min="0"
+										max="1000"
+										step="10"
+										[(ngModel)]="filters.ageRange[1]"
+										(input)="onAgeMaxChange()"
+										class="lupino-slider slider-max"
+									/>
+									<div class="slider-track"></div>
+									<div class="slider-range" [style.left.%]="getAgeRangeLeft()"
+										 [style.width.%]="getAgeRangeWidth()"></div>
+								</div>
+
+							</div>
+						}
+					</div>
+
+					<!-- ========== STATISTIQUES PRINCIPALES ========== -->
+					<div class="filter-section">
+						<button
+							(click)="toggleSection('stats')"
+							[class.active]="isSectionOpen('stats')"
+							class="section-toggle"
+						>
+							Statistiques
+						</button>
+
+						<!-- ========== STATISTIQUES ========== -->
+						@if (isSectionOpen('stats')) {
+							<div class="section-content stats-content">
+
+								<!-- Force -->
+								<div class="stat-filter">
+									<label class="stat-label">
+										<i class="fas fa-fist-raised"></i>
+										Force ({{ filters.strengthRange[0] }} - {{ filters.strengthRange[1] }})
+									</label>
+									<div class="dual-slider-container compact">
+										<input
+											type="range"
+											min="1"
+											max="100"
+											[(ngModel)]="filters.strengthRange[0]"
+											(input)="onStatMinChange('strength')"
+											class="lupino-slider slider-min"
+										/>
+										<input
+											type="range"
+											min="1"
+											max="100"
+											[(ngModel)]="filters.strengthRange[1]"
+											(input)="onStatMaxChange('strength')"
+											class="lupino-slider slider-max"
+										/>
+										<div class="slider-track"></div>
+										<div class="slider-range" [style.left.%]="getStatRangeLeft('strength')"
+											 [style.width.%]="getStatRangeWidth('strength')"></div>
+									</div>
+								</div>
+
+								<!-- Agilité -->
+								<div class="stat-filter">
+									<label class="stat-label">
+										<i class="fas fa-running"></i>
+										Agilité ({{ filters.agilityRange[0] }} - {{ filters.agilityRange[1] }})
+									</label>
+									<div class="dual-slider-container compact">
+										<input
+											type="range"
+											min="1"
+											max="100"
+											[(ngModel)]="filters.agilityRange[0]"
+											(input)="onStatMinChange('agility')"
+											class="lupino-slider slider-min"
+										/>
+										<input
+											type="range"
+											min="1"
+											max="100"
+											[(ngModel)]="filters.agilityRange[1]"
+											(input)="onStatMaxChange('agility')"
+											class="lupino-slider slider-max"
+										/>
+										<div class="slider-track"></div>
+										<div class="slider-range" [style.left.%]="getStatRangeLeft('agility')"
+											 [style.width.%]="getStatRangeWidth('agility')"></div>
+									</div>
+								</div>
+
+								<!-- Endurance -->
+								<div class="stat-filter">
+									<label class="stat-label">
+										<i class="fas fa-heart"></i>
+										Endurance ({{ filters.enduranceRange[0] }} - {{ filters.enduranceRange[1] }})
+									</label>
+									<div class="dual-slider-container compact">
+										<input
+											type="range"
+											min="1"
+											max="100"
+											[(ngModel)]="filters.enduranceRange[0]"
+											(input)="onStatMinChange('endurance')"
+											class="lupino-slider slider-min"
+										/>
+										<input
+											type="range"
+											min="1"
+											max="100"
+											[(ngModel)]="filters.enduranceRange[1]"
+											(input)="onStatMaxChange('endurance')"
+											class="lupino-slider slider-max"
+										/>
+										<div class="slider-track"></div>
+										<div class="slider-range" [style.left.%]="getStatRangeLeft('endurance')"
+											 [style.width.%]="getStatRangeWidth('endurance')"></div>
+									</div>
+								</div>
+
+								<!-- Social -->
+								<div class="stat-filter">
+									<label class="stat-label">
+										<i class="fas fa-comments"></i>
+										Social ({{ filters.socialRange[0] }} - {{ filters.socialRange[1] }})
+									</label>
+									<div class="dual-slider-container compact">
+										<input
+											type="range"
+											min="1"
+											max="100"
+											[(ngModel)]="filters.socialRange[0]"
+											(input)="onStatMinChange('social')"
+											class="lupino-slider slider-min"
+										/>
+										<input
+											type="range"
+											min="1"
+											max="100"
+											[(ngModel)]="filters.socialRange[1]"
+											(input)="onStatMaxChange('social')"
+											class="lupino-slider slider-max"
+										/>
+										<div class="slider-track"></div>
+										<div class="slider-range" [style.left.%]="getStatRangeLeft('social')"
+											 [style.width.%]="getStatRangeWidth('social')"></div>
+									</div>
+								</div>
+
+								<!-- Mental -->
+								<div class="stat-filter">
+									<label class="stat-label">
+										<i class="fas fa-brain"></i>
+										Mental ({{ filters.mentalRange[0] }} - {{ filters.mentalRange[1] }})
+									</label>
+									<div class="dual-slider-container compact">
+										<input
+											type="range"
+											min="1"
+											max="100"
+											[(ngModel)]="filters.mentalRange[0]"
+											(input)="onStatMinChange('mental')"
+											class="lupino-slider slider-min"
+										/>
+										<input
+											type="range"
+											min="1"
+											max="100"
+											[(ngModel)]="filters.mentalRange[1]"
+											(input)="onStatMaxChange('mental')"
+											class="lupino-slider slider-max"
+										/>
+										<div class="slider-track"></div>
+										<div class="slider-range" [style.left.%]="getStatRangeLeft('mental')"
+											 [style.width.%]="getStatRangeWidth('mental')"></div>
+									</div>
+								</div>
+
+								@if (hasModifiedStats()) {
+									<button (click)="resetStats()" class="reset-section-btn">
+										<i class="fas fa-undo"></i>
+										Réinitialiser les stats
+									</button>
+								}
+							</div>
+						}
+					</div>
+
+					<!-- Bouton Réinitialiser global -->
+					@if (hasActiveFilters()) {
+						<button
+							(click)="resetAllFilters()"
+							class="reset-all-filters-btn"
+						>
+							<i class="fas fa-redo"></i>
+							Réinitialiser tous les filtres
+						</button>
+					}
+				</div>
+			}
+
+
+			<!-- Compteur de résultats -->
+			@if (resultsCount !== null) {
+				<div class="results-counter">
+					<i class="fas fa-users"></i>
+					<span>{{ resultsCount }} personnage(s) trouvé(s)</span>
+				</div>
+			}
+		</div>
+	}
+</div>
