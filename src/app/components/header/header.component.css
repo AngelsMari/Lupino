@@ -28,9 +28,8 @@
 .nav-link {
 	color: #ffb65f; /* Couleur des liens */
 	padding: 8px 15px; /* Espacement des liens */
-	transition:
-		background-color 0.3s,
-		color 0.3s; /* Transition pour l'effet de survol */
+	transition: background-color 0.3s,
+	color 0.3s; /* Transition pour l'effet de survol */
 }
 
 .nav-link:hover {
@@ -75,63 +74,10 @@
 	pointer-events: none; /* Empêche le clic */
 }
 
-/* Conteneur principal (fond transparent) */
-.bar-wrap {
+.ornement-full-page {
 	width: 100%;
-	box-sizing: border-box;
-	background: transparent;
-	position: relative;
-	z-index: 1001;
-	margin-top: -25px;
-}
-
-/* La "barre" : on utilise flex pour aligner éléments */
-.bar {
-	display: flex;
-	align-items: center; /* centre verticalement séparateur et ronds */
-	height: 48px; /* hauteur de référence de la barre (modifiable) */
-}
-
-/* Ronds (gauche / droite) : juste bordure, fond transparent */
-.dot {
-	width: 28px;
-	height: 28px;
-	border-radius: 50%;
-	border: 3px solid #ffb65f; /* couleur et épaisseur de la bordure */
-	background: transparent;
-	box-sizing: border-box;
-}
-
-/* Ligne horizontale qui occupe l'espace restant entre les ronds */
-.line {
-	height: 3px; /* épaisseur de la ligne */
-	width: 100vw; /* occupe tout l'espace disponible */
-	background: #ffb65f;
-	position: relative; /* permet de positionner le séparateur centré */
-}
-
-/* Variantes rapides — ajuste si tu veux des ronds plus petits / gros */
-.dot.small {
-	width: 18px;
-	height: 18px;
-	border-width: 1.5px;
-}
-.dot.large {
-	width: 36px;
-	height: 36px;
-	border-width: 2.5px;
-}
-
-/* Responsive : réduire la hauteur et la taille des dots sur petits écrans */
-@media (max-width: 420px) {
-	.bar {
-		height: 40px;
-	}
-	.dot {
-		width: 22px;
-		height: 22px;
-	}
-	.line::after {
-		height: 48%;
-	}
+	height: 20px;
+	object-fit: fill; /* ← force l’étirement */
+	display: block;
+	margin: 16px 0;
 }

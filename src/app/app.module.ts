@@ -9,7 +9,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
 import { CharactersComponent } from './components/CharacterComponents/characters/characters.component';
-import { HeaderComponent } from './components/header/header.component';
 import { AuthGuard } from './services/auth/auth.guard';
 import { AuthService } from './services/auth/auth.service';
 import { CharacterDetailComponent } from './components/CharacterComponents/character-detail/character-detail.component';
@@ -59,6 +58,7 @@ import { BazarComponentComponent } from './components/ItemsComponents/bazar-comp
 import { FilterListPipe } from './pipes/filter-list.pipe';
 import { CharacterCardComponent } from './components/CharacterComponents/character-card/character-card.component';
 import { CharacterFiltersComponent } from './components/CharacterComponents/filter-character/character-filters.component';
+import { HeaderComponent } from './components/header/header.component';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -71,7 +71,6 @@ export function initApp(authService: AuthService) {
 		AppComponent,
 		HomeComponent,
 		CharactersComponent,
-		HeaderComponent,
 		CharacterDetailComponent,
 		LoginComponent,
 		RegisterComponent,
@@ -126,6 +125,7 @@ export function initApp(authService: AuthService) {
 			preventDuplicates: true, // Prévenir les notifications dupliquées
 		}),
 		FilterListPipe,
+		HeaderComponent,
 	],
 	providers: [
 		{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
