@@ -4,12 +4,20 @@ import { CreateUtilitaireComponent } from 'app/components/modal/create-utilitair
 import { Utilitaire } from 'app/models/items/utilitaire';
 import { UtilitaireService } from 'app/services/LupinoApi/items/utilitaire.service';
 import { catchError, Observable, of, shareReplay } from 'rxjs';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { AsyncPipe } from '@angular/common';
+import { FilterListPipe } from '../../../pipes/filter-list.pipe';
 
 @Component({
-	selector: 'app-utilitaire-component',
-	templateUrl: './utilitaire-component.component.html',
-	styleUrls: ['./utilitaire-component.component.css', '../../../../assets/styles/items.css'],
-	standalone: false,
+    selector: 'app-utilitaire-component',
+    templateUrl: './utilitaire-component.component.html',
+    styleUrls: ['./utilitaire-component.component.css', '../../../../assets/styles/items.css'],
+    imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        AsyncPipe,
+        FilterListPipe,
+    ],
 })
 export class UtilitaireComponentComponent {
 	@Input() isAdmin$!: Observable<boolean>;

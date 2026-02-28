@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CampagneService } from '../../../services/LupinoApi/campagne.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Campagne } from '../../../models/campagne';
 import { DeleteCharacterModalComponent } from '../../modal/delete-character/delete-character.component';
 import { User } from '../../../models/user';
@@ -11,7 +11,7 @@ import { UserService } from '../../../services/LupinoApi/user.service';
     selector: 'app-campagne',
     templateUrl: './campagne.component.html',
     styleUrl: './campagne.component.css',
-    standalone: false
+    imports: [RouterLink]
 })
 export class CampagneComponent {
     campagnes: Campagne[] = [];

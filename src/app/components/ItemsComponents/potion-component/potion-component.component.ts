@@ -4,12 +4,20 @@ import { CreatePotionComponent } from 'app/components/modal/create-potion/create
 import { Potion } from 'app/models/items/potion';
 import { PotionService } from 'app/services/LupinoApi/items/potion.service';
 import { catchError, Observable, of, shareReplay } from 'rxjs';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { AsyncPipe } from '@angular/common';
+import { FilterListPipe } from '../../../pipes/filter-list.pipe';
 
 @Component({
-	selector: 'app-potion-component',
-	templateUrl: './potion-component.component.html',
-	styleUrls: ['./potion-component.component.css', '../../../../assets/styles/items.css'],
-	standalone: false,
+    selector: 'app-potion-component',
+    templateUrl: './potion-component.component.html',
+    styleUrls: ['./potion-component.component.css', '../../../../assets/styles/items.css'],
+    imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        AsyncPipe,
+        FilterListPipe,
+    ],
 })
 export class PotionComponentComponent {
 	@Input() isAdmin$!: Observable<boolean>;

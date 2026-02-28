@@ -12,7 +12,6 @@ import { AsyncPipe } from '@angular/common';
 	templateUrl: './header.component.html',
 	styleUrls: ['./header.component.css'],
 	imports: [OrnementComponent, AsyncPipe, RouterLink],
-	standalone: true,
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 	router = inject(Router);

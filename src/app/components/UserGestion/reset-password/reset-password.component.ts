@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from 'app/services/LupinoApi/user.service';
 import { ToastrService } from 'ngx-toastr';
@@ -8,7 +8,7 @@ import { ToastrService } from 'ngx-toastr';
     selector: 'app-reset-password',
     templateUrl: './reset-password.component.html',
     styleUrl: './reset-password.component.css',
-    standalone: false
+    imports: [ReactiveFormsModule]
 })
 export class ResetPasswordComponent {
 	resetForm: FormGroup;

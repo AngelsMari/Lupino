@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { RaceService } from '../../../services/LupinoApi/race.service';
 
@@ -7,7 +7,7 @@ import { RaceService } from '../../../services/LupinoApi/race.service';
     selector: 'app-race-create',
     templateUrl: './race-create.component.html',
     styleUrl: './race-create.component.css',
-    standalone: false
+    imports: [ReactiveFormsModule]
 })
 export class RaceCreateComponent {
   raceForm: FormGroup;

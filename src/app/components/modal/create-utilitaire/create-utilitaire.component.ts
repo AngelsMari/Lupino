@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { Utilitaire } from '../../../models/items/utilitaire';
 import { UtilitaireService } from '../../../services/LupinoApi/items/utilitaire.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-create-utilitaire',
     templateUrl: './create-utilitaire.component.html',
     styleUrl: './create-utilitaire.component.css',
-    standalone: false
+    imports: [ReactiveFormsModule]
 })
 export class CreateUtilitaireComponent {
   utilitaireForm: FormGroup;

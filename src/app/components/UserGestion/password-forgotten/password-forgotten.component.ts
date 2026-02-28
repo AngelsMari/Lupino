@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from 'app/services/LupinoApi/user.service';
 import { ToastrService } from 'ngx-toastr';
@@ -8,7 +8,7 @@ import { ToastrService } from 'ngx-toastr';
     selector: 'app-password-forgotten',
     templateUrl: './password-forgotten.component.html',
     styleUrl: './password-forgotten.component.css',
-    standalone: false
+    imports: [ReactiveFormsModule]
 })
 export class PasswordForgottenComponent {
 	forgotForm: FormGroup;

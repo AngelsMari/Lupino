@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-add-note-modal',
     templateUrl: './add-note-modal.component.html',
     styleUrls: ['./add-note-modal.component.css'],
-    standalone: false
+    imports: [ReactiveFormsModule]
 })
 export class AddNoteModalComponent implements OnInit {
   noteForm: FormGroup;

@@ -1,18 +1,25 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Character } from '../../../models/character';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CharacterService } from '../../../services/LupinoApi/character.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { UserService } from 'app/services/LupinoApi/user.service';
 import { ToastrService } from 'ngx-toastr';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { BehaviorSubject, combineLatest, map, tap, switchMap, catchError, of, max } from 'rxjs';
+import { NgClass, NgIf, NgFor, AsyncPipe } from '@angular/common';
 
 @Component({
-	selector: 'app-character-detail',
-	templateUrl: './character-detail.component.html',
-	styleUrls: ['./character-detail.component.css'],
-	standalone: false,
+    selector: 'app-character-detail',
+    templateUrl: './character-detail.component.html',
+    styleUrls: ['./character-detail.component.css'],
+    imports: [
+        RouterLink,
+        NgClass,
+        NgIf,
+        NgFor,
+        AsyncPipe,
+    ],
 })
 export class CharacterDetailComponent implements OnInit {
 	private fb = inject(FormBuilder);

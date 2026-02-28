@@ -1,11 +1,14 @@
 import { Component } from '@angular/core';
 import { AuthService } from './services/auth/auth.service';
+import { HeaderComponent } from './components/header/header.component';
+import { RouterOutlet } from '@angular/router';
+import { FooterComponent } from './components/footer/footer.component';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrl: './app.component.css',
-    standalone: false
+    imports: [HeaderComponent, RouterOutlet, FooterComponent]
 })
 export class AppComponent {
 	title = 'Lupino';

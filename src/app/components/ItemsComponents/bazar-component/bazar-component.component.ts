@@ -4,12 +4,20 @@ import { CreateBazarComponent } from 'app/components/modal/create-bazar/create-b
 import { Bazar } from 'app/models/items/bazar';
 import { BazarService } from 'app/services/LupinoApi/items/bazar.service';
 import { catchError, combineLatest, map, Observable, of, shareReplay } from 'rxjs';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { AsyncPipe } from '@angular/common';
+import { FilterListPipe } from '../../../pipes/filter-list.pipe';
 
 @Component({
-	selector: 'app-bazar-component',
-	templateUrl: './bazar-component.component.html',
-	styleUrls: ['./bazar-component.component.css', '../../../../assets/styles/items.css'],
-	standalone: false,
+    selector: 'app-bazar-component',
+    templateUrl: './bazar-component.component.html',
+    styleUrls: ['./bazar-component.component.css', '../../../../assets/styles/items.css'],
+    imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        AsyncPipe,
+        FilterListPipe,
+    ],
 })
 export class BazarComponentComponent {
 	bazarService = inject(BazarService);

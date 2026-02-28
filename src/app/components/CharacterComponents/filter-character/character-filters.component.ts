@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CharacterFilters } from '../../../types/CharacterFilters';
+import { NgClass } from '@angular/common';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 type FilterState = 'collapsed' | 'fully-open';
 type FilterSection = 'categories' | 'levels' | 'races' | 'campaigns' | 'age' | 'stats';
@@ -10,10 +12,14 @@ interface Campaign {
 }
 
 @Component({
-	selector: 'app-character-filters',
-	templateUrl: './character-filters.component.html',
-	styleUrls: ['./character-filters.component.css'],
-	standalone: false,
+    selector: 'app-character-filters',
+    templateUrl: './character-filters.component.html',
+    styleUrls: ['./character-filters.component.css'],
+    imports: [
+        NgClass,
+        ReactiveFormsModule,
+        FormsModule,
+    ],
 })
 export class CharacterFiltersComponent {
 	@Input() showAdminFilters = false;

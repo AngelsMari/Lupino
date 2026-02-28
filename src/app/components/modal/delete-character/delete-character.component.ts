@@ -4,8 +4,7 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
     selector: 'app-delete-character-modal',
     templateUrl: './delete-character-modal.component.html',
-    styleUrls: ['./delete-character-modal.component.css'],
-    standalone: false
+    styleUrls: ['./delete-character-modal.component.css']
 })
 export class DeleteCharacterModalComponent {
   @Input() character: any; // Reçoit les données du personnage à supprimer

@@ -1,15 +1,16 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CharacterService } from '../../../services/LupinoApi/character.service';
 import { UserService } from '../../../services/LupinoApi/user.service';
 import { CampagneService } from '../../../services/LupinoApi/campagne.service';
 import { Character } from '../../../models/character';
+import { QuillEditorComponent } from 'ngx-quill';
 
 @Component({
     selector: 'app-create-campagne',
     templateUrl: './create-campagne.component.html',
     styleUrl: './create-campagne.component.css',
-    standalone: false
+    imports: [ReactiveFormsModule, FormsModule, QuillEditorComponent]
 })
 export class CreateCampagneComponent {
     campagneForm: FormGroup;

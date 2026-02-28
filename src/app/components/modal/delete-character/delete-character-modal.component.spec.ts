@@ -8,8 +8,8 @@ describe('DeleteCharacterComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DeleteCharacterComponent]
-    })
+    imports: [DeleteCharacterComponent]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(DeleteCharacterComponent);

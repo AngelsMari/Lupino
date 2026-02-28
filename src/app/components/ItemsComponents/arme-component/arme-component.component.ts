@@ -5,12 +5,20 @@ import { CreateArmeComponent } from 'app/components/modal/create-arme/create-arm
 import { Arme } from 'app/models/items/arme';
 import { ArmeService } from 'app/services/LupinoApi/items/arme.service';
 import { BehaviorSubject, catchError, combineLatest, map, Observable, of, shareReplay } from 'rxjs';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { AsyncPipe } from '@angular/common';
+import { FilterListPipe } from '../../../pipes/filter-list.pipe';
 
 @Component({
-	selector: 'app-arme-component',
-	templateUrl: './arme-component.component.html',
-	styleUrls: ['./arme-component.component.css', '../../../../assets/styles/items.css'],
-	standalone: false,
+    selector: 'app-arme-component',
+    templateUrl: './arme-component.component.html',
+    styleUrls: ['./arme-component.component.css', '../../../../assets/styles/items.css'],
+    imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        AsyncPipe,
+        FilterListPipe,
+    ],
 })
 export class ArmeComponentComponent {
 	@Input() isAdmin$!: Observable<boolean>;

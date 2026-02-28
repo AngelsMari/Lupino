@@ -8,8 +8,8 @@ describe('LoreComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [LoreComponent]
-    })
+    imports: [LoreComponent]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(LoreComponent);

@@ -4,13 +4,14 @@ import { CampagneService } from '../../../services/LupinoApi/campagne.service';
 import { Campagne } from '../../../models/campagne';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddNoteModalComponent } from '../../modal/add-note-modal/add-note-modal.component';
+import { NgClass, DatePipe } from '@angular/common';
 
 
 @Component({
     selector: 'app-campagne-detail',
     templateUrl: './campagne-detail.component.html',
     styleUrls: ['./campagne-detail.component.css'],
-    standalone: false
+    imports: [NgClass, DatePipe]
 })
 export class CampagneDetailComponent implements OnInit {
     campagne: Campagne | null = null;

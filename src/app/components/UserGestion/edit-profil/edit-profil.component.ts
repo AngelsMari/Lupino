@@ -5,14 +5,19 @@ import { AuthService } from 'app/services/auth/auth.service';
 import { UserService } from 'app/services/LupinoApi/user.service';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { switchMap, take } from 'rxjs/operators';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
-	selector: 'edit-profil',
-	templateUrl: './edit-profil.component.html',
-	styleUrls: ['./edit-profil.component.css'],
-	standalone: false,
+    selector: 'edit-profil',
+    templateUrl: './edit-profil.component.html',
+    styleUrls: ['./edit-profil.component.css'],
+    imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        AsyncPipe,
+    ],
 })
 export class EditProfilComponent implements OnInit {
 	user$: Observable<UserPublicData>;

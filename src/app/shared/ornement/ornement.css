@@ -1,0 +1,49 @@
+:host {
+	display: block;
+}
+
+.ornement {
+	--c: #ffb65f;
+	--dot: 16px;
+	--line: 2px;
+
+	position: relative;
+	height: var(--dot);
+	box-sizing: border-box;
+
+	padding-inline: calc(var(--dot) / 2);
+	margin: 0 auto;
+}
+
+.ornement .line {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	height: var(--line);
+	background: var(--c);
+	left: var(--dot);
+	right: var(--dot);
+	border-radius: 999px;
+}
+
+.ornement::before,
+.ornement::after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	width: var(--dot);
+	height: var(--dot);
+	border: var(--line) solid var(--c);
+	border-radius: 999px;
+	box-sizing: border-box;
+	background: transparent;
+}
+
+.ornement::before {
+	left: 0;
+}
+
+.ornement::after {
+	right: 0;
+}

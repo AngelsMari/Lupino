@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { PoisonService } from '../../../services/LupinoApi/items/poison.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Poison } from '../../../models/items/poison';
 
 @Component({
     selector: 'app-create-poison',
     templateUrl: './create-poison.component.html',
     styleUrl: './create-poison.component.css',
-    standalone: false
+    imports: [ReactiveFormsModule]
 })
 export class CreatePoisonComponent {
   poisonForm: FormGroup;

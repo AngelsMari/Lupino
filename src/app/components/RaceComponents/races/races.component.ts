@@ -5,12 +5,13 @@ import { Race } from '../../../models/race';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RaceCreateComponent } from '../../modal/race-create/race-createcomponent';
 import { map, Observable } from 'rxjs';
+import { NgClass, AsyncPipe } from '@angular/common';
 
 @Component({
-	selector: 'app-races',
-	templateUrl: './races.component.html',
-	styleUrl: './races.component.css',
-	standalone: false,
+    selector: 'app-races',
+    templateUrl: './races.component.html',
+    styleUrl: './races.component.css',
+    imports: [NgClass, AsyncPipe],
 })
 export class RacesComponent {
 	commonRaces: Race[] = [];

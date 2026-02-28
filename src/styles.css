@@ -6,6 +6,7 @@
 	--lupino-dark: #2c1810;
 	--lupino-gradient-light: #621503;
 	--lupino-gradient-dark: #2b0800;
+	--lupino-background-gradient: linear-gradient(180deg, #3a0f05, #5a1408);
 	--lupino-light: #d2b48c;
 	--lupino-accent: #6b3410;
 	--lupino-danger: #8b2635;
@@ -20,6 +21,9 @@
 	--fire-orange: #ff4500;
 	--shadow-dark: rgba(0, 0, 0, 0.3);
 	--shadow-light: rgba(255, 255, 255, 0.1);
+
+	--bs-body-bg: var(--lupino-background-gradient);
+	--bs-body-color: var(--lupino-primary) !important;
 }
 
 * {
@@ -29,10 +33,27 @@
 }
 
 body {
-	font-family: 'Raleway', sans-serif;
-	color: #333;
-	background: url('/Image_accueil.svg');
+	color: var(--lupino-primary) !important;
+	background: url('/Image_accueil.svg') center / cover no-repeat fixed;
 	line-height: 1.6;
+	height: 100%;
+	margin: 0;
+	font-family: 'Alegreya', serif !important;
+
+}
+
+app-root {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
+main {
+	flex: 1;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	color: var(--lupino-primary) !important;
 }
 
 .table thead th,
@@ -136,4 +157,14 @@ quill-editor {
 	color: white !important;
 	transform: translateY(-2px);
 	box-shadow: 0 5px 15px rgba(139, 38, 53, 0.4);
+}
+
+/* Layout principal */
+.lupino-page {
+	display: flex;
+	gap: 2rem;
+	padding: 2rem 3rem;
+	background: var(--lupino-background-gradient);
+	min-height: 100vh;
+	margin-top: -8px;
 }

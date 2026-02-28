@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Arme } from '../../../models/items/arme';
 import { ArmeService } from '../../../services/LupinoApi/items/arme.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap'; // Si tu utilises ng-bootstrap
@@ -8,7 +8,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap'; // Si tu utilises n
     selector: 'app-create-arme',
     templateUrl: './create-arme.component.html',
     styleUrls: ['./create-arme.component.css'],
-    standalone: false
+    imports: [ReactiveFormsModule]
 })
 export class CreateArmeComponent {
   armeForm: FormGroup;

@@ -1,12 +1,36 @@
-<div class="hero">
-	<div class="overlay">
-		<div class="content">
-			<h2>Bienvenue dans l'univers de</h2>
-			<h1>Lupino</h1>
-			<h2>Site de notre jeu de rôle</h2>
-			<img class="ornament" src="/ligne_transparent.svg">
-			<div><a class="btn-explorer" routerLink="/login">Commencer une campagne</a></div>
-			<div><a class="btn-explorer" routerLink="/explorer">Découvrir l'univers</a></div>
+<div class="home-container">
+	<div class="accueil-container">
+		<h2>Bienvenue dans l'univers de</h2>
+		<h1>Lupino</h1>
+		<h2>Site de jeu de rôle en ligne</h2>
+		<app-ornement width="10%"></app-ornement>
+		<div class="btn-explorer-container">
+			<btn class="btn-explorer" routerLink="/login">Commencer une
+				campagne
+			</btn>
 		</div>
+		<div class="btn-explorer-container">
+			<btn class="btn-explorer" routerLink="/explorer">Découvrir
+				l'univers
+			</btn>
+		</div>
+	</div>
+	<app-ornement [size]="18" [thickness]="2" width="100%"></app-ornement>
+	<div class="presentation-container">
+		<div class="prez-card">
+			<h1>Créez vos personnages</h1>
+			<p>Forgez des héros uniques grâce à notre outil de création de personnages. Chaque décision compte !</p>
+
+		</div>
+		<div class="prez-card">
+			<h1>Rejoignez des campagnes</h1>
+			<p>Participez à des aventures épiques, que vous soyez maître du jeu ou simple aventurier.</p>
+		</div>
+		<div class="prez-card">
+			<h1>Découvrez des trésors</h1>
+			<p>Collectez des objets légendaires et utilisez-les pour façonner votre destin.</p>
+		</div>
+
+
 	</div>
 </div>

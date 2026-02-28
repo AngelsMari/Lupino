@@ -8,12 +8,19 @@ import { CharacterService } from '../../../services/LupinoApi/character.service'
 import { DeleteCharacterModalComponent } from '../../modal/delete-character/delete-character.component';
 import { UserService } from 'app/services/LupinoApi/user.service';
 import { CharacterFilters } from '../../../types/CharacterFilters';
+import { CharacterFiltersComponent } from '../filter-character/character-filters.component';
+import { CharacterCardComponent } from '../character-card/character-card.component';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
-	selector: 'app-characters',
-	templateUrl: './characters.component.html',
-	styleUrl: './characters.component.css',
-	standalone: false,
+    selector: 'app-characters',
+    templateUrl: './characters.component.html',
+    styleUrl: './characters.component.css',
+    imports: [
+        CharacterFiltersComponent,
+        CharacterCardComponent,
+        AsyncPipe,
+    ],
 })
 export class CharactersComponent {
 	currentUser$ = this.userService.getUserData().pipe(filter(Boolean), shareReplay(1));

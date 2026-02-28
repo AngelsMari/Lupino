@@ -151,14 +151,6 @@
 	}
 }
 
-/* Layout principal */
-.lupino-page {
-	display: flex;
-	gap: 2rem;
-	padding: 2rem 3rem;
-	background: linear-gradient(180deg, #3a0f05, #5a1408);
-	min-height: 100vh;
-}
 
 /* Sidebar */
 .lupino-sidebar {

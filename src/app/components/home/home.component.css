@@ -2,59 +2,27 @@
 
 h1 {
 	font-family: 'Cinzel', serif;
-	font-size: 2.5rem;
+	font-size: 160px;
 	margin-bottom: 0;
+	text-align: center;
 	color: #ffb65f;
 }
 
 h2 {
 	text-transform: uppercase;
+	text-align: center;
 	font-family: 'Merriweather Sans', sans-serif !important; /* Police de la barre de navigation */
 }
 
-.hero {
-	display: flex !important;
-	align-items: center;
-	justify-content: center;
-	text-align: center;
-	color: white;
-}
-
-/* reduce Hero height on small devices */
-@media (max-width: 768px) {
-	.hero {
-		height: 50vh;
-	}
-}
-
-.hero .content {
-	z-index: 1;
-	height: 100%;
+.accueil-container {
+	height: calc(60vh - 81.19px);
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 }
 
-.hero h1 {
-	font-size: 3rem;
-	font-weight: 700;
-	margin-bottom: 1rem;
-}
 
-.hero h1 span {
-	color: #f4c542;
-}
-
-.hero p {
-	font-size: 1.2rem;
-	margin-bottom: 2rem;
-}
-
-.hero .content div:has(> a) {
-	margin-top: 3rem;
-}
-
-.hero .btn-explorer {
+.btn-explorer {
 	padding: 0.75rem 2rem;
 	background: linear-gradient(to bottom, #621503, #2b0800);
 	color: #ffb65f;
@@ -66,14 +34,43 @@ h2 {
 	border-radius: 5px;
 	cursor: pointer;
 	text-decoration: none;
+	display: inline-block;
 }
 
-.hero .btn-explorer:hover {
+.btn-explorer:hover {
 	background-color: #dab233;
 }
 
-.ornament {
-	width: 100%;
-	height: 20px;
-	display: block;
+.btn-explorer-container {
+	margin: 15px;
+	text-align: center;
+}
+
+.presentation-container {
+	display: flex;
+	flex-direction: row;
+	background: var(--lupino-background-gradient);
+	height: calc(40vh - 54px);
+	justify-content: space-evenly;
+	align-items: center;
+	margin-top: -8px;
+}
+
+.prez-card {
+	background: rgba(255, 255, 255, 0.1);
+	border-radius: 15px;
+	width: 30%;
+	padding: 1rem;
+	height: auto;
+}
+
+.prez-card h1 {
+	font-family: 'Merriweather Sans', sans-serif !important;
+	font-size: 2rem;
+	text-transform: uppercase;
+}
+
+.prez-card p {
+	text-align: center;
+	font-size: 1.5rem;
 }

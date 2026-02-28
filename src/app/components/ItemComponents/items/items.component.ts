@@ -26,12 +26,27 @@ import { Router } from '@angular/router';
 
 import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, startWith } from 'rxjs/operators';
+import { ArmeComponentComponent } from '../../ItemsComponents/arme-component/arme-component.component';
+import { ArmureComponent } from '../../ItemsComponents/armure-component/armure-component.component';
+import { PotionComponentComponent } from '../../ItemsComponents/potion-component/potion-component.component';
+import { PoisonComponentComponent } from '../../ItemsComponents/poison-component/poison-component.component';
+import { UtilitaireComponentComponent } from '../../ItemsComponents/utilitaire-component/utilitaire-component.component';
+import { BazarComponentComponent } from '../../ItemsComponents/bazar-component/bazar-component.component';
+import { ContenantComponentComponent } from '../../ItemsComponents/contenant-component/contenant-component.component';
 
 @Component({
-	selector: 'app-items',
-	templateUrl: './items.component.html',
-	styleUrls: ['./items.component.css'],
-	standalone: false,
+    selector: 'app-items',
+    templateUrl: './items.component.html',
+    styleUrls: ['./items.component.css'],
+    imports: [
+        ArmeComponentComponent,
+        ArmureComponent,
+        PotionComponentComponent,
+        PoisonComponentComponent,
+        UtilitaireComponentComponent,
+        BazarComponentComponent,
+        ContenantComponentComponent,
+    ],
 })
 export class ItemsComponent {
 	contenants$!: Observable<Contenant[]>;

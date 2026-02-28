@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { BazarService } from '../../../services/LupinoApi/items/bazar.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Bazar } from '../../../models/items/bazar';
 
@@ -8,7 +8,7 @@ import { Bazar } from '../../../models/items/bazar';
     selector: 'app-create-bazar',
     templateUrl: './create-bazar.component.html',
     styleUrl: './create-bazar.component.css',
-    standalone: false
+    imports: [ReactiveFormsModule]
 })
 export class CreateBazarComponent {
   bazarForm: FormGroup;

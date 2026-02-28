@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Potion } from '../../../models/items/potion';
 import { PotionService } from '../../../services/LupinoApi/items/potion.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -8,7 +8,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
     selector: 'app-create-potion',
     templateUrl: './create-potion.component.html',
     styleUrls: ['./create-potion.component.css'],
-    standalone: false
+    imports: [ReactiveFormsModule]
 })
 export class CreatePotionComponent {
 	potionForm: FormGroup;

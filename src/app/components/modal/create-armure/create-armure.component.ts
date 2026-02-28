@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Armure } from '../../../models/items/armure';
 import { ArmureService } from '../../../services/LupinoApi/items/armure.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -8,7 +8,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
     selector: 'app-create-armure',
     templateUrl: './create-armure.component.html',
     styleUrls: ['./create-armure.component.css'],
-    standalone: false
+    imports: [ReactiveFormsModule]
 })
 export class CreateArmureComponent {
 	armureForm: FormGroup;

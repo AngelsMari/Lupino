@@ -1,18 +1,26 @@
 import { Component } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, ValidatorFn, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CharacterService } from '../../../services/LupinoApi/character.service';
 import { RaceService } from '../../../services/LupinoApi/race.service';
 import { Race } from '../../../models/race';
 import { ActivatedRoute, Router } from '@angular/router';
 import DOMPurify from 'dompurify';
 import { ToastrService } from 'ngx-toastr';
-import { environment } from '../../../../environments/environements'; // Ajustez le chemin si nécessaire
+import { environment } from '../../../../environments/environements';
+import { NgClass } from '@angular/common';
+import { QuillEditorComponent } from 'ngx-quill';
+import { ItemsComponent } from '../../ItemComponents/items/items.component'; // Ajustez le chemin si nécessaire
 
 @Component({
-	selector: 'app-create-character',
-	templateUrl: './create-character.component.html',
-	styleUrls: ['./create-character.component.css'],
-	standalone: false,
+    selector: 'app-create-character',
+    templateUrl: './create-character.component.html',
+    styleUrls: ['./create-character.component.css'],
+    imports: [
+        ReactiveFormsModule,
+        NgClass,
+        QuillEditorComponent,
+        ItemsComponent,
+    ],
 })
 export class CreateCharacterComponent {
 	step = 1; // Pour suivre la progression des étapes

@@ -1,83 +1,77 @@
-/* Styles pour la barre de navigation */
+
 .navbar {
-	padding: 10px 20px; /* Espacement */
-	font-size: 1em; /* Taille de la police */
-	font-family: 'Merriweather', serif !important; /* Police de la barre de navigation */
+	padding: 10px 20px 0;
+	font-size: 1em;
+	font-family: 'Merriweather Sans', sans-serif !important; /* Police de la barre de navigation */
+
 }
 
 .navBarMom {
 	position: relative;
-	z-index: 1000; /* Assure que la barre de navigation est au-dessus des autres éléments */
+	z-index: 1000;
 }
 
-.navbar.not-home {
-	background: #4a2c17; /* Couleur de fond de la barre de navigation */
-	padding: 1rem 2rem;
-	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-	transition: all 0.3s ease;
-	min-height: 70px;
-}
 
 .navbar-brand {
-	color: #ffb65f; /* Couleur du texte pour le nom de la marque */
-	font-weight: bold; /* Met le texte en gras */
-	font-size: 1.8em; /* Taille de la police */
+	color: #ffb65f;
+	font-weight: bold;
+	font-size: 1.8em;
 	font-family: 'Cinzel', serif;
 }
 
 .nav-link {
-	color: #ffb65f; /* Couleur des liens */
-	padding: 8px 15px; /* Espacement des liens */
-	transition: background-color 0.3s,
-	color 0.3s; /* Transition pour l'effet de survol */
+	color: #ffb65f;
+	padding: 8px 15px;
+	transition: background-color 0.3s, color 0.3s;
+	text-transform: uppercase;
 }
 
 .nav-link:hover {
-	background-color: rgba(255, 182, 95, 0.2); /* Couleur de fond sur le survol */
-	color: #ffffff; /* Change la couleur du texte au survol */
+	background-color: rgba(255, 255, 255, 0.1);
+	color: #ffffff;
 }
 
 .navbar-toggler {
-	border-color: rgba(255, 255, 255, 0.5); /* Couleur de la bordure */
+	border-color: rgba(255, 255, 255, 0.5);
 }
 
 .navbar-toggler-icon {
-	background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(255,255,255,.5)' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E"); /* Couleur de l'icône du menu */
+	background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(255,255,255,.5)' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
 }
 
 .dropdown-menu {
-	background-color: #621503; /* Couleur de fond du menu déroulant */
+	background: var(--lupino-background-gradient);
 	z-index: 10002 !important;
+	right: 0;
+	left: auto;
+}
+
+.navbar-nav .nav-link.active, .navbar-nav .nav-link.show {
+	background-color: rgba(255, 255, 255, 0.1);
+	color: #ffffff;
 }
 
 .dropdown-item {
-	color: #ffb65f; /* Couleur des éléments du menu déroulant */
+	font-family: 'Alegreya', sans-serif !important;
+	font-size: 1.2em;
 }
 
 .dropdown-item:hover {
-	background-color: rgba(255, 182, 95, 0.2); /* Couleur de fond sur le survol des éléments du menu */
-	color: #ffffff; /* Change la couleur du texte au survol */
+	background-color: rgba(255, 255, 255, 0.2);
+	color: #ffffff;
 }
 
 .badge {
-	font-size: 0.8em; /* Taille de la police pour les badges */
-	margin-left: 5px; /* Marge à gauche */
+	font-size: 0.8em;
+	margin-left: 5px;
 }
 
 .dropdown-divider {
-	border-color: rgba(255, 255, 255, 0.1); /* Couleur du séparateur */
+	border-color: rgba(255, 255, 255, 0.1);
 }
 
 .disabled-link {
-	color: #ccc; /* Couleur grisée */
-	text-decoration: none; /* Supprime le soulignement */
-	pointer-events: none; /* Empêche le clic */
-}
-
-.ornement-full-page {
-	width: 100%;
-	height: 20px;
-	object-fit: fill; /* ← force l’étirement */
-	display: block;
-	margin: 16px 0;
+	color: #ccc;
+	text-decoration: none;
+	pointer-events: none;
 }

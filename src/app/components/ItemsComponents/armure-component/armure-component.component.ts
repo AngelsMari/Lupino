@@ -5,12 +5,20 @@ import { CreateArmureComponent } from 'app/components/modal/create-armure/create
 import { Armure } from 'app/models/items/armure';
 import { ArmureService } from 'app/services/LupinoApi/items/armure.service';
 import { catchError, combineLatest, map, Observable, of, shareReplay, tap } from 'rxjs';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { AsyncPipe } from '@angular/common';
+import { FilterListPipe } from '../../../pipes/filter-list.pipe';
 
 @Component({
-	selector: 'app-armure-component',
-	templateUrl: './armure-component.component.html',
-	styleUrls: ['./armure-component.component.css', '../../../../assets/styles/items.css'],
-	standalone: false,
+    selector: 'app-armure-component',
+    templateUrl: './armure-component.component.html',
+    styleUrls: ['./armure-component.component.css', '../../../../assets/styles/items.css'],
+    imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        AsyncPipe,
+        FilterListPipe,
+    ],
 })
 export class ArmureComponent {
 	@Input() isAdmin$!: Observable<boolean>;

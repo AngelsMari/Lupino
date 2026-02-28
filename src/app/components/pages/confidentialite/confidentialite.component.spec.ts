@@ -8,8 +8,8 @@ describe('ConfidentialiteComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ConfidentialiteComponent]
-    })
+    imports: [ConfidentialiteComponent]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(ConfidentialiteComponent);

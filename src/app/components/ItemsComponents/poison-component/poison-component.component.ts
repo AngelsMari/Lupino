@@ -4,12 +4,20 @@ import { CreatePoisonComponent } from 'app/components/modal/create-poison/create
 import { Poison } from 'app/models/items/poison';
 import { PoisonService } from 'app/services/LupinoApi/items/poison.service';
 import { catchError, Observable, of, shareReplay } from 'rxjs';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { AsyncPipe } from '@angular/common';
+import { FilterListPipe } from '../../../pipes/filter-list.pipe';
 
 @Component({
-	selector: 'app-poison-component',
-	templateUrl: './poison-component.component.html',
-	styleUrls: ['./poison-component.component.css', '../../../../assets/styles/items.css'],
-	standalone: false,
+    selector: 'app-poison-component',
+    templateUrl: './poison-component.component.html',
+    styleUrls: ['./poison-component.component.css', '../../../../assets/styles/items.css'],
+    imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        AsyncPipe,
+        FilterListPipe,
+    ],
 })
 export class PoisonComponentComponent {
 	@Input() isAdmin$!: Observable<boolean>;

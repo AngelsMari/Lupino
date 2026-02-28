@@ -4,12 +4,20 @@ import { CreateContenantComponent } from 'app/components/modal/create-contenant/
 import { Contenant } from 'app/models/items/contenant';
 import { ContenantService } from 'app/services/LupinoApi/items/contenant.service';
 import { catchError, Observable, of, shareReplay } from 'rxjs';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { AsyncPipe } from '@angular/common';
+import { FilterListPipe } from '../../../pipes/filter-list.pipe';
 
 @Component({
-	selector: 'app-contenant-component',
-	templateUrl: './contenant-component.component.html',
-	styleUrls: ['./contenant-component.component.css', '../../../../assets/styles/items.css'],
-	standalone: false,
+    selector: 'app-contenant-component',
+    templateUrl: './contenant-component.component.html',
+    styleUrls: ['./contenant-component.component.css', '../../../../assets/styles/items.css'],
+    imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        AsyncPipe,
+        FilterListPipe,
+    ],
 })
 export class ContenantComponentComponent {
 	@Input() isAdmin$!: Observable<boolean>;

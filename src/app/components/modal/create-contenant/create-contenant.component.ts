@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ContenantService } from '../../../services/LupinoApi/items/contenant.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Contenant } from '../../../models/items/contenant';
@@ -8,7 +8,7 @@ import { Contenant } from '../../../models/items/contenant';
     selector: 'app-create-contenant',
     templateUrl: './create-contenant.component.html',
     styleUrl: './create-contenant.component.css',
-    standalone: false
+    imports: [ReactiveFormsModule]
 })
 export class CreateContenantComponent {
 	contenantForm: FormGroup;
