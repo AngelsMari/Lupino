@@ -12,4 +12,9 @@
 			{{ isEdit ? 'Mettre à jour' : 'Créer le personnage' }}
 		</button>
 	}
+	@if (isEdit && step !== maxStep) {
+		<button (click)="submit.emit()" [disabled]="!canSubmit" class="btn btn-success">
+			Mettre à jour
+		</button>
+	}
 </div>

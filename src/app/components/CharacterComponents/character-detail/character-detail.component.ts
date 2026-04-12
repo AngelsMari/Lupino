@@ -1,20 +1,37 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Character } from '../../../models/character';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CharacterService } from '../../../services/LupinoApi/character.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { UserService } from 'app/services/LupinoApi/user.service';
 import { ToastrService } from 'ngx-toastr';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { BehaviorSubject, catchError, combineLatest, map, of, switchMap, tap } from 'rxjs';
-import { AsyncPipe, NgClass, NgOptimizedImage } from '@angular/common';
-import { CharacterCalculatorService, PrimaryStats } from '../../../services/character-calculator.service';
+import { AsyncPipe } from '@angular/common';
+import { CharacterCalculatorService, PrimaryStats, } from '../../../services/character-calculator.service';
+import { CharacterHeaderComponent } from './components/character-header/character-header';
+import { CharacterOverviewComponent } from './components/character-overview/character-overview';
+import { RaceService } from '../../../services/LupinoApi/race.service';
+import { Race, RaceBonus } from '../../../models/race';
+import {
+	CharacterSessionResourcesComponent
+} from './components/character-session-resources/character-session-resources';
+import { CharacterStats } from './components/tabs/character-stats/character-stats';
+import { CharacterSkills } from './components/tabs/character-skills/character-skills';
 
 @Component({
 	selector: 'app-character-detail',
 	templateUrl: './character-detail.component.html',
 	styleUrls: ['./character-detail.component.css'],
-	imports: [RouterLink, NgClass, AsyncPipe, NgOptimizedImage],
+	imports: [
+		RouterLink,
+		AsyncPipe,
+		CharacterHeaderComponent,
+		CharacterOverviewComponent,
+		CharacterSessionResourcesComponent,
+		CharacterStats,
+		CharacterSkills,
+	],
 })
 export class CharacterDetailComponent implements OnInit {
 	private fb = inject(FormBuilder);
@@ -24,6 +41,7 @@ export class CharacterDetailComponent implements OnInit {
 	private toastr = inject(ToastrService);
 	private sanitizer = inject(DomSanitizer);
 	private calc = inject(CharacterCalculatorService);
+	private router = inject(Router);
 
 	// FormGroup
 	characterForm: FormGroup = this.fb.group({
@@ -38,16 +56,66 @@ export class CharacterDetailComponent implements OnInit {
 	param$ = this.activatedRoute.params;
 	currentUser$ = this.userService.getUserData().pipe(map((user) => user ?? null));
 
-	// BehaviorSubject pour le personnage
 	private characterSubject = new BehaviorSubject<Character | null>(null);
 	character$ = this.characterSubject.asObservable();
 
+	private raceService = inject(RaceService);
+
+	races$ = this.raceService.getRaces();
+
+	lineageDisplay$ = combineLatest([this.character$, this.races$]).pipe(
+		map(([character, races]) => {
+			if (!character) return null;
+
+			if (!character.lineage) {
+				return {
+					raceNames: character.race ? [character.race] : [],
+					bonuses: [],
+				};
+			}
+
+			const lineage: any = character.lineage;
+
+			if (lineage.kind === 'pure') {
+				const race = races.find((r) => r._id === lineage.raceId);
+
+				const bonuses = (race?.bonuses ?? []).filter((bonus) =>
+					(lineage.chosenBonusIds ?? []).includes(bonus._id),
+				);
+
+				return {
+					raceNames: race ? [race.name] : [],
+					bonuses,
+				};
+			}
+
+			const parentRaces = (lineage.parentRaceIds ?? [])
+				.map((id: string) => races.find((r) => r._id === id))
+				.filter(Boolean);
+
+			const raceNames = parentRaces.map((r: Race) => r!.name);
+
+			const allBonuses = parentRaces.flatMap((r: Race) => r!.bonuses ?? []);
+
+			const bonuses = allBonuses.filter((bonus: RaceBonus) =>
+				(lineage.chosenBonusIds ?? []).includes(bonus._id),
+			);
+
+			return {
+				raceNames,
+				bonuses,
+			};
+		}),
+	);
+
 	ngOnInit() {
 		// Chargement du personnage et mise à jour du BehaviorSubject + formulaire
-		this.param$.pipe(switchMap((params) => this.characterService.getCharacterById(params['id']))).subscribe((character) => {
-			this.characterSubject.next(character);
-			this.initForm(character);
-		});
+		this.param$
+			.pipe(switchMap((params) => this.characterService.getCharacterById(params['id'])))
+			.subscribe((character) => {
+				this.characterSubject.next(character);
+				this.initForm(character);
+			});
 	}
 
 	// Combinaison personnage + user + validation d'accès
@@ -159,7 +227,6 @@ export class CharacterDetailComponent implements OnInit {
 			this.characterForm.patchValue({ current_hp: maxHp });
 		} else {
 			const currentHp = this.characterForm.get('current_hp')?.value ?? 0;
-			console.log('Current HP:', currentHp, 'Amount:', amount, 'Max HP:', maxHp);
 			this.characterForm.patchValue({
 				current_hp: Math.min(maxHp, currentHp + amount),
 			});
@@ -217,13 +284,16 @@ export class CharacterDetailComponent implements OnInit {
 	toggleVisibility() {
 		const character = this.characterSubject.getValue();
 		if (!character) return of(null);
-
+		console.log('updated', character.isPublic);
 		const updatedCharacter = { ...character, isPublic: !character.isPublic };
+		console.log('updated', updatedCharacter);
 		return this.characterService.updateCharacter(updatedCharacter).pipe(
 			tap((updated) => {
 				this.characterSubject.next(updated);
 				this.initForm(updated);
-				this.toastr.success(`Personnage maintenant ${updated.isPublic ? 'public' : 'privé'}`);
+				this.toastr.success(
+					`Personnage maintenant ${updated.isPublic ? 'public' : 'privé'}`,
+				);
 			}),
 			catchError((err) => {
 				this.toastr.error('Erreur lors de la mise à jour');
@@ -234,5 +304,9 @@ export class CharacterDetailComponent implements OnInit {
 
 	onToggleVisibility() {
 		this.toggleVisibility().subscribe();
+	}
+
+	goToEdit(characterId: string) {
+		this.router.navigate(['/create-character', characterId]);
 	}
 }

@@ -1,0 +1,73 @@
+.session-resources {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1rem;
+}
+
+.resource-card {
+	padding: 1rem;
+	border-radius: 16px;
+	background: rgba(20, 10, 5, 0.82);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.resource-top {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-bottom: 0.75rem;
+}
+
+.resource-title {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-weight: 700;
+}
+
+.resource-value {
+	font-weight: 700;
+}
+
+.resource-bar {
+	height: 12px;
+	border-radius: 999px;
+	overflow: hidden;
+	background: rgba(255, 255, 255, 0.08);
+	margin-bottom: 0.9rem;
+}
+
+.resource-fill {
+	height: 100%;
+	border-radius: 999px;
+	transition: width 180ms ease;
+}
+
+.hp-card .resource-title {
+	color: #ff8b8b;
+}
+
+.hp-card .resource-fill {
+	background: linear-gradient(90deg, #842029, #dc3545);
+}
+
+.mana-card .resource-title {
+	color: #8eb9ff;
+}
+
+.mana-card .resource-fill {
+	background: linear-gradient(90deg, #0d3b8e, #0d6efd);
+}
+
+.resource-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.45rem;
+}
+
+@media (max-width: 991px) {
+	.session-resources {
+		grid-template-columns: 1fr;
+	}
+}

@@ -33,35 +33,32 @@ export const createCharacterForm = (fb: FormBuilder): FormGroup => {
 			{ validators: [lineageValidator] },
 		),
 
-		stats: fb.group(
-			{
-				strength: [30, [Validators.required, Validators.min(30), Validators.max(85)]],
-				agility: [30, [Validators.required, Validators.min(30), Validators.max(85)]],
-				endurance: [30, [Validators.required, Validators.min(30), Validators.max(85)]],
-				social: [30, [Validators.required, Validators.min(30), Validators.max(85)]],
-				mental: [30, [Validators.required, Validators.min(30), Validators.max(85)]],
+		stats: fb.group({
+			strength: [30, [Validators.required, Validators.min(30), Validators.max(85)]],
+			agility: [30, [Validators.required, Validators.min(30), Validators.max(85)]],
+			endurance: [30, [Validators.required, Validators.min(30), Validators.max(85)]],
+			social: [30, [Validators.required, Validators.min(30), Validators.max(85)]],
+			mental: [30, [Validators.required, Validators.min(30), Validators.max(85)]],
 
-				statModifiers: fb.group({
-					primary: fb.group({
-						strength: [0],
-						agility: [0],
-						endurance: [0],
-						social: [0],
-						mental: [0],
-					}),
-					secondary: fb.group({
-						constitution: [0],
-						resilience: [0],
-						reflex: [0],
-						charisma: [0],
-					}),
+			statModifiers: fb.group({
+				primary: fb.group({
+					strength: [0],
+					agility: [0],
+					endurance: [0],
+					social: [0],
+					mental: [0],
 				}),
+				secondary: fb.group({
+					constitution: [0],
+					resilience: [0],
+					reflex: [0],
+					charisma: [0],
+				}),
+			}),
 
-				hpPerLevelBonus: [0],
-				manaPerLevelBonus: [0],
-			},
-			{ updateOn: 'blur' },
-		),
+			hpPerLevelBonus: [0],
+			manaPerLevelBonus: [0],
+		}),
 
 		progression: fb.group({
 			masteries: fb.array([] as FormControl<string>[]),

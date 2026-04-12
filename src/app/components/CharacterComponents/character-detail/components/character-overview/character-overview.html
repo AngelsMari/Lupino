@@ -1,0 +1,74 @@
+<div class="overview-grid">
+	<div class="overview-card">
+		<h3 class="overview-title">
+			<i class="bi bi-stars"></i>
+			Origines
+		</h3>
+
+		<div class="overview-row">
+			<span class="overview-label">Race</span>
+			<span class="overview-value">
+				{{ lineage?.raceNames?.length ? lineage?.raceNames?.join(' / ') : (character.race || 'Inconnue') }}
+			</span>
+		</div>
+
+		@if (lineage?.bonuses?.length) {
+			<div class="overview-row overview-row-column">
+				<span class="overview-label">Traits raciaux</span>
+
+				<div class="trait-list">
+					@for (bonus of lineage!.bonuses; track bonus._id) {
+						<div class="trait-pill">
+							<span class="trait-slot">{{ bonus.slot }}</span>
+							<span class="trait-text">{{ bonus.value }}</span>
+						</div>
+					}
+				</div>
+			</div>
+		}
+	</div>
+
+	<div class="overview-card">
+		<h3 class="overview-title">
+			<i class="bi bi-person-vcard"></i>
+			Apparence
+		</h3>
+
+		<div class="details-grid">
+			<div class="detail-item">
+				<span class="overview-label">Âge</span>
+				<span class="overview-value">{{ character.age || '—' }}</span>
+			</div>
+
+			<div class="detail-item">
+				<span class="overview-label">Sexe</span>
+				<span class="overview-value">{{ character.sexe || '—' }}</span>
+			</div>
+
+			<div class="detail-item">
+				<span class="overview-label">Yeux</span>
+				<span class="overview-value">{{ character.eyes || '—' }}</span>
+			</div>
+
+			<div class="detail-item">
+				<span class="overview-label">Cheveux</span>
+				<span class="overview-value">{{ character.hair || '—' }}</span>
+			</div>
+
+			<div class="detail-item">
+				<span class="overview-label">Peau</span>
+				<span class="overview-value">{{ character.skincolor || '—' }}</span>
+			</div>
+
+			<div class="detail-item">
+				<span class="overview-label">Taille</span>
+				<span class="overview-value">{{ character.height || '—' }}</span>
+			</div>
+
+			<div class="detail-item">
+				<span class="overview-label">Poids</span>
+				<span class="overview-value">{{ character.weight || '—' }}</span>
+			</div>
+		</div>
+	</div>
+</div>

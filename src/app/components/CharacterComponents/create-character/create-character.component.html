@@ -10,6 +10,18 @@
 		[step]="step()"
 	/>
 
+	@if (!canSubmit()) {
+		<div class="alert alert-danger mt-3">
+			<h6 class="mb-2">Impossible de valider le personnage :</h6>
+
+			<ul class="mb-0">
+				@for (err of getAllErrors(); track err) {
+					<li>{{ err }}</li>
+				}
+			</ul>
+		</div>
+	}
+
 	@switch (step()) {
 		@case (1) {
 			<app-step-1-basic

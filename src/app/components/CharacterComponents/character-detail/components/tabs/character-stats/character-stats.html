@@ -1,0 +1,134 @@
+<div class="stats-panel">
+	<div class="stats-section">
+		<h3 class="section-title">
+			<i class="bi bi-bar-chart-line-fill"></i>
+			Caractéristiques principales
+		</h3>
+
+		<div class="stats-grid primary-grid">
+			<div class="stat-card">
+				<div class="stat-name"><i class="bi bi-hammer"></i> Force</div>
+				<div class="stat-value">{{ primaryStats?.strength }}
+					@if (character.statModifiers?.primary?.strength) {
+						<div class="stat-detail">
+							({{ character.strength }} + {{ character.statModifiers?.primary?.strength }})
+						</div>
+					}
+				</div>
+				@if (bonuses?.strength) {
+					<div class="stat-bonus">{{ bonuses?.strength }}</div>
+				}
+			</div>
+
+			<div class="stat-card">
+				<div class="stat-name"><i class="bi bi-wind"></i> Agilité</div>
+				<div class="stat-value">{{ primaryStats?.agility }}
+					@if (character.statModifiers?.primary?.agility) {
+						<div class="stat-detail">
+							({{ character.agility }} + {{ character.statModifiers?.primary?.agility }})
+						</div>
+					}
+				</div>
+				@if (bonuses?.agility) {
+					<div class="stat-bonus">{{ bonuses?.agility }}</div>
+				}
+			</div>
+
+			<div class="stat-card">
+				<div class="stat-name"><i class="bi bi-shield"></i> Endurance</div>
+				<div class="stat-value">{{ primaryStats?.endurance }}
+					@if (character.statModifiers?.primary?.endurance) {
+						<div class="stat-detail">
+							({{ character.endurance }} + {{ character.statModifiers?.primary?.endurance }})
+						</div>
+					}
+				</div>
+				@if (bonuses?.endurance) {
+					<div class="stat-bonus">{{ bonuses?.endurance }}</div>
+				}
+			</div>
+
+			<div class="stat-card">
+				<div class="stat-name"><i class="bi bi-chat-dots"></i> Social</div>
+				<div class="stat-value">{{ primaryStats?.social }}
+					@if (character.statModifiers?.primary?.social) {
+						<div class="stat-detail">
+							({{ character.social }} + {{ character.statModifiers?.primary?.social }})
+						</div>
+					}
+				</div>
+				@if (bonuses?.social) {
+					<div class="stat-bonus">{{ bonuses?.social }}</div>
+				}
+			</div>
+
+			<div class="stat-card">
+				<div class="stat-name"><i class="bi bi-lightbulb"></i> Mental</div>
+				<div class="stat-value">{{ primaryStats?.mental }}
+					@if (character.statModifiers?.primary?.mental) {
+						<div class="stat-detail">
+							({{ character.mental }} + {{ character.statModifiers?.primary?.mental }})
+						</div>
+					}
+				</div>
+				@if (bonuses?.mental) {
+					<div class="stat-bonus">{{ bonuses?.mental }}</div>
+				}
+			</div>
+		</div>
+	</div>
+
+	<div class="stats-section">
+		<h3 class="section-title">
+			<i class="bi bi-speedometer2"></i>
+			Caractéristiques secondaires
+		</h3>
+
+		<div class="stats-grid secondary-grid">
+			<div class="stat-card secondary">
+				<div class="stat-name"><i class="bi bi-heart-pulse"></i> Constitution</div>
+				<div class="stat-value">{{ secondaryStats?.constitution }}
+					@if (character.statModifiers?.secondary?.constitution) {
+						<div class="stat-detail">
+							({{ ((secondaryStats?.constitution || 0) - (character.statModifiers?.secondary?.constitution || 0)) }}
+							+ {{ character.statModifiers?.secondary?.constitution }})
+						</div>
+					}
+				</div>
+			</div>
+
+			<div class="stat-card secondary">
+				<div class="stat-name"><i class="bi bi-shield-check"></i> Résilience</div>
+				<div class="stat-value">{{ secondaryStats?.resilience }}
+					@if (character.statModifiers?.secondary?.resilience) {
+						<div class="stat-detail">
+							({{ ((secondaryStats?.resilience || 0) - (character.statModifiers?.secondary?.resilience || 0)) }}
+							+ {{ character.statModifiers?.secondary?.resilience }})
+						</div>
+					}</div>
+			</div>
+
+			<div class="stat-card secondary">
+				<div class="stat-name"><i class="bi bi-lightning"></i> Réflexe</div>
+				<div class="stat-value">{{ secondaryStats?.reflex }}
+					@if (character.statModifiers?.secondary?.reflex) {
+						<div class="stat-detail">
+							({{ ((secondaryStats?.reflex || 0) - (character.statModifiers?.secondary?.reflex || 0)) }}
+							+ {{ character.statModifiers?.secondary?.reflex }})
+						</div>
+					}</div>
+			</div>
+
+			<div class="stat-card secondary">
+				<div class="stat-name"><i class="bi bi-stars"></i> Charisme</div>
+				<div class="stat-value">{{ secondaryStats?.charisma }}
+					@if (character.statModifiers?.secondary?.charisma) {
+						<div class="stat-detail">
+							({{ ((secondaryStats?.charisma || 0) - (character.statModifiers?.secondary?.charisma || 0)) }}
+							+ {{ character.statModifiers?.secondary?.charisma }})
+						</div>
+					}</div>
+			</div>
+		</div>
+	</div>
+</div>

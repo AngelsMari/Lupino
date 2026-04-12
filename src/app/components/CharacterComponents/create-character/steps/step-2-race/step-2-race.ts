@@ -90,29 +90,48 @@ export class Step2Race {
 		const kind = this.form.get('kind')?.value;
 
 		if (kind === 'pure') {
-			this.form.patchValue({ raceId: race._id, parentRaceIds: [], chosenBonusIds: [] }, { emitEvent: false });
+			this.form.patchValue(
+				{
+					raceId: race._id,
+					parentRaceIds: [],
+					chosenBonusIds: [],
+				},
+				{ emitEvent: true },
+			);
+
+			this.rebuildAvailableBonuses();
+			this.form.updateValueAndValidity({ emitEvent: true });
 			return;
 		}
 
-		// hybrid: toggle parent selection (max 2)
 		const ctrl = this.form.get('parentRaceIds');
-		const current = [...(ctrl?.value ?? [])] as string[];
+		const current = [...((ctrl?.value ?? []) as string[])];
 
-		const idx = current.indexOf(race._id);
-		if (idx >= 0) {
-			current.splice(idx, 1);
-		} else {
-			if (current.length >= 2) {
-				// remplace le plus ancien (ou ignore si tu préfères)
-				current.shift();
-			}
-			current.push(race._id);
+		let next: string[];
+
+		// toggle off
+		if (current.includes(race._id)) {
+			next = current.filter((id) => id !== race._id);
+		}
+		// add if room
+		else if (current.length < 2) {
+			next = [...current, race._id];
+		}
+		// replace oldest if already 2
+		else {
+			next = [current[1], race._id];
 		}
 
-		ctrl?.setValue(current);
+		this.form.patchValue(
+			{
+				parentRaceIds: next,
+				chosenBonusIds: [],
+			},
+			{ emitEvent: true },
+		);
 
-		// quand tu changes les parents, tu reset les bonus choisis
-		this.form.get('chosenBonusIds')?.setValue([]);
+		this.rebuildAvailableBonuses();
+		this.form.updateValueAndValidity({ emitEvent: true });
 	}
 
 	isBonusSelected(bonusId: string): boolean {

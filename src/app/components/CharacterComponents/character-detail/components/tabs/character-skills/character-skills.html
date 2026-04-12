@@ -1,0 +1,15 @@
+<h3 class="section-title"><i class="bi bi-lightning-charge-fill"></i> Compétences</h3>
+<div class="skills-grid">
+	@for (skill of character?.skills; track skill) {
+		<div class="skill-card">
+			<div class="skill-header">
+				<h5 class="skill-name"><i class="bi bi-gem"></i> {{ skill.name }}</h5>
+				<span class="skill-cost"> <i class="bi bi-coin"></i> {{ skill.cost }} </span>
+			</div>
+			<p class="skill-description">{{ skill.description }}</p>
+			<div class="skill-effects">
+				<strong><i class="bi bi-magic"></i> Effet :</strong> {{ skill.effects }}
+			</div>
+		</div>
+	}
+</div>

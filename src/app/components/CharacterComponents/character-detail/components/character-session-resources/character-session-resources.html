@@ -1,0 +1,53 @@
+<div class="session-resources">
+	<div class="resource-card hp-card">
+		<div class="resource-top">
+			<div class="resource-title">
+				<i class="bi bi-heart-fill"></i>
+				Points de vie
+			</div>
+			<div class="resource-value">
+				{{ character.current_hp }} / {{ character.max_hp }}
+			</div>
+		</div>
+
+		<div class="resource-bar">
+			<div class="resource-fill" [style.width.%]="hpPercent"></div>
+		</div>
+
+		<div class="resource-actions">
+			<button type="button" class="btn btn-sm btn-light" (click)="modifyHp.emit('max')">Full</button>
+			<button type="button" class="btn btn-sm btn-light" (click)="modifyHp.emit(10)">+10</button>
+			<button type="button" class="btn btn-sm btn-light" (click)="modifyHp.emit(5)">+5</button>
+			<button type="button" class="btn btn-sm btn-light" (click)="modifyHp.emit(1)">+1</button>
+			<button type="button" class="btn btn-sm btn-dark" (click)="modifyHp.emit(-1)">-1</button>
+			<button type="button" class="btn btn-sm btn-dark" (click)="modifyHp.emit(-5)">-5</button>
+			<button type="button" class="btn btn-sm btn-dark" (click)="modifyHp.emit(-10)">-10</button>
+		</div>
+	</div>
+
+	<div class="resource-card mana-card">
+		<div class="resource-top">
+			<div class="resource-title">
+				<i class="bi bi-star-fill"></i>
+				Mana
+			</div>
+			<div class="resource-value">
+				{{ character.current_mana }} / {{ character.max_mana }}
+			</div>
+		</div>
+
+		<div class="resource-bar">
+			<div class="resource-fill" [style.width.%]="manaPercent"></div>
+		</div>
+
+		<div class="resource-actions">
+			<button type="button" class="btn btn-sm btn-light" (click)="modifyMana.emit('max')">Full</button>
+			<button type="button" class="btn btn-sm btn-light" (click)="modifyMana.emit(10)">+10</button>
+			<button type="button" class="btn btn-sm btn-light" (click)="modifyMana.emit(5)">+5</button>
+			<button type="button" class="btn btn-sm btn-light" (click)="modifyMana.emit(1)">+1</button>
+			<button type="button" class="btn btn-sm btn-dark" (click)="modifyMana.emit(-1)">-1</button>
+			<button type="button" class="btn btn-sm btn-dark" (click)="modifyMana.emit(-5)">-5</button>
+			<button type="button" class="btn btn-sm btn-dark" (click)="modifyMana.emit(-10)">-10</button>
+		</div>
+	</div>
+</div>

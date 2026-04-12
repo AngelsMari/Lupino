@@ -81,9 +81,13 @@ export class CreateCharacterComponent {
 
 	private fb = inject(FormBuilder);
 	characterForm: FormGroup = createCharacterForm(this.fb);
-	public formStatus = toSignal(this.characterForm.statusChanges.pipe(startWith(this.characterForm.status)));
-	public canSubmit = computed(() => this.formStatus() === 'VALID');
-	// Form (groupé)
+	public formStatus = toSignal(
+		merge(this.characterForm.statusChanges, this.characterForm.valueChanges.pipe(map(() => this.characterForm.status))).pipe(
+			startWith(this.characterForm.status),
+		),
+		{ initialValue: this.characterForm.status },
+	);
+	public canSubmit = computed(() => this.formStatus() === 'VALID' && !this.isHydrating());
 	private calc = inject(CharacterCalculatorService);
 	private raceService = inject(RaceService);
 
@@ -310,7 +314,8 @@ export class CreateCharacterComponent {
 			effect(
 				() => {
 					this.remainingPoints();
-					this.statsFg.updateValueAndValidity({ emitEvent: false, onlySelf: true });
+					this.statsFg.updateValueAndValidity({ emitEvent: true, onlySelf: true });
+					this.characterForm.updateValueAndValidity({ emitEvent: true });
 				},
 				{ allowSignalWrites: true },
 			);
@@ -321,7 +326,7 @@ export class CreateCharacterComponent {
 		const arr = asFormArray(this.characterForm, path);
 
 		while (arr.length > desired) arr.removeAt(arr.length - 1);
-		while (arr.length < desired) arr.push(this.fb.control('', [Validators.required]));
+		while (arr.length < desired) arr.push(this.fb.control('-', [Validators.required]));
 	}
 
 	private resizeSkillsArray(desired: number) {
@@ -334,10 +339,10 @@ export class CreateCharacterComponent {
 		while (arr.length < target) {
 			arr.push(
 				this.fb.group({
-					name: ['', Validators.required],
-					description: ['', Validators.required],
-					effects: ['', Validators.required],
-					cost: ['', Validators.required],
+					name: ['-', Validators.required],
+					description: ['-', Validators.required],
+					effects: ['-', Validators.required],
+					cost: ['-', Validators.required],
 				}),
 			);
 		}
@@ -387,6 +392,8 @@ export class CreateCharacterComponent {
 	}
 
 	private loadCharacter(id: string) {
+		this.isHydrating.set(true);
+
 		this.characterService.getCharacterById(id).subscribe((dto) => {
 			this.isLegacy.set(!!dto.race && !dto.lineage);
 			this.patchFromFlatCharacter(dto);
@@ -396,8 +403,16 @@ export class CreateCharacterComponent {
 				languages: asFormArray(this.characterForm, 'progression.languages').length,
 				skills: asFormArray(this.characterForm, 'progression.skills').length,
 			});
-
+			console.log(this.canSubmit());
 			this.ensureEffectsInitialized();
+
+			this.basicFg.updateValueAndValidity({ emitEvent: true });
+			this.raceFg.updateValueAndValidity({ emitEvent: true });
+			this.statsFg.updateValueAndValidity({ emitEvent: true });
+			this.progressionFg.updateValueAndValidity({ emitEvent: true });
+			this.storyFg.updateValueAndValidity({ emitEvent: true });
+			this.characterForm.updateValueAndValidity({ emitEvent: true });
+			this.isHydrating.set(false);
 		});
 	}
 
@@ -405,7 +420,6 @@ export class CreateCharacterComponent {
 		// Patch des groupes simples
 		const allRaces = [...this.commonRaces(), ...this.exoticRaces()];
 		const legacyRaceId = allRaces.find((r) => r.name === dto.race)?._id ?? '';
-		console.log('dto', dto);
 		const lineage = dto.lineage
 			? {
 					kind: dto.lineage.kind ?? 'pure',
@@ -482,7 +496,6 @@ export class CreateCharacterComponent {
 			},
 			{ emitEvent: true },
 		);
-		console.log(this.characterForm.value);
 		// Patch des arrays
 		this.patchArraysFromFlat(dto);
 	}
@@ -600,5 +613,98 @@ export class CreateCharacterComponent {
 		console.log(payload);
 
 		return payload;
+	}
+
+	getAllErrors(): string[] {
+		return this.buildErrorList(this.characterForm);
+	}
+
+	private buildErrorList(control: any, path = ''): string[] {
+		let messages: string[] = [];
+
+		if (!control) return messages;
+
+		// erreurs du control/groupe courant
+		if (control.errors) {
+			messages.push(...this.mapErrors(path, control.errors));
+		}
+
+		// si pas de children → stop
+		if (!control.controls) return messages;
+
+		// FormGroup / FormArray
+		for (const key of Object.keys(control.controls)) {
+			const child = control.controls[key];
+			const childPath = path ? `${path}.${key}` : key;
+			messages.push(...this.buildErrorList(child, childPath));
+		}
+
+		return messages;
+	}
+
+	private humanize(path: string): string {
+		const map: Record<string, string> = {
+			'basic.name': 'Le nom',
+			'basic.level': 'Le niveau',
+			'basic.positive_trait': 'Le trait positif',
+			'basic.negative_trait': 'Le trait négatif',
+
+			'stats.strength': 'La force',
+			'stats.agility': 'L’agilité',
+			'stats.endurance': 'L’endurance',
+			'stats.social': 'Le social',
+			'stats.mental': 'Le mental',
+
+			race: 'La race',
+		};
+
+		return map[path] || path;
+	}
+
+	private mapErrors(path: string, errors: any): string[] {
+		const messages: string[] = [];
+		const field = this.humanize(path);
+
+		if (errors['required']) {
+			messages.push(`${field} est requis`);
+		}
+
+		if (errors['min']) {
+			messages.push(`${field} est trop petit`);
+		}
+
+		if (errors['max']) {
+			messages.push(`${field} est trop grand`);
+		}
+
+		if (errors['htmlNotAllowed']) {
+			messages.push(`${field} contient du HTML interdit`);
+		}
+
+		if (errors['remainingPointsInvalid']) {
+			messages.push(`Les points de caractéristiques doivent être exactement à 0`);
+		}
+
+		if (errors['missingRaceId']) {
+			messages.push(`Une race doit être sélectionnée`);
+		}
+
+		if (errors['needTwoParents']) {
+			messages.push(`Un hybride doit avoir exactement 2 races parentes`);
+		}
+
+		if (errors['parentsMustDiffer']) {
+			messages.push(`Les races parentes doivent être différentes`);
+		}
+
+		if (errors['needTwoBonuses']) {
+			messages.push(`Un hybride doit choisir exactement 2 bonus`);
+		}
+
+		if (errors['bonusesMustDiffer']) {
+			messages.push(`Les bonus choisis doivent être différents`);
+		}
+
+		return messages;
 	}
 }

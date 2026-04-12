@@ -1,0 +1,55 @@
+<div class="character-header">
+
+
+	<div class="header-center">
+		<h1 class="character-name">
+			{{ character.name }}
+		</h1>
+
+		<div class="character-stats-inline">
+			<div class="stat-pill level">
+				<span class="label">Lvl</span>
+				<span class="value">{{ character.level }}</span>
+			</div>
+
+			<div class="stat-pill hp">
+				<span class="label">HP</span>
+				<span class="value">{{ character.current_hp }} / {{ character.max_hp }}</span>
+			</div>
+
+			<div class="stat-pill mana">
+				<span class="label">Mana</span>
+				<span class="value">{{ character.current_mana }} / {{ character.max_mana }}</span>
+			</div>
+		</div>
+
+	</div>
+
+	@if (isOwner) {
+		<div class="header-right">
+			<button class="btn btn-outline-warning btn-sm" (click)="edit.emit()">
+				<i class="bi bi-pencil"></i> Modifier
+			</button>
+
+			<button class="btn btn-outline-info btn-sm" (click)="onToggleVisibilityClick()">
+				<i class="bi" [ngClass]="character.isPublic ? 'bi-eye-slash' : 'bi-eye'"></i>
+			</button>
+
+			@if (!sessionActive) {
+				<button
+					class="btn btn-outline-success btn-sm"
+					(click)="startSession.emit()"
+				>
+					<i class="bi bi-play"></i> Session
+				</button>
+			} @else {
+				<button
+					class="btn btn-outline-danger btn-sm"
+					(click)="endSession.emit()"
+				>
+					<i class="bi bi-stop"></i> Fin
+				</button>
+			}
+		</div>
+	}
+</div>
