@@ -1,0 +1,220 @@
+<div [formGroup]="group">
+	<h2>Étape 3: Statistiques</h2>
+
+	<div class="row mb-3">
+		<div class="col-md-6">
+			<div class="card text-bg-danger text-center">
+				<div class="card-body">
+					<h6 class="card-title">Points de vie</h6>
+					<h3>{{ resources?.hp }}</h3>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-6">
+			<div class="card text-bg-primary text-center">
+				<div class="card-body">
+					<h6 class="card-title">Mana</h6>
+					<h3>{{ resources?.mana }}</h3>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<table class="table">
+		<thead>
+		<tr>
+			<th>Force</th>
+			<th>Agilité</th>
+			<th>Endurance</th>
+			<th>Social</th>
+			<th>Mental</th>
+			<th>Restant</th>
+			<th>Total</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>
+				<input
+					class="form-control"
+					formControlName="strength"
+					max="85"
+					min="30"
+					type="number"
+					(blur)="clampControl('strength')">
+			</td>
+			<td>
+				<input
+					class="form-control"
+					formControlName="agility"
+					max="85"
+					min="30"
+					type="number"
+					(blur)="clampControl('agility')">
+			</td>
+			<td>
+				<input
+					class="form-control"
+					formControlName="endurance"
+					max="85"
+					min="30"
+					type="number"
+					(blur)="clampControl('endurance')">
+			</td>
+			<td>
+				<input
+					class="form-control"
+					formControlName="social"
+					max="85"
+					min="30"
+					type="number"
+					(blur)="clampControl('social')">
+			</td>
+			<td>
+				<input
+					class="form-control"
+					formControlName="mental"
+					max="85"
+					min="30"
+					type="number"
+					(blur)="clampControl('mental')">
+			</td>
+			<td>{{ remaining }}</td>
+			<td>{{ maximum }}</td>
+		</tr>
+		</tbody>
+	</table>
+
+	@if (secondary) {
+		<table class="table table-striped-vertical">
+			<thead>
+			<tr>
+				<th>Constitution</th>
+				<th>Résilience</th>
+				<th>Réflexe</th>
+				<th>Charisme</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+				<td>{{ secondary.constitution }}</td>
+				<td>{{ secondary.resilience }}</td>
+				<td>{{ secondary.reflex }}</td>
+				<td>{{ secondary.charisma }}</td>
+			</tr>
+			</tbody>
+		</table>
+	}
+
+	<div class="modifier-box mt-3">
+		<button
+			type="button"
+			class="btn btn-outline-secondary btn-sm"
+			(click)="showModifiers = !showModifiers">
+			{{ showModifiers ? 'Masquer les modificateurs' : 'Voir les modificateurs' }}
+		</button>
+
+		@if (showModifiers) {
+			<div class="alert mt-3 mb-0">
+				<p class="mb-3 small">
+					Ajoutez uniquement les modificateurs correspondant à la race, aux passifs ou à un bonus validé.
+				</p>
+
+				<div formGroupName="statModifiers">
+					<div class="modifier-table-wrapper">
+						<h6 class="mb-2">Modificateurs statistiques principaux</h6>
+
+						<div formGroupName="primary">
+							<table class="table table-sm align-middle text-center modifier-table">
+								<thead>
+								<tr>
+									<th>Force</th>
+									<th>Agilité</th>
+									<th>Endurance</th>
+									<th>Social</th>
+									<th>Mental</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr>
+									<td><input class="form-control text-center" formControlName="strength"
+											   type="number"></td>
+									<td><input class="form-control text-center" formControlName="agility" type="number">
+									</td>
+									<td><input class="form-control text-center" formControlName="endurance"
+											   type="number"></td>
+									<td><input class="form-control text-center" formControlName="social" type="number">
+									</td>
+									<td><input class="form-control text-center" formControlName="mental" type="number">
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+					<div class="modifier-table-wrapper mt-3">
+						<h6 class="mb-2">Modificateurs statistiques secondaires</h6>
+
+						<div formGroupName="secondary">
+							<table class="table table-sm  align-middle text-center modifier-table">
+								<thead>
+								<tr>
+									<th>Constitution</th>
+									<th>Résilience</th>
+									<th>Réflexe</th>
+									<th>Charisme</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr>
+									<td><input class="form-control text-center" formControlName="constitution"
+											   type="number"></td>
+									<td><input class="form-control text-center" formControlName="resilience"
+											   type="number"></td>
+									<td><input class="form-control text-center" formControlName="reflex" type="number">
+									</td>
+									<td><input class="form-control text-center" formControlName="charisma"
+											   type="number"></td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-12">
+					<div class="modifier-card">
+						<h6 class="mb-3">Bonus complémentaires</h6>
+
+						<div class="row g-2">
+							<div class="col-6 col-md-3">
+								<label class="form-label">HP / niveau</label>
+								<input class="form-control" formControlName="hpPerLevelBonus" type="number">
+							</div>
+
+							<div class="col-6 col-md-3">
+								<label class="form-label">Mana / niveau</label>
+								<input class="form-control" formControlName="manaPerLevelBonus" type="number">
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+
+	@if (remaining < 0) {
+		<div class="alert alert-danger mt-3">Vous avez dépassé le nombre maximum de points.</div>
+	}
+
+	@if (remaining > 0) {
+		<div class="alert alert-danger mt-3">Vous devez dépenser tous vos points.</div>
+	}
+
+	@if (remaining === 0) {
+		<div class="alert alert-success mt-3">Vous avez dépensé tous vos points.</div>
+	}
+</div>

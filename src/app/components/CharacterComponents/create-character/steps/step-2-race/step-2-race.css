@@ -1,0 +1,140 @@
+.race-card {
+	border: 1px solid #ddd;
+	box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
+	overflow: hidden;
+	transition: all 0.3s ease;
+	cursor: pointer;
+	background: rgba(255, 255, 255, 0.1);
+}
+
+.race-card:hover {
+	transform: scale(1.05);
+	box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.2);
+}
+
+.hidden-info {
+	max-height: 0;
+	overflow: hidden;
+	opacity: 0;
+	transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
+.race-card:hover .hidden-info {
+	max-height: 100px;
+	opacity: 1;
+}
+
+.card-title {
+	font-size: 1.5rem;
+	margin-bottom: 10px;
+	text-align: center;
+}
+
+.toggle-exotic-btn:hover {
+	background-color: rgba(0, 0, 0, 0.7);
+}
+
+.exotic-races.hidden {
+	display: none;
+}
+
+.exotic-races {
+	transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+	overflow: hidden;
+}
+
+.race-card {
+	cursor: pointer;
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.race-card:hover {
+	transform: scale(1.05);
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.selected-race {
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+	transform: scale(1.05);
+	border: 2px solid #007bff;
+}
+
+.toggle-exotic-btn {
+	background-color: rgba(0, 0, 0, 0.05);
+	color: #f3d8b9;
+	border: none;
+	padding: 10px;
+	border-radius: 8px;
+	cursor: pointer;
+	margin: 20px 0;
+	position: relative;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+.toggle-exotic-btn:hover {
+	background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* mini compteur */
+.bonus-counter {
+	font-size: 0.9rem;
+	opacity: 0.8;
+	padding: 0.25rem 0.6rem;
+	border: 1px solid rgba(0, 0, 0, 0.12);
+	border-radius: 999px;
+}
+
+/* carte bonus */
+.bonus-card {
+	cursor: pointer;
+	border: 1px solid rgba(0, 0, 0, 0.12);
+	background: rgba(255, 255, 255, 0.1);
+	border-radius: 14px;
+	transition: transform 0.08s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+}
+
+.bonus-card:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.bonus-text {
+	font-size: 0.95rem;
+	line-height: 1.25rem;
+}
+
+/* check visuel */
+.bonus-check {
+	width: 26px;
+	height: 26px;
+	border-radius: 999px;
+	display: grid;
+	place-items: center;
+	font-weight: 800;
+	border: 2px solid currentColor;
+}
+
+/* état sélectionné */
+.bonus-selected {
+	border-color: rgba(13, 110, 253, 0.55); /* bleu bootstrap-ish */
+	box-shadow: 0 12px 28px rgba(13, 110, 253, 0.18);
+}
+
+.bonus-selected .badge {
+	background: rgba(13, 110, 253, 0.12) !important;
+	color: #0d6efd !important;
+	border: 1px solid rgba(13, 110, 253, 0.35);
+}
+
+/* état désactivé */
+.bonus-disabled {
+	cursor: not-allowed;
+	opacity: 0.55;
+	filter: grayscale(0.25);
+}
+
+.bonus-disabled:hover {
+	transform: none;
+	box-shadow: none;
+}

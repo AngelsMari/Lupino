@@ -1,0 +1,19 @@
+<div [formGroup]="form" class="step">
+	<h2>Étape 7 : L'histoire</h2>
+
+	<div class="row g-3 mt-2">
+		<div class="col-12">
+			<label class="form-label" for="backstory">Histoire :</label>
+
+			<quill-editor
+				class="quill-editor"
+				formControlName="backstory"
+				id="backstory">
+			</quill-editor>
+
+			@if (form.get('backstory')?.invalid && (form.get('backstory')?.touched || form.get('backstory')?.dirty)) {
+				<div class="text-danger mt-2">Histoire invalide.</div>
+			}
+		</div>
+	</div>
+</div>

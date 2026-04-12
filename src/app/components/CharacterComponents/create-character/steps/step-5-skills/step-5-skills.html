@@ -1,0 +1,35 @@
+<div [formGroup]="form" class="step">
+	<h2>Étape 5 : Compétences</h2>
+
+	<table class="table">
+		<thead>
+		<tr>
+			<th style="width: 40%">Compétence</th>
+			<th style="width: 40%">Effet</th>
+			<th style="width: 20%">Coût</th>
+		</tr>
+		</thead>
+
+		<tbody formArrayName="skills">
+			@for (skill of skills.controls; track skill; let i = $index) {
+				<tr [formGroupName]="i">
+					<td>
+						<input type="text" class="form-control mb-2" placeholder="Titre" formControlName="name" />
+						<textarea class="form-control" rows="2" placeholder="Description"
+								  formControlName="description"></textarea>
+					</td>
+					<td>
+						<input type="text" class="form-control" placeholder="Effet" formControlName="effects" />
+					</td>
+					<td>
+						<input type="text" class="form-control" placeholder="Coût" formControlName="cost" />
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+
+	@if (skills.length === 0) {
+		<p class="muted">Aucune compétence pour le moment.</p>
+	}
+</div>

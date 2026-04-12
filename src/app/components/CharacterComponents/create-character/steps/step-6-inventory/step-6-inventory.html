@@ -1,0 +1,28 @@
+<div [formGroup]="form" class="step">
+	<h2>Étape 6 : L'inventaire</h2>
+
+	<div class="row g-3 mt-2">
+		<div class="col-md-3">
+			<label class="form-label" for="gold">Or :</label>
+			<input class="form-control" formControlName="gold" id="gold" min="0" type="number" />
+		</div>
+
+		<div class="col-12">
+			<label class="form-label" for="inventory">Inventaire :</label>
+
+			<quill-editor
+				class="quill-editor"
+				formControlName="inventory"
+				id="inventory">
+			</quill-editor>
+
+			@if (form.get('inventory')?.invalid && (form.get('inventory')?.touched || form.get('inventory')?.dirty)) {
+				<div class="text-danger mt-2">Inventaire invalide.</div>
+			}
+		</div>
+
+		<div class="col-12">
+			<app-items></app-items>
+		</div>
+	</div>
+</div>

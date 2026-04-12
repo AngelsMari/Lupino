@@ -1,0 +1,129 @@
+<div [formGroup]="group" class="step">
+	<h2>Étape 1 : Informations de base</h2>
+	<p>Remplissez les informations de base de votre personnage. Les champs obligatoires sont marqués d'un
+		astérisque.</p>
+
+	<div class="row g-3">
+		<div class="col-md-8">
+			<label class="form-label" for="name">Prénom nom*</label>
+			<input
+				[ngClass]="{ 'is-invalid': isInvalid('name') }"
+				class="form-control"
+				formControlName="name"
+				id="name"
+				placeholder="Prénom Nom"
+				type="text"
+			/>
+			@if (isInvalid('name')) {
+				<div class="invalid-feedback">
+					Ce champ est obligatoire.
+				</div>
+			}
+		</div>
+
+		<div class="col-md-2">
+			<label class="form-label" for="age">Âge</label>
+			<input class="form-control" formControlName="age" id="age" type="text" />
+		</div>
+
+		<div class="col-md-2">
+			<label class="form-label" for="level">Niveau*</label>
+			<input
+				[ngClass]="{ 'is-invalid': isInvalid('level') }"
+				class="form-control"
+				formControlName="level"
+				id="level"
+				min="1"
+				type="number"
+			/>
+			@if (isInvalid('level')) {
+				<div class="invalid-feedback">
+					Niveau invalide.
+				</div>
+			}
+		</div>
+
+		<div class="col-md-3">
+			<label class="form-label" for="skincolor">Couleur de peau</label>
+			<input class="form-control" formControlName="skincolor" id="skincolor" type="text" />
+		</div>
+
+		<div class="col-md-3">
+			<label class="form-label" for="height">Taille</label>
+			<input class="form-control" formControlName="height" id="height" type="text" />
+		</div>
+
+		<div class="col-md-3">
+			<label class="form-label" for="weight">Poids</label>
+			<input class="form-control" formControlName="weight" id="weight" type="text" />
+		</div>
+
+		<div class="col-md-3">
+			<label class="form-label" for="sexe">Genre</label>
+			<input class="form-control" formControlName="sexe" id="sexe" type="text" />
+		</div>
+
+		<div class="col-md-3">
+			<label class="form-label" for="eyes">Yeux</label>
+			<input class="form-control" formControlName="eyes" id="eyes" type="text" />
+		</div>
+
+		<div class="col-md-3">
+			<label class="form-label" for="hair">Cheveux</label>
+			<input class="form-control" formControlName="hair" id="hair" type="text" />
+		</div>
+
+		<div class="col-md-6">
+			<label class="form-label" for="positive_trait">Trait positif*</label>
+			<textarea
+				[ngClass]="{ 'is-invalid': isInvalid('positive_trait') }"
+				class="form-control"
+				formControlName="positive_trait"
+				id="positive_trait"
+				rows="4"
+			></textarea>
+			@if (isInvalid('positive_trait')) {
+				<div class="invalid-feedback">
+					Ce champ est obligatoire.
+				</div>
+			}
+		</div>
+
+		<div class="col-md-6">
+			<label class="form-label" for="negative_trait">Trait négatif*</label>
+			<textarea
+				[ngClass]="{ 'is-invalid': isInvalid('negative_trait') }"
+				class="form-control"
+				formControlName="negative_trait"
+				id="negative_trait"
+				rows="4"
+			></textarea>
+			@if (isInvalid('negative_trait')) {
+				<div class="invalid-feedback">
+					Ce champ est obligatoire.
+				</div>
+			}
+		</div>
+
+		<div class="col-md-8">
+			<label class="form-label">Téléchargez votre image</label>
+			<input
+				(change)="onFileChange($event)"
+				accept="image/*"
+				class="form-control"
+				type="file"
+			/>
+
+			@if (meta.get('imageUrl')?.value) {
+				<div class="preview mt-3">
+					<h3 class="h6 mb-2">Image prévisualisée :</h3>
+					<img
+						[src]="meta.get('imageUrl')?.value"
+						alt="Image prévisualisée"
+						class="preview-img"
+					/>
+				</div>
+			}
+		</div>
+	</div>
+</div>

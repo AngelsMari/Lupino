@@ -1,0 +1,15 @@
+.step {
+	padding: 8px 0;
+}
+
+.muted {
+	opacity: .75;
+}
+
+.table td {
+	vertical-align: top;
+}
+
+textarea {
+	resize: vertical;
+}

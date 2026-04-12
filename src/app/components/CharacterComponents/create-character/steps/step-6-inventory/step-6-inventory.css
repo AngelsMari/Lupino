@@ -1,0 +1,12 @@
+.step {
+	padding: 8px 0;
+}
+
+.quill-editor {
+	display: block;
+}
+
+/* Optionnel : un minimum de hauteur pour éviter le “petit champ” */
+:host ::ng-deep .ql-container {
+	min-height: 180px;
+}

@@ -1,0 +1,10 @@
+.step {
+	padding: 8px 0;
+}
+
+.preview-img {
+	max-width: 200px;
+	max-height: 200px;
+	display: block;
+	border-radius: 8px;
+}

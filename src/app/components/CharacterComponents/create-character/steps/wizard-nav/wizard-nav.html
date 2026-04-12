@@ -1,0 +1,15 @@
+<div class="wizard-nav">
+	@if (step > 1) {
+		<button class="btn btn-secondary" (click)="prev.emit()">Précédent</button>
+	}
+
+	@if (step < maxStep) {
+		<button (click)="next.emit()" [disabled]="!canNext" class="btn btn-primary">Suivant</button>
+	}
+
+	@if (step === maxStep) {
+		<button (click)="submit.emit()" [disabled]="!canSubmit" class="btn btn-success">
+			{{ isEdit ? 'Mettre à jour' : 'Créer le personnage' }}
+		</button>
+	}
+</div>

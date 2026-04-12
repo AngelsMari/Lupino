@@ -1,0 +1,11 @@
+.step {
+	padding: 8px 0;
+}
+
+.right-sep {
+	border-right: 1px solid rgba(0, 0, 0, .25);
+}
+
+.muted {
+	opacity: .75;
+}

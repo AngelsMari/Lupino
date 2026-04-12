@@ -1,0 +1,130 @@
+<div [formGroup]="form" class="step">
+	<h2>Étape 2 : Sélection de la race</h2>
+
+	<div class="form-group mb-3" [formGroup]="form">
+		<label class="me-3">
+			<input type="radio" formControlName="kind" value="pure" />
+			Race pure
+		</label>
+
+		<label>
+			<input type="radio" formControlName="kind" value="hybrid" />
+			Hybride
+		</label>
+	</div>
+
+	<!-- BONUS DISPONIBLES -->
+	@if (availableBonuses.length > 0) {
+		<div class="mb-3" formGroupName="form">
+			<div class="d-flex align-items-center justify-content-between mb-2">
+				<h4 class="mb-0">Bonus disponibles</h4>
+
+				<div class="bonus-counter">
+					<span>{{ selectedBonusIds.length }}/2</span>
+				</div>
+			</div>
+
+			<div class="row g-3">
+				@for (b of availableBonuses; track b._id) {
+					<div class="col-12 col-md-6">
+						<div
+							class="card bonus-card"
+							[class.bonus-selected]="isBonusSelected(b._id)"
+							[class.bonus-disabled]="isBonusDisabled(b)"
+							(click)="!isBonusDisabled(b) && toggleBonus(b)"
+							role="button"
+							tabindex="0"
+							(keydown.enter)="!isBonusDisabled(b) && toggleBonus(b)"
+						>
+							<div class="card-body">
+								<div class="d-flex align-items-start justify-content-between gap-2">
+									<div>
+										<div class="bonus-slot">
+											<span class="badge bg-secondary text-uppercase">{{ b.slot }}</span>
+										</div>
+
+										<div class="bonus-text mt-2">
+											{{ b.value }}
+										</div>
+									</div>
+									@if (isBonusSelected(b._id)) {
+										<div class="bonus-check">
+											✓
+										</div>
+									}
+								</div>
+							</div>
+						</div>
+					</div>
+				}
+			</div>
+
+			@if (form.errors?.['needTwoBonuses'] && form.get('kind')?.value === 'hybrid') {
+				<div class="text-danger small mt-2">
+					En hybride, tu dois choisir exactement 2 bonus.
+				</div>
+			}
+		</div>
+	}
+
+	<h3>Races Communes</h3>
+	<div class="row mb-4">
+		@for (race of commonRaces; track race._id) {
+			<div class="col-md-4 mb-3">
+				<div
+					class="card race-card"
+					[class.selected-race]="isSelected(race._id)"
+					(click)="onSelectRace(race)"
+					role="button"
+				>
+					<div class="card-body">
+						<h5 class="card-title">{{ race.name }}</h5>
+						@if (race.description) {
+							<p class="card-text hidden-info">{{ race.description }}</p>
+						}
+
+						<ul class="hidden-info">
+							@for (bonus of race.bonuses; track bonus) {
+								<li>{{ bonus.slot }} : {{ bonus.value }}</li>
+							}
+						</ul>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+
+	<button (click)="toggleExoticVisibility()" class="toggle-exotic-btn" type="button">
+		@if (!isExoticVisible()) {
+			<span>Afficher les Races Exotiques</span>
+		}
+		@if (isExoticVisible()) {
+			<span>Masquer les Races Exotiques</span>
+		}
+	</button>
+
+	@if (isExoticVisible()) {
+		<div class="exotic-races mt-3">
+			<h3>Races Exotiques</h3>
+			<div class="row mb-4">
+				@for (race of exoticRaces; track race._id) {
+					<div class="col-md-4 mb-3">
+						<div
+							class="card race-card"
+							[class.selected-race]="isSelected(race._id)"
+							(click)="onSelectRace(race)"
+							role="button"
+						>
+							<div class="card-body">
+								<h5 class="card-title">{{ race.name }}</h5>
+								@if (race.description) {
+									<p class="card-text hidden-info">{{ race.description }}</p>
+								}
+							</div>
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+	}
+</div>
