@@ -42,7 +42,7 @@ testem.log
 Thumbs.db
 
 # Environment variables
-src/environments/environements.ts
-src/app/environments/environements.ts
+src/environments/*
+src/app/environments/*
 
 proxy.conf.json
