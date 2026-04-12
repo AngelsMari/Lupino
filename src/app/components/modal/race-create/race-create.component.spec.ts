@@ -1,23 +1,22 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RaceCreateModalComponent } from './race-createcomponent';
+import { RaceCreateModalComponent } from './race-create.component';
 
 describe('RaceCreateModalComponent', () => {
-  let component: RaceCreateModalComponent;
-  let fixture: ComponentFixture<RaceCreateModalComponent>;
+	let component: RaceCreateModalComponent;
+	let fixture: ComponentFixture<RaceCreateModalComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-    imports: [RaceCreateModalComponent]
-})
-    .compileComponents();
+	beforeEach(async () => {
+		await TestBed.configureTestingModule({
+			imports: [RaceCreateModalComponent],
+		}).compileComponents();
 
-    fixture = TestBed.createComponent(RaceCreateModalComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+		fixture = TestBed.createComponent(RaceCreateModalComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+	});
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
 });

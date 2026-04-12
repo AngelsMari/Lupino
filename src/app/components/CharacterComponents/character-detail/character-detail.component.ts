@@ -6,20 +6,15 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { UserService } from 'app/services/LupinoApi/user.service';
 import { ToastrService } from 'ngx-toastr';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { BehaviorSubject, combineLatest, map, tap, switchMap, catchError, of, max } from 'rxjs';
-import { NgClass, NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { BehaviorSubject, catchError, combineLatest, map, of, switchMap, tap } from 'rxjs';
+import { AsyncPipe, NgClass, NgOptimizedImage } from '@angular/common';
+import { CharacterCalculatorService, PrimaryStats } from '../../../services/character-calculator.service';
 
 @Component({
-    selector: 'app-character-detail',
-    templateUrl: './character-detail.component.html',
-    styleUrls: ['./character-detail.component.css'],
-    imports: [
-        RouterLink,
-        NgClass,
-        NgIf,
-        NgFor,
-        AsyncPipe,
-    ],
+	selector: 'app-character-detail',
+	templateUrl: './character-detail.component.html',
+	styleUrls: ['./character-detail.component.css'],
+	imports: [RouterLink, NgClass, AsyncPipe, NgOptimizedImage],
 })
 export class CharacterDetailComponent implements OnInit {
 	private fb = inject(FormBuilder);
@@ -28,6 +23,7 @@ export class CharacterDetailComponent implements OnInit {
 	private userService = inject(UserService);
 	private toastr = inject(ToastrService);
 	private sanitizer = inject(DomSanitizer);
+	private calc = inject(CharacterCalculatorService);
 
 	// FormGroup
 	characterForm: FormGroup = this.fb.group({
@@ -71,31 +67,58 @@ export class CharacterDetailComponent implements OnInit {
 		catchError(() => of(null)),
 	);
 
+	primaryStats$ = this.character$.pipe(
+		map((character) => {
+			if (!character) return null;
+
+			const baseStats: PrimaryStats = this.calc.clampPrimaryStats({
+				strength: Number(character.strength ?? 30),
+				agility: Number(character.agility ?? 30),
+				endurance: Number(character.endurance ?? 30),
+				social: Number(character.social ?? 30),
+				mental: Number(character.mental ?? 30),
+			});
+
+			const primaryModifiers = character.statModifiers?.primary ?? {};
+
+			return {
+				strength: baseStats.strength + Number(primaryModifiers.strength ?? 0),
+				agility: baseStats.agility + Number(primaryModifiers.agility ?? 0),
+				endurance: baseStats.endurance + Number(primaryModifiers.endurance ?? 0),
+				social: baseStats.social + Number(primaryModifiers.social ?? 0),
+				mental: baseStats.mental + Number(primaryModifiers.mental ?? 0),
+			};
+		}),
+	);
+
 	// Calcul secondaryStats
 	secondaryStats$ = this.character$.pipe(
 		map((character) => {
 			if (!character) return null;
-			const { strength, endurance, mental, agility, social } = character;
-			return {
-				constitution: Math.floor((strength + endurance) / 10),
-				resilience: Math.floor((endurance + mental) / 10),
-				reflex: Math.floor((mental + agility) / 10),
-				charisma: Math.floor((social + Math.max(agility, strength)) / 10),
-			};
+
+			const baseStats: PrimaryStats = this.calc.clampPrimaryStats({
+				strength: Number(character.strength ?? 30),
+				agility: Number(character.agility ?? 30),
+				endurance: Number(character.endurance ?? 30),
+				social: Number(character.social ?? 30),
+				mental: Number(character.mental ?? 30),
+			});
+
+			return this.calc.computeSecondaryStats(baseStats, character.statModifiers);
 		}),
 	);
 
 	sessionActive: boolean = false;
 
-	bonuses$ = this.character$.pipe(
-		map((character) => {
-			if (!character) return {};
+	bonuses$ = this.primaryStats$.pipe(
+		map((stats) => {
+			if (!stats) return {};
 			return {
-				strength: this.getBonus(character.strength),
-				agility: this.getBonus(character.agility),
-				endurance: this.getBonus(character.endurance),
-				social: this.getBonus(character.social),
-				mental: this.getBonus(character.mental),
+				strength: this.getBonus(stats.strength),
+				agility: this.getBonus(stats.agility),
+				endurance: this.getBonus(stats.endurance),
+				social: this.getBonus(stats.social),
+				mental: this.getBonus(stats.mental),
 			};
 		}),
 	);

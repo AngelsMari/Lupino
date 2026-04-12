@@ -36,7 +36,20 @@
 
 			<div class="lupino-stat-row">
 				<span class="lupino-stat-label">Race:</span>
-				<span class="lupino-stat-value">{{ character.race }}</span>
+				@if (character.race) {
+					<span class="lupino-stat-value">{{ character.race }}</span>
+				}
+				@if (character.lineage) {
+					@if (character.lineage.kind == "pure") {
+						<span class="lupino-stat-value">{{ raceMap.get(character.lineage.raceId) }}</span>
+					}
+					@if (character.lineage.kind == "hybrid") {
+						@for (raceId of character.lineage.parentRaceIds; track raceId) {
+
+							<span class="lupino-stat-value">{{ raceMap.get(raceId) }}</span>
+						}
+					}
+				}
 			</div>
 		</div>
 

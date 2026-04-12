@@ -10,7 +10,8 @@
 						<div class="col-12 mb-3">
 							<div class="control-buttons">
 								@if (!sessionActive) {
-									<a routerLink="/create-character/{{ character?._id }}/" class="btn btn-custom btn-modify">
+									<a routerLink="/create-character/{{ character?._id }}/"
+									   class="btn btn-custom btn-modify">
 										<i class="bi bi-pencil-square"></i> Modifier
 									</a>
 
@@ -39,14 +40,20 @@
 				<!-- Portrait du personnage -->
 				<div class="col-lg-4 col-md-5 text-center">
 					<div class="portrait-container">
-						<img src="{{ character?.imageUrl }}" alt="{{ character?.name }}" class="character-portrait img-fluid" />
+						<img
+							[ngSrc]="character?.imageUrl || '/lupino-placeholder-230h.png'"
+							[alt]="character?.name || 'Character'"
+							class="character-portrait img-fluid"
+							fill
+						/>
 					</div>
 				</div>
 
 				<!-- Informations principales -->
 				<div class="col-lg-8 col-md-7">
 					<h1 class="character-title">{{ character?.name }}</h1>
-					<h6 class="creator-info"><i class="bi bi-person-badge"></i> Créé par : {{ character?.owner?.name }}</h6>
+					<h6 class="creator-info"><i class="bi bi-person-badge"></i> Créé par : {{ character?.owner?.name }}
+					</h6>
 
 					<!-- Section HP/Mana en session -->
 					@if (sessionActive) {
@@ -54,11 +61,13 @@
 							<!-- Points de vie -->
 							<div class="stat-bar hp-bar">
 								<div class="d-flex justify-content-between align-items-center mb-2">
-									<label class="stat-label"> <i class="bi bi-heart-fill text-danger"></i> Points de vie </label>
-									<span class="stat-value">{{ character?.current_hp }} / {{ character?.max_hp }}</span>
+									<label class="stat-label"> <i class="bi bi-heart-fill text-danger"></i> Points de
+										vie </label>
+									<span class="stat-value">{{ character?.current_hp }}/ {{ character?.max_hp }}</span>
 								</div>
 								<div class="progress mb-2">
-									<div class="progress-bar bg-danger" [style.width.%]="(character.current_hp / character.max_hp) * 100"></div>
+									<div class="progress-bar bg-danger"
+										 [style.width.%]="(character.current_hp / character.max_hp) * 100"></div>
 								</div>
 								<div class="stat-controls">
 									<button class="btn stat-btn hp-btn-positive" (click)="modifyHp('max')">
@@ -76,11 +85,14 @@
 							<!-- Mana -->
 							<div class="stat-bar mana-bar">
 								<div class="d-flex justify-content-between align-items-center mb-2">
-									<label class="stat-label"> <i class="bi bi-star-fill text-primary"></i> Mana </label>
-									<span class="stat-value">{{ character?.current_mana }} / {{ character?.max_mana }}</span>
+									<label class="stat-label"> <i class="bi bi-star-fill text-primary"></i> Mana
+									</label>
+									<span class="stat-value">{{ character?.current_mana }}
+										/ {{ character?.max_mana }}</span>
 								</div>
 								<div class="progress mb-2">
-									<div class="progress-bar bg-primary" [style.width.%]="(character.current_mana / character.max_mana) * 100"></div>
+									<div class="progress-bar bg-primary"
+										 [style.width.%]="(character.current_mana / character.max_mana) * 100"></div>
 								</div>
 								<div class="stat-controls">
 									<button class="btn stat-btn mana-btn-positive" (click)="modifyMana('max')">
@@ -91,7 +103,8 @@
 									<button class="btn stat-btn mana-btn-positive" (click)="modifyMana(1)">+1</button>
 									<button class="btn stat-btn mana-btn-negative" (click)="modifyMana(-1)">-1</button>
 									<button class="btn stat-btn mana-btn-negative" (click)="modifyMana(-5)">-5</button>
-									<button class="btn stat-btn mana-btn-negative" (click)="modifyMana(-10)">-10</button>
+									<button class="btn stat-btn mana-btn-negative" (click)="modifyMana(-10)">-10
+									</button>
 								</div>
 							</div>
 						</div>
@@ -105,12 +118,16 @@
 						<div class="info-item">
 							<strong><i class="bi bi-person"></i> Race :</strong> {{ character?.race }}
 						</div>
-						<div class="info-item" *ngIf="!sessionActive">
-							<strong><i class="bi bi-heart"></i> HP :</strong> {{ character?.current_hp }} / {{ character?.max_hp }}
-						</div>
-						<div class="info-item" *ngIf="!sessionActive">
-							<strong><i class="bi bi-star"></i> Mana :</strong> {{ character?.current_mana }} / {{ character?.max_mana }}
-						</div>
+						@if (!sessionActive) {
+							<div class="info-item">
+								<strong><i class="bi bi-heart"></i> HP :</strong> {{ character?.current_hp }}
+								/ {{ character?.max_hp }}
+							</div>
+							<div class="info-item">
+								<strong><i class="bi bi-star"></i> Mana :</strong> {{ character?.current_mana }}
+								/ {{ character?.max_mana }}
+							</div>
+						}
 						<div class="info-item">
 							<strong><i class="bi bi-gender-ambiguous"></i> Sexe :</strong> {{ character?.sexe }}
 						</div>
@@ -234,37 +251,64 @@
 						<h3 class="section-title"><i class="bi bi-bar-chart-fill"></i> Caractéristiques Principales</h3>
 						<table class="stats-table">
 							<thead>
-								<tr>
-									<th><i class="bi bi-hammer"></i> Force</th>
-									<th><i class="bi bi-wind"></i> Agilité</th>
-									<th><i class="bi bi-shield"></i> Endurance</th>
-									<th><i class="bi bi-chat-dots"></i> Social</th>
-									<th><i class="bi bi-brain"></i> Mental</th>
-								</tr>
+							<tr>
+								<th><i class="bi bi-hammer"></i> Force</th>
+								<th><i class="bi bi-wind"></i> Agilité</th>
+								<th><i class="bi bi-shield"></i> Endurance</th>
+								<th><i class="bi bi-chat-dots"></i> Social</th>
+								<th><i class="bi bi-brain"></i> Mental</th>
+							</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td>
-										{{ character?.strength }}
-										<span class="stat-bonus">({{ bonuses['strength'] }})</span>
-									</td>
-									<td>
-										{{ character?.agility }}
-										<span class="stat-bonus">({{ bonuses['agility'] }})</span>
-									</td>
-									<td>
-										{{ character?.endurance }}
-										<span class="stat-bonus">({{ bonuses['endurance'] }})</span>
-									</td>
-									<td>
-										{{ character?.social }}
-										<span class="stat-bonus">({{ bonuses['social'] }})</span>
-									</td>
-									<td>
-										{{ character?.mental }}
-										<span class="stat-bonus">({{ bonuses['mental'] }})</span>
-									</td>
-								</tr>
+								@if (primaryStats$ | async; as stats) {
+									<tr>
+										<td>
+											{{ stats?.strength }}
+											@if (character.statModifiers?.primary?.strength) {
+												<span class="stat-modifier">( {{ character.strength }}
+													+ {{ character.statModifiers?.primary?.strength }})</span>
+											}
+											<br>
+											<span class="stat-bonus">({{ bonuses['strength'] }})</span>
+										</td>
+										<td>
+											{{ stats?.agility }}
+											@if (character.statModifiers?.primary?.agility) {
+												<span class="stat-modifier">( {{ character.agility }}
+													+ {{ character.statModifiers?.primary?.agility }})</span>
+											}
+											<br>
+											<span class="stat-bonus">({{ bonuses['agility'] }})</span>
+										</td>
+										<td>
+											{{ stats?.endurance }}
+											@if (character.statModifiers?.primary?.endurance) {
+												<span class="stat-modifier">( {{ character.endurance }}
+													+ {{ character.statModifiers?.primary?.endurance }})</span>
+											}
+											<br>
+											<span class="stat-bonus">({{ bonuses['endurance'] }})</span>
+										</td>
+										<td>
+											{{ stats?.social }}
+											@if (character.statModifiers?.primary?.social) {
+												<span class="stat-modifier">( {{ character.social }}
+													+ {{ character.statModifiers?.primary?.social }})</span>
+											}
+											<br>
+											<span class="stat-bonus">({{ bonuses['social'] }})</span>
+										</td>
+										<td>
+											{{ stats?.mental }}
+											@if (character.statModifiers?.primary?.mental) {
+												<span class="stat-modifier">( {{ character.mental }}
+													+ {{ character.statModifiers?.primary?.mental }})</span>
+											}
+											<br>
+											<span class="stat-bonus">({{ bonuses['mental'] }})</span>
+										</td>
+									</tr>
+								}
 							</tbody>
 						</table>
 					}
@@ -273,20 +317,45 @@
 						<h3 class="section-title"><i class="bi bi-speedometer2"></i> Caractéristiques Secondaires</h3>
 						<table class="stats-table">
 							<thead>
-								<tr>
-									<th><i class="bi bi-heart-pulse"></i> Constitution</th>
-									<th><i class="bi bi-shield-check"></i> Résilience</th>
-									<th><i class="bi bi-lightning"></i> Réflexe</th>
-									<th><i class="bi bi-star"></i> Charisme</th>
-								</tr>
+							<tr>
+								<th><i class="bi bi-heart-pulse"></i> Constitution</th>
+								<th><i class="bi bi-shield-check"></i> Résilience</th>
+								<th><i class="bi bi-lightning"></i> Réflexe</th>
+								<th><i class="bi bi-star"></i> Charisme</th>
+							</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td>{{ secondaryStats?.constitution }}</td>
-									<td>{{ secondaryStats?.resilience }}</td>
-									<td>{{ secondaryStats?.reflex }}</td>
-									<td>{{ secondaryStats?.charisma }}</td>
-								</tr>
+							<tr>
+								<td>{{ secondaryStats?.constitution }}
+									@if (character.statModifiers?.secondary?.constitution) {
+										<span
+											class="stat-modifier">( {{ (secondaryStats?.constitution ?? 0) - (character?.statModifiers?.secondary?.constitution ?? 0) }}
+											+ {{ character.statModifiers?.secondary?.constitution }}
+											)</span>
+									}</td>
+								<td>{{ secondaryStats?.resilience }}
+									@if (character.statModifiers?.secondary?.resilience) {
+										<span
+											class="stat-modifier">( {{ (secondaryStats?.resilience ?? 0) - (character?.statModifiers?.secondary?.resilience ?? 0) }}
+											+ {{ character.statModifiers?.secondary?.resilience }}
+											)</span>
+									}</td>
+								<td>{{ secondaryStats?.reflex }}
+									@if (character.statModifiers?.secondary?.reflex) {
+										<span
+											class="stat-modifier">( {{ (secondaryStats?.reflex ?? 0) - (character?.statModifiers?.secondary?.reflex ?? 0) }}
+											+ {{ character.statModifiers?.secondary?.reflex }}
+											)</span>
+									}</td>
+								<td>
+									{{ secondaryStats?.charisma }}
+									@if (character.statModifiers?.secondary?.charisma) {
+										<span
+											class="stat-modifier">( {{ (secondaryStats?.charisma ?? 0) - (character?.statModifiers?.secondary?.charisma ?? 0) }}
+											+ {{ character.statModifiers?.secondary?.charisma }}
+											)</span>
+									}</td>
+							</tr>
 							</tbody>
 						</table>
 					}
@@ -313,17 +382,21 @@
 					<div class="col-lg-7">
 						<h4 class="section-title"><i class="bi bi-award-fill"></i> Maîtrises</h4>
 						<div class="mastery-list">
-							<span class="mastery-badge" *ngFor="let mastery of character?.masteries">
+							@for (mastery of character?.masteries; track mastery) {
+								<span class="mastery-badge">
 								<i class="bi bi-check-circle"></i> {{ mastery }}
 							</span>
+							}
 						</div>
 					</div>
 					<div class="col-lg-5">
 						<h4 class="section-title"><i class="bi bi-translate"></i> Langues</h4>
 						<div class="language-list">
-							<span class="language-badge" *ngFor="let language of character?.languages">
+							@for (language of character?.languages; track language) {
+								<span class="language-badge">
 								<i class="bi bi-chat-square-text"></i> {{ language }}
 							</span>
+							}
 						</div>
 					</div>
 				</div>
@@ -333,16 +406,18 @@
 			<div class="tab-pane fade" id="skills" role="tabpanel" aria-labelledby="skills-tab">
 				<h3 class="section-title"><i class="bi bi-lightning-charge-fill"></i> Compétences</h3>
 				<div class="skills-grid">
-					<div class="skill-card" *ngFor="let skill of character?.skills">
-						<div class="skill-header">
-							<h5 class="skill-name"><i class="bi bi-gem"></i> {{ skill.name }}</h5>
-							<span class="skill-cost"> <i class="bi bi-coin"></i> {{ skill.cost }} </span>
+					@for (skill of character?.skills; track skill) {
+						<div class="skill-card">
+							<div class="skill-header">
+								<h5 class="skill-name"><i class="bi bi-gem"></i> {{ skill.name }}</h5>
+								<span class="skill-cost"> <i class="bi bi-coin"></i> {{ skill.cost }} </span>
+							</div>
+							<p class="skill-description">{{ skill.description }}</p>
+							<div class="skill-effects">
+								<strong><i class="bi bi-magic"></i> Effet :</strong> {{ skill.effects }}
+							</div>
 						</div>
-						<p class="skill-description">{{ skill.description }}</p>
-						<div class="skill-effects">
-							<strong><i class="bi bi-magic"></i> Effet :</strong> {{ skill.effects }}
-						</div>
-					</div>
+					}
 				</div>
 			</div>
 
@@ -372,8 +447,11 @@
 		</div>
 
 		<!-- Bouton de retour -->
-		<div class="back-section" *ngIf="!sessionActive">
-			<a routerLink="/characters" class="btn btn-custom btn-back"> <i class="bi bi-arrow-left-circle"></i> Retour à la liste </a>
-		</div>
+		@if (!sessionActive) {
+			<div class="back-section">
+				<a routerLink="/characters" class="btn btn-custom btn-back"> <i class="bi bi-arrow-left-circle"></i>
+					Retour à la liste </a>
+			</div>
+		}
 	}
 </div>

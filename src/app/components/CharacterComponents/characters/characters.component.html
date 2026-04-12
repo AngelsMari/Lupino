@@ -3,6 +3,7 @@
 	<app-character-filters
 		(filtersChange)="onFiltersChange($event)"
 		(searchChange)="onSearchChange($event)"
+		[races]="(races$ | async) ?? []"
 		[resultsCount]="(characters$ | async)?.length || 0"
 		[showAdminFilters]="((currentUser$ | async)?.isAdmin && !isMyCharacterPage) ?? false">
 	</app-character-filters>
@@ -31,6 +32,7 @@
 						<div class="col-lg-3 col-md-4 col-sm-6 col-12">
 							<app-character-card
 								[character]="character"
+								[raceMap]="(raceMap$ | async)! "
 								[isMyCharacterPage]="isMyCharacterPage"
 								[isAdmin]="(currentUser$ | async)?.isAdmin ?? false"
 								(delete)="openDeleteModal($event)">

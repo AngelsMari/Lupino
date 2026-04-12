@@ -3,20 +3,19 @@ import { RaceService } from '../../../services/LupinoApi/race.service';
 import { UserService } from '../../../services/LupinoApi/user.service';
 import { Race } from '../../../models/race';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { RaceCreateComponent } from '../../modal/race-create/race-createcomponent';
+import { RaceCreateComponent } from '../../modal/race-create/race-create.component';
 import { map, Observable } from 'rxjs';
-import { NgClass, AsyncPipe } from '@angular/common';
+import { AsyncPipe, NgClass } from '@angular/common';
+import { shareReplay, startWith } from 'rxjs/operators';
 
 @Component({
-    selector: 'app-races',
-    templateUrl: './races.component.html',
-    styleUrl: './races.component.css',
-    imports: [NgClass, AsyncPipe],
+	selector: 'app-races',
+	templateUrl: './races.component.html',
+	styleUrl: './races.component.css',
+	imports: [NgClass, AsyncPipe],
 })
 export class RacesComponent {
-	commonRaces: Race[] = [];
-	exoticRaces: Race[] = [];
-	isAdmin: boolean = false; // Par défaut, pas admin
+	isAdmin$!: Observable<boolean>;
 	userId: string | null = sessionStorage.getItem('user_id');
 
 	race$!: Observable<Race[]>;
@@ -46,19 +45,12 @@ export class RacesComponent {
 		this.isExoticVisible = !this.isExoticVisible;
 	}
 
-	checkIfAdmin(): void {
-		if (this.userId) {
-			this.userService.getUserById(this.userId).subscribe((data) => {
-				if (Object(data)['result'] == 'ERROR') {
-					// Handle error
-				} else {
-					let user = Object(data)['items'][0]['object'];
-					if (user && user.isAdmin === true) {
-						this.isAdmin = true;
-					}
-				}
-			});
-		}
+	private checkIfAdmin(): void {
+		this.isAdmin$ = this.userService.getUserData().pipe(
+			map((user) => user?.isAdmin ?? false),
+			startWith(false),
+			shareReplay(1),
+		);
 	}
 
 	openCreateRaceModal(): void {
@@ -73,5 +65,11 @@ export class RacesComponent {
 				console.log('Modale fermée: ', reason);
 			},
 		);
+	}
+
+	openEditRaceModal(race: any) {
+		const modalRef = this.modalService.open(RaceCreateComponent, { centered: true });
+		modalRef.componentInstance.race = race; // 👈 on passe la race
+		modalRef.closed.subscribe(() => this.loadRaces());
 	}
 }

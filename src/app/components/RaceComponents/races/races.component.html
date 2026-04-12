@@ -1,5 +1,5 @@
 <div class="container mt-4">
-	@if (isAdmin) {
+	@if (isAdmin$ | async) {
 		<div class="mt-4">
 			<button class="btn btn-primary" (click)="openCreateRaceModal()">Créer une nouvelle race</button>
 		</div>
@@ -11,8 +11,21 @@
 			<div class="col-md-4 mb-3">
 				<div class="card race-card">
 					<div class="card-body">
+						@if (isAdmin$ | async) {
+							<button class="btn btn-sm btn-outline-primary mt-2"
+									(click)="openEditRaceModal(race)">
+								Modifier
+							</button>
+						}
 						<h5 class="card-title">{{ race.name }}</h5>
-						<p class="card-text hidden-info">{{ race.trait }}</p>
+						<p class="card-text hidden-info">{{ race.description }}</p>
+
+						<ul class=" hidden-info">
+							@for (bonus of race.bonuses; track bonus) {
+								<li>{{ bonus.slot }} : {{ bonus.value }}</li>
+							}
+						</ul>
+
 					</div>
 				</div>
 			</div>
@@ -36,8 +49,20 @@
 			<div class="col-md-4 mb-3">
 				<div class="card race-card">
 					<div class="card-body">
+						@if (isAdmin$ | async) {
+							<button class="btn btn-sm btn-outline-primary mt-2"
+									(click)="openEditRaceModal(race)">
+								Modifier
+							</button>
+						}
 						<h5 class="card-title">{{ race.name }}</h5>
-						<p class="card-text hidden-info">{{ race.trait }}</p>
+						<p class="card-text hidden-info">{{ race.description }}</p>
+
+						<ul class=" hidden-info">
+							@for (bonus of race.bonuses; track bonus) {
+								<li>{{ bonus.slot }} : {{ bonus.value }}</li>
+							}
+						</ul>
 					</div>
 				</div>
 			</div>

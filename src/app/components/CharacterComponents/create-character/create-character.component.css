@@ -1,148 +1,53 @@
 .table td, .table th {
-    text-align: center;
+	text-align: center;
 }
 
-.table td{
-    border-left: 1px solid #000;
-    vertical-align: middle;
+.table td {
+	border-left: 1px solid #000;
+	vertical-align: middle;
 }
 
-.table td:first-child{
-    border-left: inherit;
+.table td:first-child {
+	border-left: inherit;
 }
 
 .btn-primary {
-    margin: 10px 5px;
+	margin: 10px 5px;
 }
-.form-group {
-    margin-bottom: 20px;
-  }
-  
-  label {
-    font-weight: bold;
-    margin-bottom: 5px;
-    display: block;
-  }
-  
-  .quill-editor {
-    background-color: #fff; /* Fond blanc */
-    border: 1px solid #ced4da; /* Bordure similaire à un input */
-    border-radius: 0.375rem;
-    width: 100%;
-  }
 
-  .trait {
-    display: none; /* Cacher le trait par défaut */
-    transition: 0.5s ease-in; /* Transition */
+.form-group {
+	margin-bottom: 20px;
+}
+
+label {
+	font-weight: bold;
+	margin-bottom: 5px;
+	display: block;
+}
+
+.quill-editor {
+	background-color: #fff; /* Fond blanc */
+	border: 1px solid #ced4da; /* Bordure similaire à un input */
+	border-radius: 0.375rem;
+	width: 100%;
+}
+
+.trait {
+	display: none; /* Cacher le trait par défaut */
+	transition: 0.5s ease-in; /* Transition */
 
 }
 
 .trait.visible {
-    display: block; /* Afficher le trait lorsque visible */
+	display: block; /* Afficher le trait lorsque visible */
 }
 
 .race-card:hover .trait {
-    display: block; /* Afficher le trait au survol */
+	display: block; /* Afficher le trait au survol */
 }
 
 .container {
-    margin-top: 20px;
-    margin-bottom: 100px;
+	margin-top: 20px;
+	margin-bottom: 100px;
 }
 
-/* Style de base pour les cartes */
-.race-card {
-    border: 1px solid #ddd;
-    box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-  
-  /* La carte se déploie au survol */
-.race-card:hover {
-    transform: scale(1.05);
-    box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.2);
-}
-
-/* Les informations supplémentaires sont masquées par défaut */
-.hidden-info {
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    transition: max-height 0.3s ease, opacity 0.3s ease;
-}
-
-/* Les informations supplémentaires apparaissent au survol */
-.race-card:hover .hidden-info {
-    max-height: 100px; /* Ajuste la hauteur selon le contenu */
-    opacity: 1;
-}
-/* Styles de base pour le titre de la carte */
-.card-title {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-    text-align: center;
-}
-
-.toggle-exotic-btn {
-    background-color: rgba(0, 0, 0, 0.05);
-    color: #f3d8b9 ;
-    border: none;
-    padding: 10px;
-    border-radius: 8px;
-    cursor: pointer;
-    margin: 20px 0;
-    position: relative;
-    left: 50%; /* Positionnement */
-    transform: translateX(-50%);
-  }
-  
-  .toggle-exotic-btn:hover {
-    background-color: rgba(0, 0, 0, 0.7);
-  }
-  
-  /* Cacher les races exotiques par défaut */
-  .exotic-races.hidden {
-    display: none;
-  }
-
-  /* Animation pour faire apparaître les races exotiques */
-.exotic-races {
-    transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
-    overflow: hidden;
-  }
-
-  .race-card {
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.race-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.selected-race {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-    transform: scale(1.05);
-    border: 2px solid #007bff; /* Optionnel : une bordure pour plus de visibilité */
-}
-
-.toggle-exotic-btn {
-    background-color: rgba(0, 0, 0, 0.05);
-    color: #f3d8b9 ;
-    border: none;
-    padding: 10px;
-    border-radius: 8px;
-    cursor: pointer;
-    margin: 20px 0;
-    position: relative;
-    left: 50%; /* Positionnement */
-    transform: translateX(-50%);
-  }
-  
-  .toggle-exotic-btn:hover {
-    background-color: rgba(0, 0, 0, 0.7);
-  }
-  

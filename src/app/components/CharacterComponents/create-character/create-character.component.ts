@@ -1,581 +1,604 @@
-import { Component } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, ValidatorFn, Validators, ReactiveFormsModule } from '@angular/forms';
-import { CharacterService } from '../../../services/LupinoApi/character.service';
-import { RaceService } from '../../../services/LupinoApi/race.service';
-import { Race } from '../../../models/race';
+import { Component, computed, effect, inject, Injector, runInInjectionContext, signal } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import DOMPurify from 'dompurify';
+
+import { toSignal } from '@angular/core/rxjs-interop';
+import { merge } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+
+import { RaceService } from '../../../services/LupinoApi/race.service';
+import { CharacterService } from '../../../services/LupinoApi/character.service';
 import { ToastrService } from 'ngx-toastr';
-import { environment } from '../../../../environments/environements';
-import { NgClass } from '@angular/common';
-import { QuillEditorComponent } from 'ngx-quill';
-import { ItemsComponent } from '../../ItemComponents/items/items.component'; // Ajustez le chemin si nécessaire
+import DOMPurify from 'dompurify';
+
+import { asFormArray, createCharacterForm } from './form/character-form.factory';
+import { remainingPointsValidator } from './form/character.validators';
+import { CharacterCalculatorService, PrimaryStats } from '../../../services/character-calculator.service';
+
+import { WizardNavComponent } from './steps/wizard-nav/wizard-nav';
+import { Step1Basic } from './steps/step-1-basic/step-1-basic';
+import { Step2Race } from './steps/step-2-race/step-2-race';
+import { Step3Stats } from './steps/step-3-stats/step-3-stats';
+import { Step4Masteries } from './steps/step-4-masteries/step-4-masteries';
+import { Step5Skills } from './steps/step-5-skills/step-5-skills';
+import { Step6Inventory } from './steps/step-6-inventory/step-6-inventory';
+import { Step7Backstory } from './steps/step-7-backstory/step-7-backstory';
+import { Race } from '../../../models/race';
+
+type StatModifiers = {
+	primary?: {
+		strength?: number;
+		agility?: number;
+		endurance?: number;
+		social?: number;
+		mental?: number;
+	};
+	secondary?: {
+		constitution?: number;
+		resilience?: number;
+		reflex?: number;
+		charisma?: number;
+	};
+};
+type CalcInputs = {
+	level: number;
+	race?: string;
+	stats: PrimaryStats;
+	bonuses: {
+		hpPerLevelBonus?: number;
+		manaPerLevelBonus?: number;
+		masteriesModifier?: number;
+		languageModifier?: number;
+		statModifiers?: StatModifiers;
+	};
+};
 
 @Component({
-    selector: 'app-create-character',
-    templateUrl: './create-character.component.html',
-    styleUrls: ['./create-character.component.css'],
-    imports: [
-        ReactiveFormsModule,
-        NgClass,
-        QuillEditorComponent,
-        ItemsComponent,
-    ],
+	selector: 'app-create-character',
+	standalone: true,
+	imports: [
+		ReactiveFormsModule,
+		WizardNavComponent,
+		Step1Basic,
+		Step2Race,
+		Step3Stats,
+		Step4Masteries,
+		Step5Skills,
+		Step6Inventory,
+		Step7Backstory,
+	],
+	templateUrl: './create-character.component.html',
+	styleUrls: ['./create-character.component.css'],
 })
 export class CreateCharacterComponent {
-	step = 1; // Pour suivre la progression des étapes
-	characterForm: FormGroup;
-	selectedRace: String = ''; // Stocke la race sélectionnée
-	RemainingPoints: number = 135; // Points restants pour les statistiques
-	MaximumPoints: number = 150 + 135; // Points restants pour les statist
-	secondaryStats: { constitution: number; resilience: number; reflex: number; charisma: number } | undefined;
-	numberOfMasteries: number = 5;
-	numberOfLanguages: number = 1;
-	numberOfSkills: number = 4;
-	skillCount = 4;
-	characterId: string | null = null;
-	exoticRaces: Array<Race> = [];
-	commonRaces: Array<Race> = [];
-	isExoticVisible: boolean = false;
+	private injector = inject(Injector);
+	// -----------------------
+	step = signal(1);
+	readonly maxStep = 7;
+	commonRaces = signal<Race[]>([]);
+	exoticRaces = signal<Race[]>([]);
+	isLegacy = signal(false);
 
-	constructor(
-		private fb: FormBuilder,
-		private characterService: CharacterService,
-		private raceService: RaceService,
-		private router: Router,
-		private route: ActivatedRoute,
-		private toastr: ToastrService,
-	) {
-		this.characterForm = this.fb.group(
-			{
-				// Étape 1: Informations de base
-				_id: [''],
-				name: ['', [Validators.required, this.noHtmlValidator]],
-				level: [1, [Validators.required, Validators.min(1)]],
-				age: ['', [this.noHtmlValidator]],
-				skincolor: ['', [this.noHtmlValidator]],
-				height: ['', [this.noHtmlValidator]],
-				weight: ['', [this.noHtmlValidator]],
-				sexe: ['', [this.noHtmlValidator]],
-				eyes: ['', [this.noHtmlValidator]],
-				hair: ['', [this.noHtmlValidator]],
-				positive_trait: ['', [Validators.required, this.noHtmlValidator]],
-				negative_trait: ['', [Validators.required, this.noHtmlValidator]],
-				imageUrl: [''],
+	private fb = inject(FormBuilder);
+	characterForm: FormGroup = createCharacterForm(this.fb);
+	public formStatus = toSignal(this.characterForm.statusChanges.pipe(startWith(this.characterForm.status)));
+	public canSubmit = computed(() => this.formStatus() === 'VALID');
+	// Form (groupé)
+	private calc = inject(CharacterCalculatorService);
+	private raceService = inject(RaceService);
 
-				// Etape 2 : Race
-				race: ['', [Validators.required]],
+	private isHydrating = signal(false);
 
-				// Étape 3: Statistiques
-				strength: [30, [Validators.required, Validators.min(30), Validators.max(85)]],
-				agility: [30, [Validators.required, Validators.min(30), Validators.max(85)]],
-				endurance: [30, [Validators.required, Validators.min(30), Validators.max(85)]],
-				social: [30, [Validators.required, Validators.min(30), Validators.max(85)]],
-				mental: [30, [Validators.required, Validators.min(30), Validators.max(85)]],
+	// -----------------------
+	// Wizard state (signals)
+	private characterService = inject(CharacterService);
+	private router = inject(Router);
+	private route = inject(ActivatedRoute);
+	// -----------------------
+	characterId = signal<string | null>(this.route.snapshot.paramMap.get('id'));
+	private toastr = inject(ToastrService);
+	// Helpers (typed-ish)
+	private basicFg = this.characterForm.get('basic') as FormGroup;
+	private raceFg = this.characterForm.get('race') as FormGroup;
+	// Calc inputs as signal (sans Quill)
+	private statsFg = this.characterForm.get('stats') as FormGroup;
+	// Derived (computed)
+	private progressionFg = this.characterForm.get('progression') as FormGroup;
+	private storyFg = this.characterForm.get('story') as FormGroup;
+	// -----------------------
+	private lastSizes = signal({ masteries: -1, languages: -1, skills: -1 });
 
-				// Étape 4: Détails supplémentaires
-				masteries: this.fb.array([]),
-				languages: this.fb.array([]),
+	// -----------------------
+	// -----------------------
+	private calcInputs = toSignal(
+		merge(this.basicFg.get('level')!.valueChanges, this.raceFg.valueChanges, this.statsFg.valueChanges, this.progressionFg.valueChanges).pipe(
+			startWith(null),
+			map(() => this.snapshotCalcInputs()),
+		),
+		{ initialValue: this.snapshotCalcInputs() },
+	);
+	// -----------------------
+	clampedStats = computed<PrimaryStats>(() => this.calc.clampPrimaryStats(this.calcInputs().stats));
+	secondaryStats = computed(() => {
+		const i = this.calcInputs();
+		return this.calc.computeSecondaryStats(this.clampedStats(), i.bonuses.statModifiers);
+	});
+	remainingPack = computed(() => {
+		const i = this.calcInputs();
+		return this.calc.computeRemainingPoints(i.level, i.race, this.clampedStats());
+	});
+	remainingPoints = computed(() => this.remainingPack().remaining);
+	// -----------------------
+	maximumPoints = computed(() => this.remainingPack().max);
+	counts = computed(() => {
+		const i = this.calcInputs();
+		return this.calc.computeCounts(i.level, this.clampedStats(), i.bonuses);
+	});
 
-				// Étape 5: Compétences
-				skills: this.fb.array([]),
+	resources = computed(() => {
+		const i = this.calcInputs();
+		return this.calc.computeHpMana(i.level, this.clampedStats(), i.bonuses);
+	});
+	private effectsInitialized = false;
 
-				// Étape 6: Inventaires
-				inventory: [''], // Utilisation de DOMPurify pour nettoyer l'inventaire
-				// Étape 7: Histoire
-				backstory: [''],
-				gold: [0],
+	constructor() {
+		// races
+		this.raceService.getRaces().subscribe((races: any[]) => {
+			this.commonRaces.set(races.filter((r) => r.type === 'commune'));
+			this.exoticRaces.set(races.filter((r) => r.type === 'inhabituelle'));
+		});
 
-				//Champs calculé automatique
-				current_hp: [0],
-				max_hp: [0],
-				current_mana: [0],
-				max_mana: [0],
-				isPNJ: [false],
-			},
-			{ validator: this.checkRemainingPoints() },
-		);
-	}
-	// Validation personnalisée pour empêcher les balises HTML
-	noHtmlValidator(control: any) {
-		const regex = /<.*?>/g; // Regex qui vérifie les balises HTML
-		if (control.value && regex.test(control.value)) {
-			return { htmlNotAllowed: true };
+		// edit
+		const id = this.characterId();
+		if (id) this.loadCharacter(id);
+
+		// ✅ validator “remaining points” SUR stats group (scope limité)
+		this.statsFg.setValidators(remainingPointsValidator(() => this.remainingPoints()));
+
+		// Effects (side effects)
+		if (!id) {
+			this.setupEffects();
 		}
-		return null;
 	}
 
-	checkRemainingPoints() {
-		return (formGroup: FormGroup) => {
-			const remainingPoints = this.RemainingPoints; // Your variable
+	// -----------------------
+	// UI actions
 
-			if (remainingPoints !== 0) {
-				return { remainingPointsInvalid: true };
-			} else {
-				return null;
+	get basicGroup(): FormGroup {
+		return this.characterForm.get('basic') as FormGroup;
+	}
+
+	get metaGroup(): FormGroup {
+		return this.characterForm.get('meta') as FormGroup;
+	}
+
+	get raceGroup(): FormGroup {
+		return this.characterForm.get('race') as FormGroup;
+	}
+
+	get statsGroup(): FormGroup {
+		return this.characterForm.get('stats') as FormGroup;
+	}
+
+	get progressionGroup(): FormGroup {
+		return this.characterForm.get('progression') as FormGroup;
+	}
+
+	get storyGroup(): FormGroup {
+		return this.characterForm.get('story') as FormGroup;
+	}
+
+	nextStep() {
+		if (this.step() < this.maxStep) this.step.update((s) => s + 1);
+	}
+
+	previousStep() {
+		if (this.step() > 1) this.step.update((s) => s - 1);
+	}
+
+	// -----------------------
+	// Submit
+	submit() {
+		this.characterForm.markAllAsTouched();
+		if (this.characterForm.invalid) {
+			console.log('FORM INVALID', {
+				status: this.characterForm.status,
+				errors: this.characterForm.errors,
+			});
+			this.logInvalidControls(this.characterForm);
+
+			this.toastr.error('Formulaire invalide');
+			return;
+		}
+
+		const payload = this.buildFlatPayloadFromForm();
+		const id = this.characterId();
+
+		if (id) {
+			payload._id = id;
+			this.characterService.updateCharacter(payload).subscribe(() => {
+				this.router.navigate(['/character', id]);
+			});
+		} else {
+			delete payload._id;
+			this.characterService.createCharacter(payload).subscribe(() => {
+				this.router.navigate(['/mycharacters']);
+			});
+		}
+	}
+
+	private logInvalidControls(fg: any, path = ''): void {
+		if (!fg) return;
+
+		// FormControl
+		if (fg.controls === undefined) {
+			if (fg.invalid) {
+				console.log(`❌ INVALID control: ${path}`, {
+					value: fg.value,
+					errors: fg.errors,
+					status: fg.status,
+					touched: fg.touched,
+					dirty: fg.dirty,
+				});
 			}
-		};
+			return;
+		}
+
+		// FormGroup / FormArray
+		const controls = fg.controls;
+		Object.keys(controls).forEach((key) => {
+			const c = controls[key];
+			const p = path ? `${path}.${key}` : key;
+
+			if (c.invalid) {
+				// log group/array errors too
+				if (c.errors) {
+					console.log(`❌ INVALID group/array: ${p}`, { errors: c.errors, status: c.status });
+				}
+				this.logInvalidControls(c, p);
+			}
+		});
 	}
 
-	sanitizeString(input: string): string {
-		// Nettoyage DOMPurify avec les options
-		let clean = DOMPurify.sanitize(input, {
+	// -----------------------
+	// Effects
+
+	// -----------------------
+	private ensureEffectsInitialized() {
+		if (this.effectsInitialized) return;
+		this.setupEffects();
+		this.effectsInitialized = true;
+	}
+	// -----------------------
+	private setupEffects() {
+		// 1) Clamp stats into the stats group (no loop, only if changed)
+		runInInjectionContext(this.injector, () => {
+			effect(
+				() => {
+					const s = this.clampedStats();
+					for (const k of Object.keys(s) as (keyof PrimaryStats)[]) {
+						const ctrl = this.statsFg.get(k as string);
+						if (!ctrl) continue;
+						const current = Number(ctrl.value);
+						const next = Number(s[k]);
+						if (current !== next) ctrl.setValue(next, { emitEvent: false });
+					}
+				},
+				{ allowSignalWrites: true },
+			);
+
+			// 2) Resize arrays only when counts change
+			effect(
+				() => {
+					if (this.isHydrating()) return;
+
+					const c = this.counts();
+					const prev = this.lastSizes();
+
+					if (c.masteries !== prev.masteries) this.resizeSimpleArray('progression.masteries', c.masteries);
+					if (c.languages !== prev.languages) this.resizeSimpleArray('progression.languages', c.languages);
+					if (c.skills !== prev.skills) this.resizeSkillsArray(c.skills);
+
+					if (c.masteries !== prev.masteries || c.languages !== prev.languages || c.skills !== prev.skills) {
+						this.lastSizes.set({ masteries: c.masteries, languages: c.languages, skills: c.skills });
+					}
+				},
+				{ allowSignalWrites: true },
+			);
+
+			// 3) Refresh validity of stats group only (validator remaining points)
+			effect(
+				() => {
+					this.remainingPoints();
+					this.statsFg.updateValueAndValidity({ emitEvent: false, onlySelf: true });
+				},
+				{ allowSignalWrites: true },
+			);
+		});
+	}
+
+	private resizeSimpleArray(path: string, desired: number) {
+		const arr = asFormArray(this.characterForm, path);
+
+		while (arr.length > desired) arr.removeAt(arr.length - 1);
+		while (arr.length < desired) arr.push(this.fb.control('', [Validators.required]));
+	}
+
+	private resizeSkillsArray(desired: number) {
+		const arr = asFormArray(this.characterForm, 'progression.skills');
+
+		const isEditing = !!this.characterId();
+		const target = isEditing ? Math.max(desired, arr.length) : desired;
+
+		while (arr.length > target) arr.removeAt(arr.length - 1);
+		while (arr.length < target) {
+			arr.push(
+				this.fb.group({
+					name: ['', Validators.required],
+					description: ['', Validators.required],
+					effects: ['', Validators.required],
+					cost: ['', Validators.required],
+				}),
+			);
+		}
+	}
+
+	private snapshotCalcInputs(): CalcInputs {
+		const level = Number(this.basicFg.get('level')?.value ?? 1);
+		const v: any = this.statsFg.getRawValue();
+		const progressionValue: any = this.progressionFg.getRawValue();
+
+		let result = {
+			level: Math.max(1, Number(level ?? 1)),
+			race: undefined,
+			stats: {
+				strength: Number(v.strength ?? 30),
+				agility: Number(v.agility ?? 30),
+				endurance: Number(v.endurance ?? 30),
+				social: Number(v.social ?? 30),
+				mental: Number(v.mental ?? 30),
+			},
+			bonuses: {
+				hpPerLevelBonus: Number(v.hpPerLevelBonus ?? 0),
+				manaPerLevelBonus: Number(v.manaPerLevelBonus ?? 0),
+				masteriesModifier: Number(progressionValue.masteriesModifier ?? 0),
+				languageModifier: Number(progressionValue.languageModifier ?? 0),
+				statModifiers: v.statModifiers ?? {},
+			},
+		};
+
+		return result;
+	}
+
+	private sanitizeQuill(input: string): string {
+		let clean = DOMPurify.sanitize(input || '', {
 			ALLOWED_TAGS: ['b', 'i', 'strong', 'ul', 'li', 'p', 'span', 'em', 'u', 's', 'blockquote', 'h1', 'h2', 'h3', 'sub', 'sup'],
 			ALLOWED_ATTR: ['style', 'class'],
 			FORBID_TAGS: ['script', 'iframe', 'object'],
 		});
 
-		// Hook pour filtrer les styles (autoriser uniquement 'color')
-		clean = DOMPurify.sanitize(clean, {
-			ALLOWED_TAGS: ['b', 'i', 'strong', 'ul', 'li', 'p', 'span', 'em', 'u', 's', 'blockquote', 'h1', 'h2', 'h3', 'sub', 'sup'],
-			ALLOWED_ATTR: ['style', 'class'],
-			FORBID_TAGS: ['script', 'iframe', 'object'],
-			// Filtrage via hook
-			ALLOW_UNKNOWN_PROTOCOLS: false,
-		});
-
-		// Post-traitement du style (supprimer les styles sauf color)
-		clean = clean.replace(/style="([^"]*)"/g, (match, styleContent) => {
-			const colorMatch = styleContent.match(/color\s*:\s*[^;]+/i);
+		clean = clean.replace(/style="([^"]*)"/g, (_m, styleContent) => {
+			const colorMatch = String(styleContent).match(/color\s*:\s*[^;]+/i);
 			return colorMatch ? `style="${colorMatch[0]}"` : '';
 		});
 
-		// Supprimer les paragraphes vides (<p></p>)
-		clean = clean.replace(/<p>\s*<\/p>/g, '');
-
-		// Remplacer &nbsp; par un espace
-		clean = clean.replace(/&nbsp;/g, ' ');
-
+		clean = clean.replace(/<p>\s*<\/p>/g, '').replace(/&nbsp;/g, ' ');
 		return clean;
 	}
 
-	toggleExoticVisibility() {
-		this.isExoticVisible = !this.isExoticVisible;
-	}
-	updateCharacter() {
-		let { strength, endurance, mental, agility, social } = this.characterForm.value;
-		const level = this.characterForm.value.level;
+	private loadCharacter(id: string) {
+		this.characterService.getCharacterById(id).subscribe((dto) => {
+			this.isLegacy.set(!!dto.race && !dto.lineage);
+			this.patchFromFlatCharacter(dto);
+			this.step.set(1);
+			this.lastSizes.set({
+				masteries: asFormArray(this.characterForm, 'progression.masteries').length,
+				languages: asFormArray(this.characterForm, 'progression.languages').length,
+				skills: asFormArray(this.characterForm, 'progression.skills').length,
+			});
 
-		// Capper les valeurs à 30 minimum et 85 maximum
-		strength = Math.max(30, Math.min(strength, 85));
-		this.characterForm.patchValue({ strength: strength });
-		endurance = Math.max(30, Math.min(endurance, 85));
-		this.characterForm.patchValue({ endurance: endurance });
-		mental = Math.max(30, Math.min(mental, 85));
-		this.characterForm.patchValue({ mental: mental });
-		agility = Math.max(30, Math.min(agility, 85));
-		this.characterForm.patchValue({ agility: agility });
-		social = Math.max(30, Math.min(social, 85));
-		this.characterForm.patchValue({ social: social });
-
-		// Calcul de la constitution
-		const constitution = Math.floor((strength + endurance) / 10);
-
-		// Calcul de la résilience
-		const resilience = Math.floor((endurance + mental) / 10);
-
-		// Calcul des réflexes
-		const reflex = Math.floor((mental + agility) / 10);
-
-		// Calcul du charisme
-		const charisma = Math.floor((social + Math.max(agility, strength)) / 10);
-
-		this.secondaryStats = { constitution, resilience, reflex, charisma };
-
-		let numberOfLanguages = 1;
-		// Update nombres des langues
-		if (social >= 40 && social < 61) {
-			numberOfLanguages = 2;
-		} else if (social >= 61) {
-			numberOfLanguages = 3;
-		}
-
-		//Si le niveau est pair et différent de 1 on ajoute 1 langues
-		let templang = 0;
-		if (level < 3) {
-			templang = 0;
-		} else if (level < 5) {
-			templang += 1;
-		} else if (level < 7) {
-			templang += 2;
-		} else if (level < 9) {
-			templang += 3;
-		} else {
-			templang += 4;
-		}
-
-		let multiplicateurLang = 0.5;
-		if (46 <= social && social < 60) {
-			multiplicateurLang = 1;
-		}
-		if (social >= 60 && social < 75) {
-			multiplicateurLang = 2;
-		}
-		if (social >= 75) {
-			multiplicateurLang = 3;
-		}
-
-		this.numberOfLanguages = numberOfLanguages + templang * multiplicateurLang;
-
-		// Calcul du nombre de maîtrises 5 + 2 pour chaques stats > 70
-		let numberOfMasteries = 5;
-
-		if (strength >= 70) {
-			numberOfMasteries += 2;
-		}
-		if (agility >= 70) {
-			numberOfMasteries += 2;
-		}
-		if (endurance >= 70) {
-			numberOfMasteries += 2;
-		}
-		if (social >= 70) {
-			numberOfMasteries += 2;
-		}
-		if (mental >= 70) {
-			numberOfMasteries += 2;
-		}
-		numberOfMasteries += Math.floor(level / 2);
-		this.numberOfMasteries = numberOfMasteries;
-
-		this.numberOfSkills = 4 + Math.floor(level / 2);
-
-		this.setMasteries(this.numberOfMasteries);
-		this.setLanguages(this.numberOfLanguages);
-		this.setSkills(this.numberOfSkills);
-
-		// Points totaux = 150 (base) + 135 (distribution) + niveau modifié
-		this.MaximumPoints = 150 + 135 + Math.floor(level / 2) * 5;
-		if (this.selectedRace == 'Gnomes') {
-			this.MaximumPoints = 150 + 105 + Math.floor(level / 2) * 5;
-		} else {
-			this.MaximumPoints = 150 + 135 + Math.floor(level / 2) * 5;
-		}
-		// Calculer le total restant (par exemple, en fonction de la somme des statistiques)
-		this.RemainingPoints = this.MaximumPoints - this.calculateTotalStats();
-
-		this.skillCount = 4 + Math.floor(level / 2);
+			this.ensureEffectsInitialized();
+		});
 	}
 
-	onFileSelected(event: Event) {
-		const fileInput = event.target as HTMLInputElement;
-		if (fileInput.files && fileInput.files.length > 0) {
-			const file = fileInput.files[0];
-			console.log(file);
-			//copy the file to a folder
-			this.characterService.uploadImage(file).subscribe((data: any) => {
-				if (data.result == 'OK') {
-					this.characterForm.patchValue({ imageUrl: environment.apiUrl + '/public/persoImg/' + data.items[0].object.filename });
-				} else {
-					alert("Erreur lors de l'upload de l'image");
+	private patchFromFlatCharacter(dto: any) {
+		// Patch des groupes simples
+		const allRaces = [...this.commonRaces(), ...this.exoticRaces()];
+		const legacyRaceId = allRaces.find((r) => r.name === dto.race)?._id ?? '';
+		console.log('dto', dto);
+		const lineage = dto.lineage
+			? {
+					kind: dto.lineage.kind ?? 'pure',
+					raceId: dto.lineage.raceId ?? '',
+					parentRaceIds: dto.lineage.parentRaceIds ?? [],
+					chosenBonusIds: dto.lineage.chosenBonusIds ?? [],
 				}
-
-				console.log(data);
-			});
-
-			// Lisez le fichier et convertissez-le en Base64
-		}
-	}
-
-	calculateTotalStats(): number {
-		// Calculer la somme des statistiques
-		let usedStat =
-			this.characterForm.value.strength +
-			this.characterForm.value.agility +
-			this.characterForm.value.endurance +
-			this.characterForm.value.social +
-			this.characterForm.value.mental;
-		return usedStat; // Remplacez par la somme réelle des statistiques
-	}
-
-	ngOnInit() {
-		// Charger les races depuis l'API lors de l'initialisation du composant
-		this.raceService.getRaces().subscribe((data) => {
-			let races = data;
-
-			this.commonRaces = races.filter((race: any) => race.type === 'commune');
-			this.exoticRaces = races.filter((race: any) => race.type === 'inhabituelle');
-		});
-		this.characterId = this.route.snapshot.paramMap.get('id'); // Récupère l'ID du personnage si en mode édition
-		if (this.characterId) {
-			this.loadCharacterData(); // Charge les données du personnage si en mode édition
-		} else {
-			this.setMasteries(this.numberOfMasteries);
-			this.setLanguages(this.numberOfLanguages);
-			this.setSkills(this.skillCount);
-		}
-	}
-
-	// Getter pour les FormArray
-	get masteries() {
-		return this.characterForm.get('masteries') as FormArray;
-	}
-
-	get languages() {
-		return this.characterForm.get('languages') as FormArray;
-	}
-
-	get skills() {
-		return this.characterForm.get('skills') as FormArray;
-	}
-
-	loadCharacterData() {
-		if (this.characterId) {
-			this.characterService.getCharacterById(this.characterId).subscribe((character) => {
-				this.characterForm.patchValue({
-					name: character.name,
-					age: character.age,
-					level: character.level,
-					skincolor: character.skincolor,
-					height: character.height,
-					weight: character.weight,
-					sexe: character.sexe,
-					eyes: character.eyes,
-					hair: character.hair,
-					positive_trait: character.positive_trait,
-					negative_trait: character.negative_trait,
-					inventory: character.inventory,
-					gold: character.gold,
-					strength: character.strength,
-					agility: character.agility,
-					endurance: character.endurance,
-					social: character.social,
-					mental: character.mental,
-					imageUrl: character.imageUrl,
-					backstory: character.backstory,
-				});
-
-				// Remplir les tableaux de maîtrises, langues et compétences
-				this.setFormArray('masteries', character.masteries);
-				this.setFormArray('languages', character.languages);
-				this.setSkillsFormArray(character.skills);
-				this.selectRace(character.race);
-				this.calculateTotalStats();
-				this.updateCharacter();
-			});
-		}
-	}
-	// Fonction utilitaire pour peupler un FormArray
-	setFormArray(arrayName: string, values: string[]) {
-		const formArray = this.characterForm.get(arrayName) as FormArray;
-		formArray.clear(); // Vide les anciennes données
-
-		values.forEach((value) => {
-			formArray.push(this.fb.control(value));
-		});
-	}
-
-	// Remplit le tableau de compétences
-	setSkillsFormArray(skills: any[]) {
-		const skillsFormArray = this.characterForm.get('skills') as FormArray;
-		skillsFormArray.clear(); // Vide les anciennes compétences
-
-		skills.forEach((skill) => {
-			skillsFormArray.push(
-				this.fb.group({
-					name: [skill.name, [Validators.required, this.noHtmlValidator]],
-					description: [skill.description, [Validators.required, this.noHtmlValidator]],
-					effects: [skill.effects, [Validators.required, this.noHtmlValidator]],
-					cost: [skill.cost, [Validators.required, this.noHtmlValidator]],
-				}),
-			);
-		});
-	}
-
-	// Gère l'ajout d'une nouvelle maîtrise/langue
-	addMastery() {
-		(this.characterForm.get('masteries') as FormArray).push(this.fb.control(''));
-	}
-
-	addLanguage() {
-		(this.characterForm.get('languages') as FormArray).push(this.fb.control(''));
-	}
-
-	// Gère l'ajout d'une compétence
-	addSkill() {
-		(this.characterForm.get('skills') as FormArray).push(
-			this.fb.group({
-				name: ['', [Validators.required, this.noHtmlValidator]],
-				description: ['', [Validators.required, this.noHtmlValidator]],
-				effects: ['', [Validators.required, this.noHtmlValidator]],
-				cost: ['', [Validators.required, this.noHtmlValidator]],
-			}),
+			: {
+					kind: 'pure',
+					raceId: legacyRaceId,
+					parentRaceIds: [],
+					chosenBonusIds: [],
+				};
+		this.characterForm.patchValue(
+			{
+				meta: {
+					_id: dto._id ?? '',
+					imageUrl: dto.imageUrl ?? '',
+					isPNJ: dto.isPNJ ?? false,
+				},
+				basic: {
+					name: dto.name ?? '',
+					level: dto.level ?? 1,
+					age: dto.age ?? '',
+					skincolor: dto.skincolor ?? '',
+					height: dto.height ?? '',
+					weight: dto.weight ?? '',
+					sexe: dto.sexe ?? '',
+					eyes: dto.eyes ?? '',
+					hair: dto.hair ?? '',
+					positive_trait: dto.positive_trait ?? '',
+					negative_trait: dto.negative_trait ?? '',
+				},
+				race: lineage,
+				stats: {
+					strength: dto.strength ?? 30,
+					agility: dto.agility ?? 30,
+					endurance: dto.endurance ?? 30,
+					social: dto.social ?? 30,
+					mental: dto.mental ?? 30,
+					statModifiers: {
+						primary: {
+							strength: dto.statModifiers?.primary?.strength ?? 0,
+							agility: dto.statModifiers?.primary?.agility ?? 0,
+							endurance: dto.statModifiers?.primary?.endurance ?? 0,
+							social: dto.statModifiers?.primary?.social ?? 0,
+							mental: dto.statModifiers?.primary?.mental ?? 0,
+						},
+						secondary: {
+							constitution: dto.statModifiers?.secondary?.constitution ?? 0,
+							resilience: dto.statModifiers?.secondary?.resilience ?? 0,
+							reflex: dto.statModifiers?.secondary?.reflex ?? 0,
+							charisma: dto.statModifiers?.secondary?.charisma ?? 0,
+						},
+					},
+					hpPerLevelBonus: dto.hpPerLevelBonus ?? 0,
+					manaPerLevelBonus: dto.manaPerLevelBonus ?? 0,
+				},
+				progression: {
+					masteriesModifier: dto.masteriesModifier ?? 0,
+					languageModifier: dto.languageModifier ?? 0,
+				},
+				story: {
+					inventory: dto.inventory ?? '',
+					backstory: dto.backstory ?? '',
+					gold: dto.gold ?? 0,
+				},
+				derived: {
+					current_hp: dto.current_hp ?? 0,
+					max_hp: dto.max_hp ?? 0,
+					current_mana: dto.current_mana ?? 0,
+					max_mana: dto.max_mana ?? 0,
+				},
+			},
+			{ emitEvent: true },
 		);
+		console.log(this.characterForm.value);
+		// Patch des arrays
+		this.patchArraysFromFlat(dto);
 	}
 
-	// Méthode pour ajouter des maîtrises
-	setMasteries(count: number) {
-		for (let i = this.masteries.length; i < count; i++) {
-			this.masteries.push(this.fb.control('Materies' + i, [Validators.required, this.noHtmlValidator]));
-		}
-	}
+	private patchArraysFromFlat(dto: any) {
+		const masteries = Array.isArray(dto.masteries) ? dto.masteries : [];
+		const languages = Array.isArray(dto.languages) ? dto.languages : [];
+		const skills = Array.isArray(dto.skills) ? dto.skills : [];
 
-	// Méthode pour ajouter des langues
-	setLanguages(count: number) {
-		for (let i = this.languages.length; i < count; i++) {
-			this.languages.push(this.fb.control('langues' + i, [Validators.required, this.noHtmlValidator]));
-		}
-	}
+		const mArr = asFormArray(this.characterForm, 'progression.masteries');
+		const lArr = asFormArray(this.characterForm, 'progression.languages');
+		const sArr = asFormArray(this.characterForm, 'progression.skills');
 
-	// Méthode pour ajouter des compétences
-	setSkills(count: number) {
-		for (let i = this.skills.length; i < count; i++) {
-			this.skills.push(
+		// clear() existe sur FormArray Angular récent; si tu préfères:
+		// while(arr.length) arr.removeAt(0)
+		mArr.clear();
+		lArr.clear();
+		sArr.clear();
+
+		for (const m of masteries) mArr.push(this.fb.control(m ?? '', Validators.required));
+		for (const l of languages) lArr.push(this.fb.control(l ?? '', Validators.required));
+
+		for (const sk of skills) {
+			sArr.push(
 				this.fb.group({
-					name: ['Nom', [Validators.required, this.noHtmlValidator]],
-					description: ['Description', [Validators.required, this.noHtmlValidator]],
-					effects: ['Effet', [Validators.required, this.noHtmlValidator]],
-					cost: ['Cout', [Validators.required, this.noHtmlValidator]],
+					name: [sk?.name ?? '', Validators.required],
+					description: [sk?.description ?? '', Validators.required],
+					effects: [sk?.effects ?? '', Validators.required],
+					cost: [sk?.cost ?? '', Validators.required],
 				}),
 			);
 		}
+
+		// Important: sync le cache de tailles pour éviter qu’un effect resize “écrase” ce qu’on vient de patch
+		this.lastSizes.set({ masteries: mArr.length, languages: lArr.length, skills: sArr.length });
 	}
 
-	// Naviguer vers l'étape suivante
-	nextStep() {
-		if (this.step < 7) {
-			this.step++;
+	private buildFlatPayloadFromForm(): any {
+		const raw: any = this.characterForm.getRawValue();
+
+		const stats = this.clampedStats();
+		const level = Number(raw.basic?.level ?? 1);
+		const bonuses = {
+			hpPerLevelBonus: Number(raw.stats?.hpPerLevelBonus ?? 0),
+			manaPerLevelBonus: Number(raw.stats?.manaPerLevelBonus ?? 0),
+			masteriesModifier: Number(raw.progression?.masteriesModifier ?? 0),
+			languageModifier: Number(raw.progression?.languageModifier ?? 0),
+			statModifiers: raw.stats?.statModifiers ?? {},
+		};
+
+		const { hp, mana } = this.calc.computeHpMana(level, stats, bonuses);
+
+		// lineage (nouveau)
+		const lineage = {
+			kind: raw.race?.kind ?? 'pure',
+			raceId: raw.race?.raceId ?? '',
+			parentRaceIds: raw.race?.parentRaceIds ?? [],
+			chosenBonusIds: raw.race?.chosenBonusIds ?? [],
+		};
+
+		// si on édite un ancien perso -> on demande au back d'effacer le champ race legacy
+		const legacy = this.isLegacy();
+
+		const payload: any = {
+			// meta
+			_id: raw.meta?._id || undefined,
+			imageUrl: raw.meta?.imageUrl ?? '',
+			isPNJ: raw.meta?.isPNJ ?? false,
+
+			// basic
+			name: raw.basic?.name ?? '',
+			level,
+			age: raw.basic?.age ?? '',
+			skincolor: raw.basic?.skincolor ?? '',
+			height: raw.basic?.height ?? '',
+			weight: raw.basic?.weight ?? '',
+			sexe: raw.basic?.sexe ?? '',
+			eyes: raw.basic?.eyes ?? '',
+			hair: raw.basic?.hair ?? '',
+			positive_trait: raw.basic?.positive_trait ?? '',
+			negative_trait: raw.basic?.negative_trait ?? '',
+
+			// ✅ nouveau système
+			lineage,
+
+			// stats
+			...stats,
+			hpPerLevelBonus: bonuses.hpPerLevelBonus,
+			manaPerLevelBonus: bonuses.manaPerLevelBonus,
+			masteriesModifier: bonuses.masteriesModifier,
+			languageModifier: bonuses.languageModifier,
+			statModifiers: bonuses.statModifiers,
+
+			// arrays
+			masteries: raw.progression?.masteries ?? [],
+			languages: raw.progression?.languages ?? [],
+			skills: raw.progression?.skills ?? [],
+
+			// story
+			inventory: this.sanitizeQuill(raw.story?.inventory),
+			backstory: this.sanitizeQuill(raw.story?.backstory),
+			gold: raw.story?.gold ?? 0,
+
+			// derived
+			current_hp: hp,
+			max_hp: hp,
+			current_mana: mana,
+			max_mana: mana,
+		};
+
+		if (legacy) {
+			payload.clearLegacyRace = true;
 		}
-	}
+		console.log('payload');
+		console.log(payload);
 
-	// Revenir à l'étape précédente
-	previousStep() {
-		if (this.step > 1) {
-			this.step--;
-		}
-	}
-
-	selectRace(race: String) {
-		this.selectedRace = race;
-		this.updateCharacter();
-		this.characterForm.patchValue({ race: race });
-	}
-
-	// Soumettre le formulaire une fois toutes les étapes complétées
-	onSubmit() {
-		if (this.characterForm.valid) {
-			console.log(this.characterForm.value);
-
-			this.characterForm.patchValue({
-				inventory: this.sanitizeString(this.characterForm.value.inventory),
-				backstory: this.sanitizeString(this.characterForm.value.backstory),
-			});
-			console.log(this.characterForm.value);
-
-			// On définit HP et Mana
-			let hp = this.characterForm.value.endurance / 10 + 10;
-			hp = Math.floor(hp);
-			// Foreach level we add 9 hp si endu>= 50, 12 si endu >= 70 et sinon 6
-			let level = this.characterForm.value.level;
-			let hpForLevelUp = 6;
-			if (this.characterForm.value.endurance >= 70) {
-				hpForLevelUp = 12;
-			} else if (this.characterForm.value.endurance >= 50) {
-				hpForLevelUp = 9;
-			}
-			//Check if Endurance est la stat la plus haute
-			if (
-				this.characterForm.value.endurance ==
-				Math.max(
-					this.characterForm.value.agility,
-					this.characterForm.value.endurance,
-					this.characterForm.value.strength,
-					this.characterForm.value.mental,
-					this.characterForm.value.social,
-				)
-			) {
-				hpForLevelUp += 1;
-			}
-
-			hp += (level - 1) * hpForLevelUp;
-			this.characterForm.patchValue({ current_hp: hp });
-			this.characterForm.patchValue({ max_hp: hp });
-
-			// Mana c'est (Mental + caractéristique la plus haute /10
-			let mana = this.characterForm.value.mental;
-
-			mana += Math.max(
-				this.characterForm.value.agility,
-				this.characterForm.value.endurance,
-				this.characterForm.value.mental,
-				this.characterForm.value.strength,
-				this.characterForm.value.social,
-			);
-			mana = Math.floor(mana / 10);
-			let manaForLevelUp = 5;
-			if (this.characterForm.value.mental >= 70) {
-				manaForLevelUp = 10;
-			} else if (this.characterForm.value.mental >= 50) {
-				manaForLevelUp = 8;
-			}
-			//Check if Mental est la stat la plus haute
-			if (
-				this.characterForm.value.mental ==
-				Math.max(
-					this.characterForm.value.agility,
-					this.characterForm.value.endurance,
-					this.characterForm.value.strength,
-					this.characterForm.value.mental,
-					this.characterForm.value.social,
-				)
-			) {
-				manaForLevelUp += 1;
-			}
-			console.log(mana);
-
-			mana += (level - 1) * manaForLevelUp;
-			console.log(mana);
-			this.characterForm.patchValue({ current_mana: Math.floor(mana) });
-			this.characterForm.patchValue({ max_mana: Math.floor(mana) });
-
-			if (this.characterId) {
-				this.characterForm.patchValue({ _id: this.characterId });
-				this.characterService.updateCharacter(this.characterForm.value).subscribe((data) => {
-					this.router.navigate(['/character', this.characterId]);
-				});
-			} else {
-				if (!this.characterForm.value._id) {
-					delete this.characterForm.value._id;
-				}
-				this.characterService.createCharacter(this.characterForm.value).subscribe((data) => {
-					if (Object(data)['result'] == 'ERROR') {
-						// Handle error
-					} else {
-						// Handle success
-						this.router.navigate(['/mycharacters']);
-					}
-				});
-			}
-		} else {
-			this.showFormErrors();
-		}
-	}
-
-	showFormErrors() {
-		Object.keys(this.characterForm.controls).forEach((field) => {
-			const control = this.characterForm.get(field);
-			if (control && control.invalid) {
-				const errors = control.errors;
-				if (errors) {
-					// Tu peux personnaliser les messages ici
-					if (errors['required']) {
-						this.toastr.error(`Le champ ${field} est requis.`, 'Erreur');
-					}
-					if (errors['min']) {
-						this.toastr.error(`Le champ ${field} doit avoir une valeur minimum de ${errors['min'].min}.`, 'Erreur');
-					}
-					if (errors['max']) {
-						this.toastr.error(`Le champ ${field} ne peut pas dépasser ${errors['max'].max}.`, 'Erreur');
-					}
-					if (errors['pattern']) {
-						this.toastr.error(`Le champ ${field} a un format incorrect.`, 'Erreur');
-					}
-					console.log(`Le champ ${field} est invalide :`, errors);
-				}
-			}
-		});
-		if (this.characterForm.errors?.['remainingPointsInvalid']) {
-			this.toastr.error('La répartition des points de statistiques est incorrecte.', 'Erreur');
-		}
+		return payload;
 	}
 }

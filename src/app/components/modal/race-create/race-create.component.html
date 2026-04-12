@@ -1,33 +1,77 @@
 <div class="modal-header">
-    <h5 class="modal-title">Créer une nouvelle race</h5>
-    <button type="button" class="close" aria-label="Close" (click)="cancel()">
-        <span aria-hidden="true">&times;</span>
-    </button>
+	<h5 class="modal-title">
+		{{ isEditMode ? 'Modifier la race' : 'Créer une nouvelle race' }}
+	</h5>
+	<button type="button" class="close" aria-label="Close" (click)="cancel()">
+		<span aria-hidden="true">&times;</span>
+	</button>
 </div>
 
 <div class="modal-body">
-    <form [formGroup]="raceForm">
-        <div class="form-group">
-            <label for="name">Nom de la race</label>
-            <input type="text" id="name" class="form-control" formControlName="name" required>
-        </div>
-        
-        <div class="form-group">
-            <label for="type">Type (commune / inhabituelle)</label>
-            <select id="type" class="form-control" formControlName="type" required>
-                <option value="commune">Commune</option>
-                <option value="inhabituelle">Inhabituelle</option>
-            </select>
-        </div>
-        
-        <div class="form-group">
-            <label for="trait">Trait</label>
-            <textarea id="trait" class="form-control" formControlName="trait" required></textarea>
-        </div>
-    </form>
+	<form [formGroup]="raceForm">
+		<div class="form-group">
+			<label for="name">Nom de la race</label>
+			<input type="text" id="name" class="form-control" formControlName="name" required>
+		</div>
+
+		<div class="form-group">
+			<label for="type">Type</label>
+			<select id="type" class="form-control" formControlName="type" required>
+				<option value="commune">Commune</option>
+				<option value="inhabituelle">Exotique</option>
+			</select>
+		</div>
+
+		<div class="form-group">
+			<label for="description">Description</label>
+			<textarea id="description" class="form-control" formControlName="description"></textarea>
+		</div>
+
+		<div class="form-group">
+			<label>Bonus 1</label>
+			<div [formGroup]="bonus1" class="border rounded p-2 mb-3">
+				<select class="form-control mb-2" formControlName="slot">
+					<option value="">Type de bonus</option>
+					@for (s of bonusSlots; track $index) {
+						<option [value]="s.value">{{ s.value }}</option>
+					}
+				</select>
+
+				<input
+					class="form-control mb-2"
+					placeholder="Texte affiché"
+					formControlName="value" />
+			</div>
+
+			<label>Bonus 2</label>
+			<div [formGroup]="bonus2" class="border rounded p-2">
+				<select class="form-control mb-2" formControlName="slot">
+					<option value="">(Optionnel)</option>
+					@for (s of bonusSlots; track s.value) {
+						<option [value]="s.value" [disabled]="isSlotTaken(s.value)">
+							{{ s.value }}
+						</option>
+					}
+				</select>
+
+				<input
+					class="form-control mb-2"
+					placeholder="Texte affiché"
+					formControlName="value" />
+			</div>
+
+			@if (raceForm.errors?.['duplicateBonusSlot']) {
+				<div class="text-danger mt-2">
+					Impossible d'avoir deux bonus du même type.
+				</div>
+			}
+		</div>
+	</form>
 </div>
 
 <div class="modal-footer">
-    <button class="btn btn-secondary" (click)="cancel()">Annuler</button>
-    <button class="btn btn-primary" (click)="submit()">Créer</button>
+	<button class="btn btn-secondary" (click)="cancel()">Annuler</button>
+	<button class="btn btn-primary" (click)="submit()">
+		{{ isEditMode ? 'Modifier' : 'Créer' }}
+	</button>
 </div>

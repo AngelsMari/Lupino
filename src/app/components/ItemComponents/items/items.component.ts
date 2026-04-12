@@ -1,31 +1,11 @@
 import { Component } from '@angular/core';
-import { Arme } from '../../../models/items/arme';
 import { UserService } from '../../../services/LupinoApi/user.service';
-import { ArmeService } from '../../../services/LupinoApi/items/arme.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CreateArmeComponent } from '../../modal/create-arme/create-arme.component';
-import { Armure } from '../../../models/items/armure';
-import { ArmureService } from '../../../services/LupinoApi/items/armure.service';
-import { CreateArmureComponent } from '../../modal/create-armure/create-armure.component';
-import { PotionService } from '../../../services/LupinoApi/items/potion.service';
-import { Potion } from '../../../models/items/potion';
-import { CreatePotionComponent } from '../../modal/create-potion/create-potion.component';
-import { CreatePoisonComponent } from '../../modal/create-poison/create-poison.component';
-import { Poison } from '../../../models/items/poison';
-import { PoisonService } from '../../../services/LupinoApi/items/poison.service';
-import { Utilitaire } from '../../../models/items/utilitaire';
-import { UtilitaireService } from '../../../services/LupinoApi/items/utilitaire.service';
-import { CreateUtilitaireComponent } from '../../modal/create-utilitaire/create-utilitaire.component';
-import { Contenant } from '../../../models/items/contenant';
 import { ContenantService } from '../../../services/LupinoApi/items/contenant.service';
-import { CreateContenantComponent } from '../../modal/create-contenant/create-contenant.component';
-import { CreateBazarComponent } from '../../modal/create-bazar/create-bazar.component';
-import { BazarService } from '../../../services/LupinoApi/items/bazar.service';
-import { Bazar } from '../../../models/items/bazar';
 import { Router } from '@angular/router';
 
-import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
-import { catchError, map, shareReplay, startWith } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map, shareReplay, startWith } from 'rxjs/operators';
 import { ArmeComponentComponent } from '../../ItemsComponents/arme-component/arme-component.component';
 import { ArmureComponent } from '../../ItemsComponents/armure-component/armure-component.component';
 import { PotionComponentComponent } from '../../ItemsComponents/potion-component/potion-component.component';
@@ -35,22 +15,20 @@ import { BazarComponentComponent } from '../../ItemsComponents/bazar-component/b
 import { ContenantComponentComponent } from '../../ItemsComponents/contenant-component/contenant-component.component';
 
 @Component({
-    selector: 'app-items',
-    templateUrl: './items.component.html',
-    styleUrls: ['./items.component.css'],
-    imports: [
-        ArmeComponentComponent,
-        ArmureComponent,
-        PotionComponentComponent,
-        PoisonComponentComponent,
-        UtilitaireComponentComponent,
-        BazarComponentComponent,
-        ContenantComponentComponent,
-    ],
+	selector: 'app-items',
+	templateUrl: './items.component.html',
+	styleUrls: ['./items.component.css'],
+	imports: [
+		ArmeComponentComponent,
+		ArmureComponent,
+		PotionComponentComponent,
+		PoisonComponentComponent,
+		UtilitaireComponentComponent,
+		BazarComponentComponent,
+		ContenantComponentComponent,
+	],
 })
 export class ItemsComponent {
-	contenants$!: Observable<Contenant[]>;
-
 	isAdmin$!: Observable<boolean>;
 	isInCharacterCreation = false;
 

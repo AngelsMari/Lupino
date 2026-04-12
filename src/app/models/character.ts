@@ -1,4 +1,24 @@
 import { UserPublicData } from './userpublicdata';
+import { BonusSlot } from './race';
+
+export interface BonusSnapshot {
+	_id: string;
+	slot: BonusSlot;
+	value: string;
+	sourceRaceId: string;
+}
+
+export type Lineage =
+	| {
+			kind: 'pure';
+			raceId: string; // la race choisie
+			appliedBonuses: BonusSnapshot[]; // snapshot des bonus appliqués
+	  }
+	| {
+			kind: 'hybrid';
+			parentRaceIds: [string, string];
+			appliedBonuses: BonusSnapshot[]; // exactement 2, slots uniques
+	  };
 
 // character.model.ts
 export interface Character {
@@ -6,18 +26,21 @@ export interface Character {
 	owner: UserPublicData;
 	imageUrl: string;
 	isPNJ: boolean;
-	type: string; // Ajout du champ pour le type de personnage //ENUM ['Jouable', 'PNJ', 'Monstre', 'Monture', 'Compagnon']
-	lien: string; // Un lien entre une invoc / Transfo et sa fiche mère
+	type: string; //ENUM à venir ['Jouable', 'PNJ', 'Monstre', 'Monture', 'Invoc']
+	lien: string;
 	name: string;
-	age: string; // Ajout du champ pour l'âge
+	age: string;
 	level: number;
-	race: string;
-	skincolor: string; // Ajout du champ pour la couleur de peau
-	height: string; // Ajout du champ pour la taille
-	weight: string; // Ajout du champ pour le poids
-	sexe: string; // Ajout du champ pour le genre
-	eyes: string; // Ajout du champ pour les yeux
-	hair: string; // Ajout du champ pour les cheveux
+
+	race: string; // Ancien modèle
+	lineage: Lineage;
+
+	skincolor: string;
+	height: string;
+	weight: string;
+	sexe: string;
+	eyes: string;
+	hair: string;
 	current_hp: number;
 	max_hp: number;
 	current_mana: number;
@@ -36,6 +59,12 @@ export interface Character {
 	masteries: string[];
 	languages: string[];
 	isPublic: boolean;
+
+	hpPerLevelBonus?: number;
+	manaPerLevelBonus?: number;
+	masteriesModifier?: number;
+	languageModifier?: number;
+	statModifiers?: StatModifiers;
 }
 
 export interface Skill {
@@ -43,4 +72,20 @@ export interface Skill {
 	description: string;
 	effects: string;
 	cost: string;
+}
+
+export interface StatModifiers {
+	primary?: {
+		strength?: number;
+		agility?: number;
+		endurance?: number;
+		social?: number;
+		mental?: number;
+	};
+	secondary?: {
+		constitution?: number;
+		resilience?: number;
+		reflex?: number;
+		charisma?: number;
+	};
 }

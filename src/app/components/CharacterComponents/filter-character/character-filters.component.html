@@ -32,7 +32,7 @@
 					/>
 					@if (searchText) {
 						<button (click)="clearSearch()" class="clear-search">
-							<i class="fas fa-times"></i>
+							<i class="fa-solid fa-xmark"></i>
 						</button>
 					}
 				</div>
@@ -177,17 +177,17 @@
 						@if (isSectionOpen('races')) {
 							<div class="section-content races-content">
 								<div class="races-grid">
-									@for (race of availableRaces; track race) {
+									@for (race of races; track race) {
 										<label
 											class="lupino-checkbox race-checkbox"
 										>
 											<input
-												(change)="onRaceChange($event, race)"
-												[checked]="filters.races.includes(race)"
+												(change)="onRaceChange($event, race._id)"
+												[checked]="filters.races.includes(race._id)"
 												[value]="race"
 												type="checkbox"
 											/>
-											<span>{{ race }}</span>
+											<span>{{ race.name }}</span>
 										</label>
 									}
 								</div>

@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CharacterFilters } from '../../../types/CharacterFilters';
 import { NgClass } from '@angular/common';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Race } from '../../../models/race';
 
 type FilterState = 'collapsed' | 'fully-open';
 type FilterSection = 'categories' | 'levels' | 'races' | 'campaigns' | 'age' | 'stats';
@@ -12,17 +13,14 @@ interface Campaign {
 }
 
 @Component({
-    selector: 'app-character-filters',
-    templateUrl: './character-filters.component.html',
-    styleUrls: ['./character-filters.component.css'],
-    imports: [
-        NgClass,
-        ReactiveFormsModule,
-        FormsModule,
-    ],
+	selector: 'app-character-filters',
+	templateUrl: './character-filters.component.html',
+	styleUrls: ['./character-filters.component.css'],
+	imports: [NgClass, ReactiveFormsModule, FormsModule],
 })
 export class CharacterFiltersComponent {
 	@Input() showAdminFilters = false;
+	@Input() races!: Race[];
 	@Input() resultsCount: number | null = null;
 	@Output() filtersChange = new EventEmitter<CharacterFilters>();
 	@Output() searchChange = new EventEmitter<string>();
@@ -39,24 +37,9 @@ export class CharacterFiltersComponent {
 		{ id: 'camp3', name: 'Campagne 3' },
 	];
 
-	filters: CharacterFilters = {
-		publishedOnly: true,
-		upToDate: false,
-		mjApproved: false,
-		beginners: false,
-		hasImage: false,
-		levelRange: [1, 10],
-		ageRange: [0, 1000],
-		races: [],
-		selectedCampaign: '',
-		strengthRange: [30, 85],
-		agilityRange: [30, 85],
-		enduranceRange: [30, 85],
-		socialRange: [30, 85],
-		mentalRange: [30, 85],
-	};
+	filters: CharacterFilters = this.createDefaultFilters();
 
-	private defaultFilters: CharacterFilters = { ...this.filters };
+	private defaultFilters: CharacterFilters = this.createDefaultFilters();
 
 	// ========== GESTION DES ÉTATS ==========
 	openFilters() {
@@ -94,18 +77,6 @@ export class CharacterFiltersComponent {
 	// ========== FILTRES ==========
 	onFilterChange() {
 		this.filtersChange.emit({ ...this.filters });
-	}
-
-	// ========== NIVEAUX ==========
-	setExactLevel(level: number) {
-		this.filters.levelRange = [level, level];
-		this.onFilterChange();
-	}
-
-	// ========== ÂGE ==========
-	setAgeRange(min: number, max: number) {
-		this.filters.ageRange = [min, max];
-		this.onFilterChange();
 	}
 
 	// ========== RACES ==========
@@ -156,9 +127,28 @@ export class CharacterFiltersComponent {
 		);
 	}
 
+	private createDefaultFilters(): CharacterFilters {
+		return {
+			publishedOnly: true,
+			upToDate: false,
+			mjApproved: false,
+			beginners: false,
+			hasImage: false,
+			levelRange: [1, 10],
+			ageRange: [0, 1000],
+			races: [],
+			selectedCampaign: '',
+			strengthRange: [30, 85],
+			agilityRange: [30, 85],
+			enduranceRange: [30, 85],
+			socialRange: [30, 85],
+			mentalRange: [30, 85],
+		};
+	}
+
 	// ========== RESET ==========
 	resetAllFilters() {
-		this.filters = { ...this.defaultFilters };
+		this.filters = this.createDefaultFilters();
 		this.searchText = '';
 		this.onSearchChange();
 		this.onFilterChange();

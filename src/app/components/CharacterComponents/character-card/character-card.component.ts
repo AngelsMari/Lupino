@@ -4,13 +4,14 @@ import { NgClass } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
 @Component({
-    selector: 'app-character-card',
-    templateUrl: './character-card.component.html',
-    styleUrl: './character-card.component.css',
-    imports: [NgClass, RouterLink],
+	selector: 'app-character-card',
+	templateUrl: './character-card.component.html',
+	styleUrl: './character-card.component.css',
+	imports: [NgClass, RouterLink],
 })
 export class CharacterCardComponent {
 	@Input() character!: Character;
+	@Input() raceMap!: Map<string, string>;
 
 	@Input() isMyCharacterPage = false;
 	@Input() isAdmin = false;
