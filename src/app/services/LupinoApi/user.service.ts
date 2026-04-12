@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { environment } from '../../../environments/environements';
-import { AuthService } from '../auth/auth.service';
+import { environment } from '@environments/environment';
 import { User } from '../../models/user';
 import { UserPublicData } from 'app/models/userpublicdata';
 

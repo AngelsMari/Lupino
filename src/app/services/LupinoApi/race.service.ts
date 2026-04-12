@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Race } from '../../models/race';
 import { Observable } from 'rxjs';
-import { environment } from '@environments/environements'; // Ajustez le chemin si nécessaire
+import { environment } from '@environments/environment'; // Ajustez le chemin si nécessaire
 
 @Injectable({
 	providedIn: 'root',

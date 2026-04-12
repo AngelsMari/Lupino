@@ -2,9 +2,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { environment } from '../../../environments/environements';
+import { environment } from '@environments/environment';
 import { UserService } from '../LupinoApi/user.service';
-import { User } from 'app/models/user';
 import { UserPublicData } from 'app/models/userpublicdata';
 
 @Injectable()
