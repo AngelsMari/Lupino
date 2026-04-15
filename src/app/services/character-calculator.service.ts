@@ -8,7 +8,12 @@ export type PrimaryStats = {
 	mental: number;
 };
 
-export type SecondaryStats = { constitution: number; resilience: number; reflex: number; charisma: number };
+export type SecondaryStats = {
+	constitution: number;
+	resilience: number;
+	reflex: number;
+	charisma: number;
+};
 
 export type PrimaryStatModifiers = {
 	strength?: number;
@@ -40,7 +45,12 @@ export type CharacterBonuses = {
 
 @Injectable({ providedIn: 'root' })
 export class CharacterCalculatorService {
-	computeAll(level: number, race: string | undefined, stats: PrimaryStats, bonuses?: CharacterBonuses) {
+	computeAll(
+		level: number,
+		race: string | undefined,
+		stats: PrimaryStats,
+		bonuses?: CharacterBonuses,
+	) {
 		const clamped = this.clampPrimaryStats(stats);
 		const effectivePrimary = this.applyPrimaryModifiers(clamped, bonuses?.statModifiers);
 		const secondary = this.computeSecondaryStats(clamped, bonuses?.statModifiers);
@@ -82,11 +92,18 @@ export class CharacterCalculatorService {
 	computeSecondaryStats(stats: PrimaryStats, modifiers?: StatModifiers): SecondaryStats {
 		const effective = this.applyPrimaryModifiers(stats, modifiers);
 
-		const constitution = Math.floor((effective.strength + effective.endurance) / 10) + (modifiers?.secondary?.constitution ?? 0);
-		const resilience = Math.floor((effective.endurance + effective.mental) / 10) + (modifiers?.secondary?.resilience ?? 0);
-		const reflex = Math.floor((effective.mental + effective.agility) / 10) + (modifiers?.secondary?.reflex ?? 0);
+		const constitution =
+			Math.floor((effective.strength + effective.endurance) / 10) +
+			(modifiers?.secondary?.constitution ?? 0);
+		const resilience =
+			Math.floor((effective.endurance + effective.mental) / 10) +
+			(modifiers?.secondary?.resilience ?? 0);
+		const reflex =
+			Math.floor((effective.mental + effective.agility) / 10) +
+			(modifiers?.secondary?.reflex ?? 0);
 		const charisma =
-			Math.floor((effective.social + Math.max(effective.agility, effective.strength)) / 10) + (modifiers?.secondary?.charisma ?? 0);
+			Math.floor((effective.social + Math.max(effective.agility, effective.strength)) / 10) +
+			(modifiers?.secondary?.charisma ?? 0);
 
 		return { constitution, resilience, reflex, charisma };
 	}
@@ -97,7 +114,11 @@ export class CharacterCalculatorService {
 		return base + Math.floor(lvl / 2) * 5;
 	}
 
-	computeRemainingPoints(level: number, race: string | undefined, stats: PrimaryStats): { remaining: number; max: number } {
+	computeRemainingPoints(
+		level: number,
+		race: string | undefined,
+		stats: PrimaryStats,
+	): { remaining: number; max: number } {
 		const max = this.computeMaxPoints(level, race);
 		const used = stats.strength + stats.agility + stats.endurance + stats.social + stats.mental;
 		return { remaining: max - used, max };
@@ -154,7 +175,13 @@ export class CharacterCalculatorService {
 		else if (effective.endurance < 59 && effective.endurance >= 50) hpForLevelUp = 8;
 		else if (effective.endurance < 49 && effective.endurance >= 40) hpForLevelUp = 7;
 
-		const maxStat = Math.max(effective.agility, effective.endurance, effective.strength, effective.mental, effective.social);
+		const maxStat = Math.max(
+			effective.agility,
+			effective.endurance,
+			effective.strength,
+			effective.mental,
+			effective.social,
+		);
 		if (effective.endurance === maxStat) hpForLevelUp += 1;
 		const hpBonus = bonuses?.hpPerLevelBonus ?? 0;
 
@@ -171,10 +198,11 @@ export class CharacterCalculatorService {
 		else if (effective.mental >= 40 && effective.mental < 49) manaForLevelUp = 5;
 
 		if (effective.mental === maxStat) manaForLevelUp += 1;
-
-		manaForLevelUp += bonuses?.manaPerLevelBonus ?? 0;
+		const manaBonus = bonuses?.manaPerLevelBonus ?? 0;
+		mana += manaBonus;
+		manaForLevelUp += manaBonus;
 		mana += (lvl - 1) * manaForLevelUp;
-
+		console.log('test', mana);
 		return { hp, mana };
 	}
 }

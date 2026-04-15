@@ -1,6 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
+import { CharacterService } from '../../../../../services/LupinoApi/character.service';
+import { environment } from '@environments/environment';
 
 @Component({
 	selector: 'app-step-1-basic',
@@ -13,14 +15,22 @@ export class Step1Basic {
 	@Input({ required: true }) group!: FormGroup;
 	@Input({ required: true }) meta!: FormGroup;
 
+	characterService = inject(CharacterService);
+
 	onFileChange(evt: Event) {
 		const input = evt.target as HTMLInputElement;
 		const file = input.files?.[0];
 		if (file) {
-			console.log(file);
-			const localUrl = URL.createObjectURL(file);
-			console.log(localUrl);
-			this.meta.patchValue({ imageUrl: localUrl }, { emitEvent: false });
+			this.characterService.uploadImage(file).subscribe((data: any) => {
+				if (data.result == 'OK') {
+					console.log(data);
+					this.meta.patchValue({
+						imageUrl: environment.apiUrl + '/public/persoImg/' + data.file.filename,
+					});
+				} else {
+					alert("Erreur lors de l'upload de l'image");
+				}
+			});
 		}
 	}
 

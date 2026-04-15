@@ -1,6 +1,29 @@
 <div [formGroup]="group">
 	<h2>Étape 3: Statistiques</h2>
 
+	@if (group.errors?.['negativeFinalStats']; as err) {
+		<div class="alert alert-danger mt-3">
+			Les statistiques finales suivantes sont négatives :
+			@if (err.primary?.length) {
+				<div>Principales : {{ err.primary.join(', ') }}</div>
+			}
+			@if (err.secondary?.length) {
+				<div>Secondaires : {{ err.secondary.join(', ') }}</div>
+			}
+		</div>
+	}
+
+	@if (group.errors?.['negativeResources']; as err) {
+		<div class="alert alert-danger mt-3">
+			@if (err.hp < 0) {
+				<div>Les points de vie ne peuvent pas être négatifs ({{ err.hp }})</div>
+			}
+			@if (err.mana < 0) {
+				<div>Le mana ne peut pas être négatif ({{ err.mana }})</div>
+			}
+		</div>
+	}
+
 	<div class="row mb-3">
 		<div class="col-md-6">
 			<div class="card text-bg-danger text-center">

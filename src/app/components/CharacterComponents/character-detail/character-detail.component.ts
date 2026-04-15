@@ -8,14 +8,15 @@ import { ToastrService } from 'ngx-toastr';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { BehaviorSubject, catchError, combineLatest, map, of, switchMap, tap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
-import { CharacterCalculatorService, PrimaryStats, } from '../../../services/character-calculator.service';
+import {
+	CharacterCalculatorService,
+	PrimaryStats,
+} from '../../../services/character-calculator.service';
 import { CharacterHeaderComponent } from './components/character-header/character-header';
 import { CharacterOverviewComponent } from './components/character-overview/character-overview';
 import { RaceService } from '../../../services/LupinoApi/race.service';
 import { Race, RaceBonus } from '../../../models/race';
-import {
-	CharacterSessionResourcesComponent
-} from './components/character-session-resources/character-session-resources';
+import { CharacterSessionResourcesComponent } from './components/character-session-resources/character-session-resources';
 import { CharacterStats } from './components/tabs/character-stats/character-stats';
 import { CharacterSkills } from './components/tabs/character-skills/character-skills';
 
@@ -257,6 +258,7 @@ export class CharacterDetailComponent implements OnInit {
 				current_mana: Math.max(0, Math.min(maxMana, currentMana + amount)),
 			});
 		}
+		console.log(this.characterForm.value);
 		this.characterService
 			.updateCharacter(this.characterForm.value)
 			.pipe(

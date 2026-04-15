@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, Injector, runInInjectionContext, signal } from '@angular/core';
+import { Component, computed, effect, inject, Injector, runInInjectionContext, signal, } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -12,8 +12,13 @@ import { ToastrService } from 'ngx-toastr';
 import DOMPurify from 'dompurify';
 
 import { asFormArray, createCharacterForm } from './form/character-form.factory';
-import { remainingPointsValidator } from './form/character.validators';
-import { CharacterCalculatorService, PrimaryStats } from '../../../services/character-calculator.service';
+import {
+	nonNegativeCountsValidator,
+	nonNegativeFinalStatsValidator,
+	nonNegativeResourcesValidator,
+	remainingPointsValidator,
+} from './form/character.validators';
+import { CharacterCalculatorService, PrimaryStats, } from '../../../services/character-calculator.service';
 
 import { WizardNavComponent } from './steps/wizard-nav/wizard-nav';
 import { Step1Basic } from './steps/step-1-basic/step-1-basic';
@@ -82,9 +87,10 @@ export class CreateCharacterComponent {
 	private fb = inject(FormBuilder);
 	characterForm: FormGroup = createCharacterForm(this.fb);
 	public formStatus = toSignal(
-		merge(this.characterForm.statusChanges, this.characterForm.valueChanges.pipe(map(() => this.characterForm.status))).pipe(
-			startWith(this.characterForm.status),
-		),
+		merge(
+			this.characterForm.statusChanges,
+			this.characterForm.valueChanges.pipe(map(() => this.characterForm.status)),
+		).pipe(startWith(this.characterForm.status)),
 		{ initialValue: this.characterForm.status },
 	);
 	public canSubmit = computed(() => this.formStatus() === 'VALID' && !this.isHydrating());
@@ -115,14 +121,22 @@ export class CreateCharacterComponent {
 	// -----------------------
 	// -----------------------
 	private calcInputs = toSignal(
-		merge(this.basicFg.get('level')!.valueChanges, this.raceFg.valueChanges, this.statsFg.valueChanges, this.progressionFg.valueChanges).pipe(
+		merge(
+			this.basicFg.get('level')!.valueChanges,
+			this.raceFg.valueChanges,
+			this.statsFg.valueChanges,
+			this.progressionFg.get('masteriesModifier')!.valueChanges,
+			this.progressionFg.get('languageModifier')!.valueChanges,
+		).pipe(
 			startWith(null),
 			map(() => this.snapshotCalcInputs()),
 		),
 		{ initialValue: this.snapshotCalcInputs() },
 	);
 	// -----------------------
-	clampedStats = computed<PrimaryStats>(() => this.calc.clampPrimaryStats(this.calcInputs().stats));
+	clampedStats = computed<PrimaryStats>(() =>
+		this.calc.clampPrimaryStats(this.calcInputs().stats),
+	);
 	secondaryStats = computed(() => {
 		const i = this.calcInputs();
 		return this.calc.computeSecondaryStats(this.clampedStats(), i.bonuses.statModifiers);
@@ -156,8 +170,22 @@ export class CreateCharacterComponent {
 		const id = this.characterId();
 		if (id) this.loadCharacter(id);
 
-		// ✅ validator “remaining points” SUR stats group (scope limité)
 		this.statsFg.setValidators(remainingPointsValidator(() => this.remainingPoints()));
+		this.statsFg.addValidators(
+			nonNegativeFinalStatsValidator((primary) => this.calc.computeSecondaryStats(primary)),
+		);
+		this.statsFg.addValidators(
+			nonNegativeResourcesValidator((level, stats, bonuses) =>
+				this.calc.computeHpMana(level, stats, bonuses),
+			),
+		);
+
+		this.progressionFg.addValidators(
+			nonNegativeCountsValidator((level, stats, bonuses) =>
+				this.calc.computeCounts(level, stats, bonuses),
+			),
+		);
+		this.progressionFg.updateValueAndValidity();
 
 		// Effects (side effects)
 		if (!id) {
@@ -257,7 +285,10 @@ export class CreateCharacterComponent {
 			if (c.invalid) {
 				// log group/array errors too
 				if (c.errors) {
-					console.log(`❌ INVALID group/array: ${p}`, { errors: c.errors, status: c.status });
+					console.log(`❌ INVALID group/array: ${p}`, {
+						errors: c.errors,
+						status: c.status,
+					});
 				}
 				this.logInvalidControls(c, p);
 			}
@@ -275,23 +306,14 @@ export class CreateCharacterComponent {
 	}
 	// -----------------------
 	private setupEffects() {
-		// 1) Clamp stats into the stats group (no loop, only if changed)
 		runInInjectionContext(this.injector, () => {
 			effect(
 				() => {
-					const s = this.clampedStats();
-					for (const k of Object.keys(s) as (keyof PrimaryStats)[]) {
-						const ctrl = this.statsFg.get(k as string);
-						if (!ctrl) continue;
-						const current = Number(ctrl.value);
-						const next = Number(s[k]);
-						if (current !== next) ctrl.setValue(next, { emitEvent: false });
-					}
+					this.calcInputs();
+					this.progressionFg.updateValueAndValidity({ emitEvent: false, onlySelf: true });
 				},
 				{ allowSignalWrites: true },
 			);
-
-			// 2) Resize arrays only when counts change
 			effect(
 				() => {
 					if (this.isHydrating()) return;
@@ -299,12 +321,32 @@ export class CreateCharacterComponent {
 					const c = this.counts();
 					const prev = this.lastSizes();
 
-					if (c.masteries !== prev.masteries) this.resizeSimpleArray('progression.masteries', c.masteries);
-					if (c.languages !== prev.languages) this.resizeSimpleArray('progression.languages', c.languages);
-					if (c.skills !== prev.skills) this.resizeSkillsArray(c.skills);
+					const masteries = Math.max(0, c.masteries);
+					const languages = Math.max(0, c.languages);
+					const skills = Math.max(0, c.skills);
 
-					if (c.masteries !== prev.masteries || c.languages !== prev.languages || c.skills !== prev.skills) {
-						this.lastSizes.set({ masteries: c.masteries, languages: c.languages, skills: c.skills });
+					if (masteries !== prev.masteries) {
+						this.resizeSimpleArray('progression.masteries', masteries);
+					}
+
+					if (languages !== prev.languages) {
+						this.resizeSimpleArray('progression.languages', languages);
+					}
+
+					if (skills !== prev.skills) {
+						this.resizeSkillsArray(skills);
+					}
+
+					if (
+						masteries !== prev.masteries ||
+						languages !== prev.languages ||
+						skills !== prev.skills
+					) {
+						this.lastSizes.set({
+							masteries,
+							languages,
+							skills,
+						});
 					}
 				},
 				{ allowSignalWrites: true },
@@ -323,26 +365,28 @@ export class CreateCharacterComponent {
 	}
 
 	private resizeSimpleArray(path: string, desired: number) {
+		const safeDesired = Math.max(0, desired);
 		const arr = asFormArray(this.characterForm, path);
 
-		while (arr.length > desired) arr.removeAt(arr.length - 1);
-		while (arr.length < desired) arr.push(this.fb.control('-', [Validators.required]));
+		while (arr.length > safeDesired) arr.removeAt(arr.length - 1);
+		while (arr.length < safeDesired) arr.push(this.fb.control('', [Validators.required]));
 	}
 
 	private resizeSkillsArray(desired: number) {
+		const safeDesired = Math.max(0, desired);
 		const arr = asFormArray(this.characterForm, 'progression.skills');
 
 		const isEditing = !!this.characterId();
-		const target = isEditing ? Math.max(desired, arr.length) : desired;
+		const target = isEditing ? Math.max(safeDesired, arr.length) : safeDesired;
 
 		while (arr.length > target) arr.removeAt(arr.length - 1);
 		while (arr.length < target) {
 			arr.push(
 				this.fb.group({
-					name: ['-', Validators.required],
-					description: ['-', Validators.required],
-					effects: ['-', Validators.required],
-					cost: ['-', Validators.required],
+					name: ['', Validators.required],
+					description: ['', Validators.required],
+					effects: ['', Validators.required],
+					cost: ['', Validators.required],
 				}),
 			);
 		}
@@ -377,7 +421,24 @@ export class CreateCharacterComponent {
 
 	private sanitizeQuill(input: string): string {
 		let clean = DOMPurify.sanitize(input || '', {
-			ALLOWED_TAGS: ['b', 'i', 'strong', 'ul', 'li', 'p', 'span', 'em', 'u', 's', 'blockquote', 'h1', 'h2', 'h3', 'sub', 'sup'],
+			ALLOWED_TAGS: [
+				'b',
+				'i',
+				'strong',
+				'ul',
+				'li',
+				'p',
+				'span',
+				'em',
+				'u',
+				's',
+				'blockquote',
+				'h1',
+				'h2',
+				'h3',
+				'sub',
+				'sup',
+			],
 			ALLOWED_ATTR: ['style', 'class'],
 			FORBID_TAGS: ['script', 'iframe', 'object'],
 		});

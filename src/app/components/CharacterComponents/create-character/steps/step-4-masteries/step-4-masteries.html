@@ -1,6 +1,17 @@
 <div [formGroup]="form" class="step">
 	<h2>Étape 4 : Maîtrises et Langues</h2>
 
+	@if (form.errors?.['negativeCounts']; as err) {
+		<div class="alert alert-danger mt-3">
+			@if (err.masteries < 0) {
+				<div>Le nombre final de maîtrises ne peut pas être négatif ({{ err.masteries }}).</div>
+			}
+			@if (err.languages < 0) {
+				<div>Le nombre final de langues ne peut pas être négatif ({{ err.languages }}).</div>
+			}
+		</div>
+	}
+
 	<div class="row mt-2">
 		<div class="col-md-6 right-sep">
 			<h4>Maîtrises</h4>
