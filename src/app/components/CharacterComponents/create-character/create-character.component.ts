@@ -369,7 +369,7 @@ export class CreateCharacterComponent {
 		const arr = asFormArray(this.characterForm, path);
 
 		while (arr.length > safeDesired) arr.removeAt(arr.length - 1);
-		while (arr.length < safeDesired) arr.push(this.fb.control('', [Validators.required]));
+		while (arr.length < safeDesired) arr.push(this.fb.control('-', [Validators.required]));
 	}
 
 	private resizeSkillsArray(desired: number) {
@@ -383,10 +383,10 @@ export class CreateCharacterComponent {
 		while (arr.length < target) {
 			arr.push(
 				this.fb.group({
-					name: ['', Validators.required],
-					description: ['', Validators.required],
-					effects: ['', Validators.required],
-					cost: ['', Validators.required],
+					name: ['-', Validators.required],
+					description: ['-', Validators.required],
+					effects: ['-', Validators.required],
+					cost: ['-', Validators.required],
 				}),
 			);
 		}
