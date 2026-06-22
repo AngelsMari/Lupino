@@ -1,26 +1,26 @@
-/* Styles globaux */
-
 h1 {
 	font-family: 'Cinzel', serif;
-	font-size: 160px;
+	font-size: clamp(4rem, 14vw, 160px);
 	margin-bottom: 0;
 	text-align: center;
 	color: #ffb65f;
+	line-height: 0.95;
 }
 
 h2 {
 	text-transform: uppercase;
 	text-align: center;
-	font-family: 'Merriweather Sans', sans-serif !important; /* Police de la barre de navigation */
+	font-family: 'Merriweather Sans', sans-serif !important;
+	font-size: clamp(1rem, 3vw, 1.5rem);
 }
 
 .accueil-container {
-	height: calc(60vh - 81.19px);
+	min-height: calc(60vh - 81.19px);
+	padding: 2rem 1rem;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 }
-
 
 .btn-explorer {
 	padding: 0.75rem 2rem;
@@ -35,10 +35,7 @@ h2 {
 	cursor: pointer;
 	text-decoration: none;
 	display: inline-block;
-}
-
-.btn-explorer:hover {
-	background-color: #dab233;
+	max-width: 100%;
 }
 
 .btn-explorer-container {
@@ -48,29 +45,65 @@ h2 {
 
 .presentation-container {
 	display: flex;
-	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 1rem;
 	background: var(--lupino-background-gradient);
-	height: calc(40vh - 54px);
-	justify-content: space-evenly;
-	align-items: center;
+	min-height: calc(40vh - 54px);
+	justify-content: center;
+	align-items: stretch;
 	margin-top: -8px;
+	padding: 2rem 1rem;
 }
 
 .prez-card {
 	background: rgba(255, 255, 255, 0.1);
 	border-radius: 15px;
-	width: 30%;
+	width: min(30%, 380px);
+	min-width: 260px;
 	padding: 1rem;
-	height: auto;
 }
 
 .prez-card h1 {
 	font-family: 'Merriweather Sans', sans-serif !important;
-	font-size: 2rem;
+	font-size: clamp(1.3rem, 3vw, 2rem);
 	text-transform: uppercase;
 }
 
 .prez-card p {
 	text-align: center;
-	font-size: 1.5rem;
+	font-size: clamp(1rem, 2.5vw, 1.5rem);
+}
+
+/* Tablette / mobile */
+@media (max-width: 768px) {
+	.accueil-container {
+		min-height: auto;
+		padding: 3rem 1rem;
+	}
+
+	.presentation-container {
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.prez-card {
+		width: 100%;
+		max-width: 520px;
+	}
+
+
+}
+
+/* Très petit mobile */
+@media (max-width: 420px) {
+	.btn-explorer {
+		width: 100%;
+		padding: 0.75rem 1rem;
+	}
+
+	.btn-explorer-container {
+		width: 100%;
+		margin: 10px 0;
+		padding: 0 1rem;
+	}
 }
