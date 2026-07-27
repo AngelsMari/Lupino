@@ -41,7 +41,11 @@ export class UserService {
 
 	resetPassword(password: string, token?: string): Observable<any> {
 		const headers = new HttpHeaders({ Accept: 'application/json' });
-		return this.http.post<any>(`${this.apiUrl}/reset-password`, { password, token }, { headers });
+		return this.http.post<any>(
+			`${this.apiUrl}/reset-password`,
+			{ password, token },
+			{ headers },
+		);
 	}
 
 	// ===== STATE UTILISATEUR =====
@@ -68,5 +72,24 @@ export class UserService {
 			isMJ: false,
 		});
 		this.userLoadedSubject.next(false);
+	}
+
+	toggleMj(userId: string, isMJ: boolean): Observable<User> {
+		const headers = new HttpHeaders({ Accept: 'application/json' });
+		return this.http.post<User>(`${this.apiUrl}/toggle-mj`, { id: userId, isMJ }, { headers });
+	}
+
+	toggleAdmin(userId: string, isAdmin: boolean): Observable<User> {
+		const headers = new HttpHeaders({ Accept: 'application/json' });
+		return this.http.post<User>(
+			`${this.apiUrl}/toggle-admin`,
+			{ id: userId, isAdmin },
+			{ headers },
+		);
+	}
+
+	suspendUser(userId: string): Observable<any> {
+		const headers = new HttpHeaders({ Accept: 'application/json' });
+		return this.http.post<any>(`${this.apiUrl}/suspend`, { id: userId }, { headers });
 	}
 }

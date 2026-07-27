@@ -88,6 +88,7 @@ type CalcInputs = {
 })
 export class CreateCharacterComponent {
 	private injector = inject(Injector);
+
 	// -----------------------
 	step = signal(1);
 	readonly maxStep = 7;
@@ -115,6 +116,8 @@ export class CreateCharacterComponent {
 	private characterService = inject(CharacterService);
 	private router = inject(Router);
 	private route = inject(ActivatedRoute);
+	readonly isPNJCreation = this.route.snapshot.routeConfig?.path === 'create-pnj';
+
 	// -----------------------
 	characterId = signal<string | null>(this.route.snapshot.paramMap.get('id'));
 	private toastr = inject(ToastrService);
@@ -180,6 +183,12 @@ export class CreateCharacterComponent {
 		// edit
 		const id = this.characterId();
 		if (id) this.loadCharacter(id);
+
+		if (this.isPNJCreation) {
+			this.metaGroup.patchValue({
+				isPNJ: true,
+			});
+		}
 
 		this.statsFg.setValidators(remainingPointsValidator(() => this.remainingPoints()));
 		this.statsFg.addValidators(

@@ -1,71 +1,203 @@
-<div class="container mt-4">
-	@if (isAdmin$ | async) {
-		<div class="mt-4">
-			<button class="btn btn-primary" (click)="openCreateRaceModal()">Créer une nouvelle race</button>
+<div class="races-page">
+	<header class="races-hero">
+		<div class="hero-ornament" aria-hidden="true">
+			<span></span>
+			<i>✦</i>
+			<span></span>
 		</div>
+
+		<h1>Les Races du Monde</h1>
+
+		<p>
+			Explorez les peuples qui façonnent les terres de Lupino.<br />
+			Chaque race possède son histoire, ses dons et sa propre destinée.
+		</p>
+
+		@if (isAdmin$ | async) {
+			<button
+				class="create-race-btn"
+				type="button"
+				(click)="openCreateRaceModal()"
+			>
+				<span>＋</span>
+				Créer une nouvelle race
+			</button>
+		}
+	</header>
+
+	<section class="race-section">
+		<div class="section-heading">
+			<div class="section-symbol">✦</div>
+
+			<div>
+				<h2>Races communes</h2>
+				<p>Les peuples les plus présents à travers le monde</p>
+			</div>
+
+			<div class="section-line"></div>
+		</div>
+
+		<div class="races-grid">
+			@for (race of commonRaces$ | async; track race._id) {
+				<article class="race-card">
+					<div class="race-image">
+						@if (race.image) {
+							<img
+								[src]="race.image"
+								[alt]="'Illustration de la race ' + race.name"
+							/>
+						} @else {
+							<div class="race-image-placeholder">
+								<span>{{ race.name.charAt(0) }}</span>
+							</div>
+						}
+
+						<div class="image-shadow"></div>
+
+						@if (isAdmin$ | async) {
+							<button
+								class="edit-race-btn"
+								type="button"
+								(click)="openEditRaceModal(race)"
+							>
+								✎ Modifier
+							</button>
+						}
+					</div>
+
+					<div class="race-content">
+						<div class="card-decoration">
+							<span></span>
+							<i>◆</i>
+							<span></span>
+						</div>
+
+						<h3>{{ race.name }}</h3>
+
+						@if (race.description) {
+							<p class="race-description">
+								{{ race.description }}
+							</p>
+						}
+
+						@if (race.bonuses?.length) {
+							<div class="race-bonuses">
+								@for (bonus of race.bonuses; track bonus._id) {
+									<div class="bonus-pill">
+										<span class="bonus-slot">{{ bonus.slot }}</span>
+										<span class="bonus-value">{{ bonus.value }}</span>
+									</div>
+								}
+							</div>
+						}
+
+						<div class="card-footer-decoration">
+							<span>❧</span>
+						</div>
+					</div>
+				</article>
+			}
+		</div>
+	</section>
+
+	<section class="exotic-toggle-section">
+		<div class="exotic-separator">
+			<span></span>
+			<i>✦</i>
+			<span></span>
+		</div>
+
+		<button
+			class="toggle-exotic-btn"
+			type="button"
+			(click)="toggleExoticVisibility()"
+		>
+			<span class="toggle-icon">
+				{{ isExoticVisible ? '▲' : '▼' }}
+			</span>
+
+			{{
+				isExoticVisible
+					? 'Masquer les races exotiques'
+					: 'Découvrir les races exotiques'
+			}}
+		</button>
+	</section>
+
+	@if (isExoticVisible) {
+		<section class="race-section exotic-section">
+			<div class="section-heading">
+				<div class="section-symbol exotic-symbol">☾</div>
+
+				<div>
+					<h2>Races exotiques</h2>
+					<p>Des peuples rares, mystérieux ou venus de terres lointaines</p>
+				</div>
+
+				<div class="section-line"></div>
+			</div>
+
+			<div class="races-grid">
+				@for (race of exoticRaces$ | async; track race._id) {
+					<article class="race-card exotic-card">
+						<div class="race-image">
+							@if (race.image) {
+								<img
+									[src]="race.image"
+									[alt]="'Illustration de la race ' + race.name"
+								/>
+							} @else {
+								<div class="race-image-placeholder">
+									<span>{{ race.name.charAt(0) }}</span>
+								</div>
+							}
+
+							<div class="image-shadow"></div>
+
+							@if (isAdmin$ | async) {
+								<button
+									class="edit-race-btn"
+									type="button"
+									(click)="openEditRaceModal(race)"
+								>
+									✎ Modifier
+								</button>
+							}
+						</div>
+
+						<div class="race-content">
+							<div class="card-decoration">
+								<span></span>
+								<i>◆</i>
+								<span></span>
+							</div>
+
+							<h3>{{ race.name }}</h3>
+
+							@if (race.description) {
+								<p class="race-description">
+									{{ race.description }}
+								</p>
+							}
+
+							@if (race.bonuses?.length) {
+								<div class="race-bonuses">
+									@for (bonus of race.bonuses; track bonus._id) {
+										<div class="bonus-pill">
+											<span class="bonus-slot">{{ bonus.slot }}</span>
+											<span class="bonus-value">{{ bonus.value }}</span>
+										</div>
+									}
+								</div>
+							}
+
+							<div class="card-footer-decoration">
+								<span>❧</span>
+							</div>
+						</div>
+					</article>
+				}
+			</div>
+		</section>
 	}
-	<!-- Section pour les races communes -->
-	<h2>Races Communes</h2>
-	<div class="row">
-		@for (race of commonRaces$ | async; track race) {
-			<div class="col-md-4 mb-3">
-				<div class="card race-card">
-					<div class="card-body">
-						@if (isAdmin$ | async) {
-							<button class="btn btn-sm btn-outline-primary mt-2"
-									(click)="openEditRaceModal(race)">
-								Modifier
-							</button>
-						}
-						<h5 class="card-title">{{ race.name }}</h5>
-						<p class="card-text hidden-info">{{ race.description }}</p>
-
-						<ul class=" hidden-info">
-							@for (bonus of race.bonuses; track bonus) {
-								<li>{{ bonus.slot }} : {{ bonus.value }}</li>
-							}
-						</ul>
-
-					</div>
-				</div>
-			</div>
-		}
-	</div>
-
-	<!-- Bouton semi-visible pour afficher les races exotiques -->
-	<button class="toggle-exotic-btn" (click)="toggleExoticVisibility()">
-		@if (!isExoticVisible) {
-			<span>Afficher les Races Exotiques</span>
-		}
-		@if (isExoticVisible) {
-			<span>Masquer les Races Exotiques</span>
-		}
-	</button>
-	<!-- Section pour les races inhabituelles -->
-	<div class="row exotic-races" [ngClass]="{ hidden: !isExoticVisible }">
-		<h2>Races Exotiques/Inhabituelles</h2>
-
-		@for (race of exoticRaces$ | async; track race) {
-			<div class="col-md-4 mb-3">
-				<div class="card race-card">
-					<div class="card-body">
-						@if (isAdmin$ | async) {
-							<button class="btn btn-sm btn-outline-primary mt-2"
-									(click)="openEditRaceModal(race)">
-								Modifier
-							</button>
-						}
-						<h5 class="card-title">{{ race.name }}</h5>
-						<p class="card-text hidden-info">{{ race.description }}</p>
-
-						<ul class=" hidden-info">
-							@for (bonus of race.bonuses; track bonus) {
-								<li>{{ bonus.slot }} : {{ bonus.value }}</li>
-							}
-						</ul>
-					</div>
-				</div>
-			</div>
-		}
-	</div>
 </div>

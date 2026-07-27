@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
-import { User } from 'app/models/user';
 import { UserPublicData } from 'app/models/userpublicdata';
 import { UserService } from 'app/services/LupinoApi/user.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
-    selector: 'app-user-list',
-    templateUrl: './user-list.component.html',
-    styleUrl: './user-list.component.css',
+	selector: 'app-user-list',
+	templateUrl: './user-list.component.html',
+	styleUrl: './user-list.component.css',
 })
 export class UserListComponent {
 	users: UserPublicData[] = [];
@@ -30,17 +29,40 @@ export class UserListComponent {
 	}
 
 	toggleMj(user: UserPublicData): void {
-		// Implémentez la logique pour rétrograder l'utilisateur du rôle de MJ
-		this.toastr.success('Utilisateur rétrogradé de MJ');
+		const nextValue = !user.isMJ;
+
+		this.userService.toggleMj(user._id, nextValue).subscribe({
+			next: () => {
+				user.isMJ = nextValue;
+				this.toastr.success(
+					nextValue ? 'Utilisateur promu MJ' : 'Utilisateur rétrogradé MJ',
+				);
+			},
+			error: () => this.toastr.error('Erreur lors de la mise à jour du rôle MJ'),
+		});
 	}
 
 	toggleAdminRole(user: UserPublicData): void {
-		// Implémentez la logique pour promouvoir l'utilisateur au rôle d'Admin
-		this.toastr.success('Utilisateur promu en Admin');
+		const nextValue = !user.isAdmin;
+
+		this.userService.toggleAdmin(user._id, nextValue).subscribe({
+			next: () => {
+				user.isAdmin = nextValue;
+				this.toastr.success(
+					nextValue ? 'Utilisateur promu Admin' : 'Utilisateur rétrogradé Admin',
+				);
+			},
+			error: () => this.toastr.error('Erreur lors de la mise à jour du rôle Admin'),
+		});
 	}
 
 	suspendUser(user: UserPublicData): void {
-		// Implémentez la logique pour suspendre l'utilisateur
-		this.toastr.success('Utilisateur suspendu');
+		this.userService.suspendUser(user._id).subscribe({
+			next: () => {
+				this.users = this.users.filter((u) => u._id !== user._id);
+				this.toastr.success('Utilisateur suspendu');
+			},
+			error: () => this.toastr.error('Erreur lors de la suspension'),
+		});
 	}
 }

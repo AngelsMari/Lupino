@@ -17,6 +17,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	router = inject(Router);
 	isLoggedIn$ = this.authService.loggedIn$; // Observable<boolean>
 	isAdmin$ = this.userService.getUserData().pipe(map((user) => user?.isAdmin ?? false));
+	isMj$ = this.userService.getUserData().pipe(map((user) => user?.isMJ ?? false));
 	private destroy$ = new Subject<void>();
 
 	constructor(

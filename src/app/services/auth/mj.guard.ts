@@ -7,7 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { UserService } from '../LupinoApi/user.service';
 
 @Injectable()
-export class AdminGuard implements CanActivate {
+export class MJGuard implements CanActivate {
 	constructor(
 		private router: Router,
 		private toastr: ToastrService,
@@ -26,12 +26,12 @@ export class AdminGuard implements CanActivate {
 				return of(null);
 			}),
 			map((userData) => {
-				if (userData?.isAdmin || userData?.isSuperAdmin) {
+				if (userData?.isAdmin || userData?.isSuperAdmin || userData?.isMJ) {
 					return true;
 				}
 
 				this.toastr.error(
-					'Vous devez être administrateur pour accéder à cette page',
+					'Vous devez être Maître de jeu pour accéder à cette page',
 					'Error',
 				);
 				this.router.navigate(['/']);

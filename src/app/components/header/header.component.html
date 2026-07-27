@@ -18,7 +18,10 @@
 					<a class="nav-link disabled-link" onclick="event.preventDefault();" routerLink="/campagnes">Campagnes</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" routerLink="/characters">Personnages</a>
+					<a class="nav-link" routerLink="/characters">Héros</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" routerLink="/pnjs">Personnages non joueur</a>
 				</li>
 				<li class="nav-item dropdown">
 					<a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
@@ -61,6 +64,9 @@
 								<div class="dropdown-divider"></div>
 								@if (isAdmin$ | async) {
 									<a class="dropdown-item" routerLink="/user-list">Listes des utilisateurs</a>
+								}
+								@if ((isAdmin$ | async) || (isMj$ |async)) {
+									<a class="dropdown-item" routerLink="/mypnjs">Mes PNJs</a>
 								}
 								@if (isAdmin$ | async) {
 									<div class="dropdown-divider"></div>

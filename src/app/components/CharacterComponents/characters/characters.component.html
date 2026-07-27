@@ -11,20 +11,24 @@
 	<div class="container lupino-container">
 		<!-- Message si aucun personnage -->
 		@if (characters$ | async; as characters) {
+
+			<!-- Bouton de création -->
+			@if (isMyCharacterPage || isMyPNJSPage) {
+				<div class="d-flex justify-content-end mb-4">
+					<button class="btn lupino-create-btn" (click)="createNewCharacter()">
+						<i class="fas fa-plus me-2"></i>
+						{{ isMyPNJSPage ? 'Créer un nouveau PNJ' : 'Créer un nouveau personnage' }}
+					</button>
+				</div>
+			}
+
 			@if (characters.length === 0) {
 				<div class="lupino-empty-state">
 					<div class="lupino-empty-icon">🎭</div>
 					<div class="lupino-empty-text">Aucun personnage... mais vous pouvez en créer un !</div>
 				</div>
 			}
-			<!-- Bouton de création -->
-			@if (isMyCharacterPage) {
-				<div class="d-flex justify-content-end mb-4">
-					<button class="btn lupino-create-btn" (click)="createNewCharacter()">
-						<i class="fas fa-plus me-2"></i>Créer un nouveau personnage
-					</button>
-				</div>
-			}
+			
 			<!-- Liste -->
 			@if (characters.length > 0) {
 				<div class="row g-4">

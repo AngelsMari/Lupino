@@ -21,15 +21,20 @@ import { UserListComponent } from './components/UserGestion/list/user-list.compo
 import { PasswordForgottenComponent } from './components/UserGestion/password-forgotten/password-forgotten.component';
 import { ResetPasswordComponent } from './components/UserGestion/reset-password/reset-password.component';
 import { NoAuthGuard } from './services/auth/noauth.guard';
+import { MJGuard } from './services/auth/mj.guard';
 
 const routes: Routes = [
 	{ path: '', component: HomeComponent },
 	{ path: 'login', component: LoginComponent, canActivate: [NoAuthGuard] }, // Protéger cette route avec AuthGuard
 	{ path: 'register', component: RegisterComponent, canActivate: [NoAuthGuard] },
 	{ path: 'characters', component: CharactersComponent },
+	{ path: 'pnjs', component: CharactersComponent },
 	{ path: 'mycharacters', component: CharactersComponent, canActivate: [AuthGuard] }, // Protéger cette route avec AuthGuard
+	{ path: 'mypnjs', component: CharactersComponent, canActivate: [AuthGuard] },
 	{ path: 'character/:id', component: CharacterDetailComponent }, // Route pour la fiche de personnage
 	{ path: 'create-character', component: CreateCharacterComponent, canActivate: [AuthGuard] },
+	{ path: 'create-pnj', component: CreateCharacterComponent, canActivate: [MJGuard] },
+	{ path: 'create-pnj/:id', component: CreateCharacterComponent, canActivate: [MJGuard] },
 	{ path: 'create-character/:id', component: CreateCharacterComponent, canActivate: [AuthGuard] },
 	{ path: 'races', component: RacesComponent },
 	{ path: 'items', component: ItemsComponent },

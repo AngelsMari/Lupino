@@ -24,6 +24,20 @@
 
 	--bs-body-bg: var(--lupino-background-gradient);
 	--bs-body-color: var(--lupino-primary) !important;
+	--gold: #d69a32;
+	--gold-light: #f4c369;
+	--gold-dark: #98601c;
+
+	--wine: #46150f;
+	--wine-dark: #220b08;
+	--wine-light: #72251a;
+
+	--parchment: #ead3a6;
+	--parchment-light: #f6e6c3;
+	--parchment-dark: #c39b64;
+
+	--ink: #321d14;
+	--muted-ink: #6f5138;
 }
 
 * {

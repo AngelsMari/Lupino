@@ -1,7 +1,16 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { BehaviorSubject, combineLatest, filter, map, Observable, shareReplay, switchMap, tap } from 'rxjs';
+import {
+	BehaviorSubject,
+	combineLatest,
+	filter,
+	map,
+	Observable,
+	shareReplay,
+	switchMap,
+	tap,
+} from 'rxjs';
 
 import { Character } from '../../../models/character';
 import { CharacterService } from '../../../services/LupinoApi/character.service';
@@ -28,6 +37,8 @@ export class CharactersComponent {
 	allCharacters$!: Observable<Character[]>; // Source brute
 	characters$!: Observable<Character[]>;
 	isMyCharacterPage = this.router.url === '/mycharacters';
+	isMyPNJSPage = this.router.url === '/mypnjs';
+	isPNJSPage = this.router.url === '/pnjs';
 
 	raceMap$: Observable<Map<string, string>> = this.races$.pipe(
 		map((races) => {
@@ -70,21 +81,41 @@ export class CharactersComponent {
 	) {
 		this.loadCharacter();
 
-		this.characters$ = combineLatest([this.allCharacters$, this.filtersSubject$, this.searchSubject$, this.raceMap$]).pipe(
+		this.characters$ = combineLatest([
+			this.allCharacters$,
+			this.filtersSubject$,
+			this.searchSubject$,
+			this.raceMap$,
+		]).pipe(
 			map(([characters, filters, search, raceMap]) => {
 				const raceFilterSet = new Set(filters.races);
 
 				return characters.filter((character) => {
 					const q = (search ?? '').trim().toLowerCase();
 					const ageNum = Number(character.age) || 0;
-					const ageOk = !isNaN(ageNum) && ageNum >= filters.ageRange[0] && ageNum <= filters.ageRange[1];
-					const levelOk = character.level >= filters.levelRange[0] && character.level <= filters.levelRange[1];
+					const ageOk =
+						!isNaN(ageNum) &&
+						ageNum >= filters.ageRange[0] &&
+						ageNum <= filters.ageRange[1];
+					const levelOk =
+						character.level >= filters.levelRange[0] &&
+						character.level <= filters.levelRange[1];
 
-					const agiOk = character.agility >= filters.agilityRange[0] && character.agility <= filters.agilityRange[1];
-					const forceOk = character.strength >= filters.strengthRange[0] && character.strength <= filters.strengthRange[1];
-					const mentalOk = character.mental >= filters.mentalRange[0] && character.mental <= filters.mentalRange[1];
-					const socialOk = character.social >= filters.socialRange[0] && character.social <= filters.socialRange[1];
-					const enduranceOk = character.endurance >= filters.enduranceRange[0] && character.endurance <= filters.enduranceRange[1];
+					const agiOk =
+						character.agility >= filters.agilityRange[0] &&
+						character.agility <= filters.agilityRange[1];
+					const forceOk =
+						character.strength >= filters.strengthRange[0] &&
+						character.strength <= filters.strengthRange[1];
+					const mentalOk =
+						character.mental >= filters.mentalRange[0] &&
+						character.mental <= filters.mentalRange[1];
+					const socialOk =
+						character.social >= filters.socialRange[0] &&
+						character.social <= filters.socialRange[1];
+					const enduranceOk =
+						character.endurance >= filters.enduranceRange[0] &&
+						character.endurance <= filters.enduranceRange[1];
 
 					let characterRaceIds: string[] = [];
 
@@ -114,11 +145,26 @@ export class CharactersComponent {
 					}
 
 					// 🎯 filtre final
-					const raceOk = raceFilterSet.size === 0 || characterRaceIds.some((id) => raceFilterSet.has(id));
+					const raceOk =
+						raceFilterSet.size === 0 ||
+						characterRaceIds.some((id) => raceFilterSet.has(id));
 
-					const textOk = !q || (character.name ?? '').toLowerCase().includes(q) || (character.owner.name ?? '').toLowerCase().includes(q);
+					const textOk =
+						!q ||
+						(character.name ?? '').toLowerCase().includes(q) ||
+						(character.owner.name ?? '').toLowerCase().includes(q);
 
-					return ageOk && levelOk && forceOk && mentalOk && socialOk && enduranceOk && agiOk && textOk && raceOk;
+					return (
+						ageOk &&
+						levelOk &&
+						forceOk &&
+						mentalOk &&
+						socialOk &&
+						enduranceOk &&
+						agiOk &&
+						textOk &&
+						raceOk
+					);
 				});
 			}),
 			shareReplay(1),
@@ -131,15 +177,32 @@ export class CharactersComponent {
 				if (this.isMyCharacterPage) {
 					return this.characterService.getCharactersByUser(user._id);
 				}
+				if (this.isMyPNJSPage) {
+					return this.characterService
+						.getCharactersByUser(user._id)
+						.pipe(map((characters) => characters.filter((c) => c.isPNJ)));
+				}
+				if (this.isPNJSPage) {
+					return this.characterService.getCharacters().pipe(
+						map((chars) => (user.isAdmin ? chars : chars.filter((c) => c.isPublic))),
+						map((chars) => chars.filter((c) => c.isPNJ)),
+					);
+				}
 
-				return this.characterService.getCharacters().pipe(map((chars) => (user.isAdmin ? chars : chars.filter((c) => c.isPublic))));
+				return this.characterService
+					.getCharacters()
+					.pipe(map((chars) => (user.isAdmin ? chars : chars.filter((c) => c.isPublic))));
 			}),
 			shareReplay(1), // garde en cache
 		);
 	}
 
 	createNewCharacter() {
-		this.router.navigate(['/create-character']);
+		if (this.isMyPNJSPage) {
+			this.router.navigate(['/create-pnj']);
+		} else {
+			this.router.navigate(['/create-character']);
+		}
 	}
 
 	openDeleteModal(character: Character) {
