@@ -61,7 +61,7 @@
 				Voir la fiche
 			</a>
 
-			@if (isMyCharacterPage) {
+			@if (isMyCharacterPage || isMyPnjPage) {
 				<button
 					class="btn lupino-delete-btn w-100"
 					(click)="onDelete()">

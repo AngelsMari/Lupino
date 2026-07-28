@@ -14,6 +14,7 @@ export class CharacterCardComponent {
 	@Input() raceMap!: Map<string, string>;
 
 	@Input() isMyCharacterPage = false;
+	@Input() isMyPnjPage = false;
 	@Input() isAdmin = false;
 
 	@Output() delete = new EventEmitter<Character>();

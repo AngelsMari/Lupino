@@ -28,7 +28,7 @@
 					<div class="lupino-empty-text">Aucun personnage... mais vous pouvez en créer un !</div>
 				</div>
 			}
-			
+
 			<!-- Liste -->
 			@if (characters.length > 0) {
 				<div class="row g-4">
@@ -38,6 +38,7 @@
 								[character]="character"
 								[raceMap]="(raceMap$ | async)! "
 								[isMyCharacterPage]="isMyCharacterPage"
+								[isMyPnjPage]="isMyPNJSPage"
 								[isAdmin]="(currentUser$ | async)?.isAdmin ?? false"
 								(delete)="openDeleteModal($event)">
 							</app-character-card>
