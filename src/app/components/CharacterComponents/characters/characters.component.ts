@@ -1,7 +1,15 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { BehaviorSubject, combineLatest, filter, map, Observable, shareReplay, switchMap, } from 'rxjs';
+import {
+	BehaviorSubject,
+	combineLatest,
+	filter,
+	map,
+	Observable,
+	shareReplay,
+	switchMap,
+} from 'rxjs';
 
 import { Character } from '../../../models/character';
 import { CharacterService } from '../../../services/LupinoApi/character.service';

@@ -1,12 +1,4 @@
-import {
-	Component,
-	computed,
-	effect,
-	inject,
-	Injector,
-	runInInjectionContext,
-	signal,
-} from '@angular/core';
+import { Component, computed, effect, inject, Injector, runInInjectionContext, signal, } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -26,10 +18,7 @@ import {
 	nonNegativeResourcesValidator,
 	remainingPointsValidator,
 } from './form/character.validators';
-import {
-	CharacterCalculatorService,
-	PrimaryStats,
-} from '../../../services/character-calculator.service';
+import { CharacterCalculatorService, PrimaryStats, } from '../../../services/character-calculator.service';
 
 import { WizardNavComponent } from './steps/wizard-nav/wizard-nav';
 import { Step1Basic } from './steps/step-1-basic/step-1-basic';
@@ -274,7 +263,11 @@ export class CreateCharacterComponent {
 		} else {
 			delete payload._id;
 			this.characterService.createCharacter(payload).subscribe(() => {
-				this.router.navigate(['/mycharacters']);
+				if (this.isPNJCreation) {
+					this.router.navigate(['/mypnjs']);
+				} else {
+					this.router.navigate(['/mycharacters']);
+				}
 			});
 		}
 	}
