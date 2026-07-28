@@ -1,16 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import {
-	BehaviorSubject,
-	combineLatest,
-	filter,
-	map,
-	Observable,
-	shareReplay,
-	switchMap,
-	tap,
-} from 'rxjs';
+import { BehaviorSubject, combineLatest, filter, map, Observable, shareReplay, switchMap, } from 'rxjs';
 
 import { Character } from '../../../models/character';
 import { CharacterService } from '../../../services/LupinoApi/character.service';
@@ -72,6 +63,8 @@ export class CharactersComponent {
 	filtersSubject$ = new BehaviorSubject(this.filters);
 	searchText = '';
 	searchSubject$ = new BehaviorSubject('');
+
+	private refreshCharacters$ = new BehaviorSubject<void>(undefined);
 
 	constructor(
 		private characterService: CharacterService,
@@ -171,29 +164,46 @@ export class CharactersComponent {
 		);
 	}
 
-	loadCharacter() {
-		this.allCharacters$ = this.currentUser$.pipe(
-			switchMap((user) => {
+	loadCharacter(): void {
+		this.allCharacters$ = combineLatest([this.currentUser$, this.refreshCharacters$]).pipe(
+			switchMap(([user]) => {
 				if (this.isMyCharacterPage) {
 					return this.characterService.getCharactersByUser(user._id);
 				}
+
 				if (this.isMyPNJSPage) {
 					return this.characterService
 						.getCharactersByUser(user._id)
-						.pipe(map((characters) => characters.filter((c) => c.isPNJ)));
+						.pipe(
+							map((characters) => characters.filter((character) => character.isPNJ)),
+						);
 				}
+
 				if (this.isPNJSPage) {
 					return this.characterService.getCharacters().pipe(
-						map((chars) => (user.isAdmin ? chars : chars.filter((c) => c.isPublic))),
-						map((chars) => chars.filter((c) => c.isPNJ)),
+						map((characters) =>
+							user.isAdmin
+								? characters
+								: characters.filter((character) => character.isPublic),
+						),
+						map((characters) => characters.filter((character) => character.isPNJ)),
 					);
 				}
 
 				return this.characterService
 					.getCharacters()
-					.pipe(map((chars) => (user.isAdmin ? chars : chars.filter((c) => c.isPublic))));
+					.pipe(
+						map((characters) =>
+							user.isAdmin
+								? characters
+								: characters.filter((character) => character.isPublic),
+						),
+					);
 			}),
-			shareReplay(1), // garde en cache
+			shareReplay({
+				bufferSize: 1,
+				refCount: true,
+			}),
 		);
 	}
 
@@ -213,15 +223,15 @@ export class CharactersComponent {
 		});
 	}
 
-	deleteCharacter(characterId: string) {
-		this.characterService
-			.deleteCharacter(characterId)
-			.pipe(
-				tap(() => {
-					this.loadCharacter();
-				}),
-			)
-			.subscribe();
+	deleteCharacter(characterId: string): void {
+		this.characterService.deleteCharacter(characterId).subscribe({
+			next: () => {
+				this.refreshCharacters$.next();
+			},
+			error: (error) => {
+				console.error('Erreur lors de la suppression du personnage :', error);
+			},
+		});
 	}
 
 	onFiltersChange(filters: CharacterFilters) {
