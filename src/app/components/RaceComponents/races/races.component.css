@@ -9,9 +9,6 @@
 	padding: 2rem 1.5rem 5rem;
 
 	color: var(--lupino-light);
-linear-gradient( rgba(25, 7, 5, 0.88),
-rgba(19, 6, 5, 0.94) ),
-var(--lupino-background-gradient);
 
 	overflow: hidden;
 }
@@ -482,7 +479,7 @@ var(--lupino-background-gradient);
 
 	color: var(--lupino-light);
 
-	font-family: Georgia, 'Times New Roman', serif;
+	font-family: 'Merriweather Sans', sans-serif;
 	font-size: 1.55rem;
 	font-weight: 700;
 	text-align: center;
@@ -499,7 +496,7 @@ var(--lupino-background-gradient);
 	overflow: hidden;
 
 	color: var(--lupino-light);
-	font-family: Georgia, 'Times New Roman', serif;
+	font-family: 'Alegreya', serif;
 	font-size: 0.91rem;
 	line-height: 1.48;
 	text-align: center;
@@ -517,8 +514,6 @@ var(--lupino-background-gradient);
 	display: flex;
 	flex-direction: column;
 	gap: 0.45rem;
-
-	margin-top: auto;
 }
 
 .bonus-pill {
@@ -540,7 +535,7 @@ var(--lupino-background-gradient);
 
 .bonus-slot {
 	padding-right: 0.5rem;
-
+	font-family: 'Merriweather Sans', sans-serif;
 	color: #f5d27a;
 	font-weight: 800;
 	text-transform: uppercase;
@@ -551,6 +546,8 @@ var(--lupino-background-gradient);
 
 .bonus-value {
 	line-height: 1.25;
+	font-family: 'Alegreya', serif;
+
 }
 
 .card-footer-decoration {
@@ -559,6 +556,7 @@ var(--lupino-background-gradient);
 	color: rgba(245, 210, 122, 0.6);
 	font-family: Georgia, 'Times New Roman', serif;
 	text-align: center;
+	margin-top: auto;
 }
 
 

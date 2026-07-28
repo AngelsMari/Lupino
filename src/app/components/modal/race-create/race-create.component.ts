@@ -1,10 +1,18 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+	AbstractControl,
+	FormBuilder,
+	FormGroup,
+	ReactiveFormsModule,
+	ValidationErrors,
+	Validators,
+} from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { RaceService } from '../../../services/LupinoApi/race.service';
 import { BonusSlot, Race, RaceBonus } from '../../../models/race';
+import { environment } from '@environments/environment';
 
-type EffectType = 'passive' | 'hpPerLevel' | 'masteryChoice' | 'secondaryStatBonus';
+type RaceWithImage = Race & { image?: string };
 
 @Component({
 	selector: 'app-race-create',
@@ -12,13 +20,20 @@ type EffectType = 'passive' | 'hpPerLevel' | 'masteryChoice' | 'secondaryStatBon
 	styleUrl: './race-create.component.css',
 	imports: [ReactiveFormsModule],
 })
-export class RaceCreateComponent implements OnInit {
-	@Input() race?: Race;
+export class RaceCreateComponent implements OnInit, OnDestroy {
+	@Input() race?: RaceWithImage;
 
 	raceForm: FormGroup;
 	isEditMode = false;
+	isSubmitting = false;
+	imagePreview = '';
+	imageError = '';
+	selectedImageFile: File | null = null;
 
-	bonusSlots: { value: BonusSlot; label: string }[] = [
+	private readonly maxImageSize = 5 * 1024 * 1024;
+	private objectUrl: string | null = null;
+
+	readonly bonusSlots: { value: BonusSlot; label: string }[] = [
 		{ value: 'corps', label: 'Corps' },
 		{ value: 'membre', label: 'Membre' },
 		{ value: 'aura', label: 'Aura' },
@@ -34,10 +49,10 @@ export class RaceCreateComponent implements OnInit {
 		this.raceForm = this.fb.group(
 			{
 				_id: [''],
-				name: ['', Validators.required],
+				name: ['', [Validators.required, Validators.maxLength(80)]],
 				type: ['', Validators.required],
-				description: ['', Validators.required],
-
+				description: ['', [Validators.required, Validators.maxLength(1200)]],
+				image: [''],
 				bonus1: this.createBonusGroup(true),
 				bonus2: this.createBonusGroup(false),
 			},
@@ -50,39 +65,28 @@ export class RaceCreateComponent implements OnInit {
 	ngOnInit(): void {
 		this.isEditMode = !!this.race;
 
-		if (this.isEditMode && this.race) {
-			const b1 = this.race.bonuses?.[0];
-			const b2 = this.race.bonuses?.[1];
+		if (!this.race) return;
 
-			this.raceForm.patchValue({
-				_id: this.race._id,
-				name: this.race.name,
-				type: this.race.type,
-				description: this.race.description ?? '',
-			});
+		const firstBonus = this.race.bonuses?.[0];
+		const secondBonus = this.race.bonuses?.[1];
+		const image = this.race.image ?? '';
 
-			if (b1) this.patchBonus(this.bonus1, b1);
-			if (b2) this.patchBonus(this.bonus2, b2);
-		}
+		this.raceForm.patchValue({
+			_id: this.race._id,
+			name: this.race.name,
+			type: this.race.type,
+			description: this.race.description ?? '',
+			image,
+		});
+
+		this.imagePreview = image;
+
+		if (firstBonus) this.patchBonus(this.bonus1, firstBonus);
+		if (secondBonus) this.patchBonus(this.bonus2, secondBonus);
 	}
 
-	private createBonusGroup(required: boolean): FormGroup {
-		return this.fb.group({
-			_id: [''],
-			slot: ['', required ? Validators.required : []],
-			value: ['', required ? Validators.required : []],
-			effectType: [''],
-
-			passiveDescription: [''],
-
-			hpPerLevelValue: [null],
-
-			mastery: [''],
-			masteryChoiceCount: [1],
-
-			secondaryStat: [''],
-			secondaryStatValue: [null],
-		});
+	ngOnDestroy(): void {
+		this.revokeObjectUrl();
 	}
 
 	get bonus1(): FormGroup {
@@ -93,52 +97,155 @@ export class RaceCreateComponent implements OnInit {
 		return this.raceForm.get('bonus2') as FormGroup;
 	}
 
-	private watchBonus2() {
-		this.bonus2.valueChanges.subscribe(() => {
-			const slot = this.bonus2.get('slot')?.value;
-			const value = this.bonus2.get('value')?.value?.trim();
-			const effectType = this.bonus2.get('effectType')?.value;
+	get descriptionLength(): number {
+		return String(this.raceForm.get('description')?.value ?? '').length;
+	}
 
-			const started = !!slot || !!value || !!effectType;
+	onFileChange(event: Event): void {
+		const input = event.target as HTMLInputElement;
+		const file = input.files?.[0];
 
-			if (started) {
-				this.bonus2.get('slot')?.setValidators(Validators.required);
-				this.bonus2.get('value')?.setValidators(Validators.required);
-				this.bonus2.get('effectType');
+		this.imageError = '';
+
+		if (!file) {
+			return;
+		}
+
+		const allowedTypes = ['image/png', 'image/jpeg', 'image/webp'];
+
+		if (!allowedTypes.includes(file.type)) {
+			this.imageError = 'Le fichier doit être une image PNG, JPG ou WEBP.';
+			input.value = '';
+			return;
+		}
+
+		if (file.size > this.maxImageSize) {
+			this.imageError = 'L’image ne doit pas dépasser 5 Mo.';
+			input.value = '';
+			return;
+		}
+
+		this.raceService.uploadImage(file).subscribe((data: any) => {
+			if (data.result == 'OK') {
+				this.raceForm.patchValue({
+					image: environment.apiUrl + '/public/raceImg/' + data.file.filename,
+				});
 			} else {
-				this.bonus2.get('slot')?.clearValidators();
-				this.bonus2.get('value')?.clearValidators();
-				this.bonus2.get('effectType')?.clearValidators();
+				alert("Erreur lors de l'upload de l'image");
 			}
+		});
 
-			this.bonus2.get('slot')?.updateValueAndValidity({ emitEvent: false });
-			this.bonus2.get('value')?.updateValueAndValidity({ emitEvent: false });
-			this.bonus2.get('effectType')?.updateValueAndValidity({ emitEvent: false });
+		this.revokeObjectUrl();
+
+		this.selectedImageFile = file;
+		this.objectUrl = URL.createObjectURL(file);
+		this.imagePreview = this.objectUrl;
+	}
+
+	removeImage(): void {
+		this.revokeObjectUrl();
+
+		this.selectedImageFile = null;
+		this.imagePreview = '';
+		this.imageError = '';
+
+		this.raceForm.patchValue({
+			image: '',
 		});
 	}
 
-	private noDuplicateBonusSlotsValidator(control: AbstractControl): ValidationErrors | null {
-		const b1 = control.get('bonus1.slot')?.value;
-		const b2 = control.get('bonus2.slot')?.value;
+	isInvalid(controlName: string): boolean {
+		const control = this.raceForm.get(controlName);
+		return !!(control?.invalid && (control.touched || control.dirty));
+	}
 
-		if (b1 && b2 && b1 === b2) {
-			return { duplicateBonusSlot: true };
-		}
-
-		return null;
+	isBonusInvalid(group: FormGroup, controlName: string): boolean {
+		const control = group.get(controlName);
+		return !!(control?.invalid && (control.touched || control.dirty));
 	}
 
 	isSlotTaken(slot: BonusSlot): boolean {
 		return this.bonus1.get('slot')?.value === slot;
 	}
 
+	submit(): void {
+		if (this.raceForm.invalid) {
+			this.raceForm.markAllAsTouched();
+			return;
+		}
+
+		this.isSubmitting = true;
+
+		const bonuses = [
+			this.buildBonusFromGroup(this.bonus1),
+			this.buildBonusFromGroup(this.bonus2),
+		].filter((b): b is RaceBonus => !!b);
+
+		const formValue = this.raceForm.value;
+
+		const payload: Race = {
+			_id: this.isEditMode ? formValue._id : '',
+			name: (formValue.name ?? '').trim(),
+			type: formValue.type,
+			description: (formValue.description ?? '').trim(),
+			bonuses,
+			image: formValue.image,
+		};
+
+		const request$ = this.isEditMode
+			? this.raceService.editRace(payload)
+			: this.raceService.createRace(payload);
+
+		request$.subscribe(() => {
+			this.activeModal.close(this.isEditMode ? 'Race modifiée' : 'Race créée');
+		});
+	}
+
+	cancel(): void {
+		this.activeModal.dismiss('Cancel');
+	}
+
+	private createBonusGroup(required: boolean): FormGroup {
+		return this.fb.group({
+			_id: [''],
+			slot: ['', required ? Validators.required : []],
+			value: ['', required ? Validators.required : []],
+		});
+	}
+
+	private watchBonus2(): void {
+		this.bonus2.valueChanges.subscribe(() => {
+			const slot = this.bonus2.get('slot')?.value;
+			const value = String(this.bonus2.get('value')?.value ?? '').trim();
+			const started = !!slot || !!value;
+
+			if (started) {
+				this.bonus2.get('slot')?.setValidators(Validators.required);
+				this.bonus2.get('value')?.setValidators(Validators.required);
+			} else {
+				this.bonus2.get('slot')?.clearValidators();
+				this.bonus2.get('value')?.clearValidators();
+			}
+
+			this.bonus2.get('slot')?.updateValueAndValidity({ emitEvent: false });
+			this.bonus2.get('value')?.updateValueAndValidity({ emitEvent: false });
+		});
+	}
+
+	private noDuplicateBonusSlotsValidator(control: AbstractControl): ValidationErrors | null {
+		const firstSlot = control.get('bonus1.slot')?.value;
+		const secondSlot = control.get('bonus2.slot')?.value;
+
+		return firstSlot && secondSlot && firstSlot === secondSlot
+			? { duplicateBonusSlot: true }
+			: null;
+	}
+
 	private buildBonusFromGroup(group: FormGroup): RaceBonus | null {
 		const slot = group.get('slot')?.value;
-		const value = group.get('value')?.value?.trim();
+		const value = String(group.get('value')?.value ?? '').trim();
 
-		if (!slot || !value) {
-			return null;
-		}
+		if (!slot || !value) return null;
 
 		return {
 			_id: group.get('_id')?.value ?? '',
@@ -155,29 +262,9 @@ export class RaceCreateComponent implements OnInit {
 		});
 	}
 
-	submit(): void {
-		if (this.raceForm.invalid) return;
-
-		const bonuses = [this.buildBonusFromGroup(this.bonus1), this.buildBonusFromGroup(this.bonus2)].filter((b): b is RaceBonus => !!b);
-
-		const formValue = this.raceForm.value;
-
-		const payload: Race = {
-			_id: this.isEditMode ? formValue._id : '',
-			name: (formValue.name ?? '').trim(),
-			type: formValue.type,
-			description: (formValue.description ?? '').trim(),
-			bonuses,
-		};
-
-		const request$ = this.isEditMode ? this.raceService.editRace(payload) : this.raceService.createRace(payload);
-
-		request$.subscribe(() => {
-			this.activeModal.close(this.isEditMode ? 'Race modifiée' : 'Race créée');
-		});
-	}
-
-	cancel(): void {
-		this.activeModal.dismiss('Cancel');
+	private revokeObjectUrl(): void {
+		if (!this.objectUrl) return;
+		URL.revokeObjectURL(this.objectUrl);
+		this.objectUrl = null;
 	}
 }

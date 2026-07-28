@@ -1,77 +1,229 @@
-<div class="modal-header">
-	<h5 class="modal-title">
-		{{ isEditMode ? 'Modifier la race' : 'Créer une nouvelle race' }}
-	</h5>
-	<button type="button" class="close" aria-label="Close" (click)="cancel()">
-		<span aria-hidden="true">&times;</span>
-	</button>
-</div>
-
-<div class="modal-body">
-	<form [formGroup]="raceForm">
-		<div class="form-group">
-			<label for="name">Nom de la race</label>
-			<input type="text" id="name" class="form-control" formControlName="name" required>
+<div class="race-modal-shell">
+	<header class="race-modal-header">
+		<div class="header-ornament" aria-hidden="true">
+			<span></span>
+			<i>✦</i>
+			<span></span>
 		</div>
 
-		<div class="form-group">
-			<label for="type">Type</label>
-			<select id="type" class="form-control" formControlName="type" required>
-				<option value="commune">Commune</option>
-				<option value="inhabituelle">Exotique</option>
-			</select>
+		<div class="header-copy">
+			<p class="eyebrow">Codex de Lupino</p>
+			<h2>{{ isEditMode ? 'Modifier une race' : 'Créer une nouvelle race' }}</h2>
+			<p>
+				{{
+					isEditMode
+						? 'Mettez à jour les informations de cette race.'
+						: 'Ajoutez un nouveau peuple au monde de Lupino.'
+				}}
+			</p>
 		</div>
 
-		<div class="form-group">
-			<label for="description">Description</label>
-			<textarea id="description" class="form-control" formControlName="description"></textarea>
-		</div>
+		<button type="button" class="close-button" aria-label="Fermer" (click)="cancel()">
+			<span aria-hidden="true">×</span>
+		</button>
+	</header>
 
-		<div class="form-group">
-			<label>Bonus 1</label>
-			<div [formGroup]="bonus1" class="border rounded p-2 mb-3">
-				<select class="form-control mb-2" formControlName="slot">
-					<option value="">Type de bonus</option>
-					@for (s of bonusSlots; track $index) {
-						<option [value]="s.value">{{ s.value }}</option>
+	<form [formGroup]="raceForm" (ngSubmit)="submit()" class="race-form">
+		<div class="modal-scroll-area">
+			<section class="illustration-panel">
+				<div class="image-preview" [class.has-image]="imagePreview">
+					@if (imagePreview) {
+						<img [src]="imagePreview" alt="Prévisualisation de la race" />
+						<div class="image-overlay"></div>
+					} @else {
+						<div class="image-placeholder">
+							<span class="placeholder-symbol">✦</span>
+							<strong>Illustration de la race</strong>
+							<small>PNG, JPG ou WEBP — 5 Mo maximum</small>
+						</div>
 					}
-				</select>
 
-				<input
-					class="form-control mb-2"
-					placeholder="Texte affiché"
-					formControlName="value" />
-			</div>
+					<div class="image-actions">
+						<label class="upload-button" for="race-image">
+							<span>▣</span>
+							{{ imagePreview ? 'Changer l’image' : 'Choisir une image' }}
+						</label>
 
-			<label>Bonus 2</label>
-			<div [formGroup]="bonus2" class="border rounded p-2">
-				<select class="form-control mb-2" formControlName="slot">
-					<option value="">(Optionnel)</option>
-					@for (s of bonusSlots; track s.value) {
-						<option [value]="s.value" [disabled]="isSlotTaken(s.value)">
-							{{ s.value }}
-						</option>
-					}
-				</select>
-
-				<input
-					class="form-control mb-2"
-					placeholder="Texte affiché"
-					formControlName="value" />
-			</div>
-
-			@if (raceForm.errors?.['duplicateBonusSlot']) {
-				<div class="text-danger mt-2">
-					Impossible d'avoir deux bonus du même type.
+						@if (imagePreview) {
+							<button type="button" class="remove-image-button" (click)="removeImage()">
+								Retirer
+							</button>
+						}
+					</div>
 				</div>
-			}
-		</div>
-	</form>
-</div>
 
-<div class="modal-footer">
-	<button class="btn btn-secondary" (click)="cancel()">Annuler</button>
-	<button class="btn btn-primary" (click)="submit()">
-		{{ isEditMode ? 'Modifier' : 'Créer' }}
-	</button>
+				<input
+					id="race-image"
+					class="visually-hidden-file"
+					type="file"
+					accept="image/png,image/jpeg,image/webp"
+					(change)="onFileChange($event)"
+				/>
+
+				@if (imageError) {
+					<p class="field-error image-error">{{ imageError }}</p>
+				}
+			</section>
+
+			<section class="form-section identity-section">
+				<div class="section-heading">
+					<span class="section-icon">I</span>
+					<div>
+						<h3>Identité</h3>
+						<p>Les informations principales visibles dans le codex.</p>
+					</div>
+				</div>
+
+				<div class="fields-grid">
+					<div class="field-group field-large">
+						<label for="name">Nom de la race <span>*</span></label>
+						<input
+							id="name"
+							type="text"
+							formControlName="name"
+							placeholder="Ex. Sylvains"
+							[class.invalid]="isInvalid('name')"
+						/>
+						@if (isInvalid('name')) {
+							<p class="field-error">Le nom de la race est obligatoire.</p>
+						}
+					</div>
+
+					<div class="field-group">
+						<label for="type">Catégorie <span>*</span></label>
+						<div class="select-wrapper">
+							<select id="type" formControlName="type" [class.invalid]="isInvalid('type')">
+								<option value="" disabled>Choisir une catégorie</option>
+								<option value="commune">Commune</option>
+								<option value="inhabituelle">Exotique / inhabituelle</option>
+							</select>
+						</div>
+						@if (isInvalid('type')) {
+							<p class="field-error">La catégorie est obligatoire.</p>
+						}
+					</div>
+				</div>
+
+				<div class="field-group description-field">
+					<div class="label-row">
+						<label for="description">Description <span>*</span></label>
+						<small>{{ descriptionLength }}/1200</small>
+					</div>
+					<textarea
+						id="description"
+						formControlName="description"
+						rows="6"
+						maxlength="1200"
+						placeholder="Décrivez son apparence, sa culture, son histoire et sa place dans le monde…"
+						[class.invalid]="isInvalid('description')"
+					></textarea>
+					@if (isInvalid('description')) {
+						<p class="field-error">La description est obligatoire.</p>
+					}
+				</div>
+			</section>
+
+			<section class="form-section bonuses-section">
+				<div class="section-heading">
+					<span class="section-icon">II</span>
+					<div>
+						<h3>Bonus raciaux</h3>
+						<p>Le premier bonus est obligatoire. Le second reste facultatif.</p>
+					</div>
+				</div>
+
+				<div class="bonuses-grid">
+					<div [formGroup]="bonus1" class="bonus-card required-bonus">
+						<div class="bonus-card-header">
+							<div>
+								<span class="bonus-number">01</span>
+								<h4>Bonus principal</h4>
+							</div>
+							<span class="required-pill">Obligatoire</span>
+						</div>
+
+						<div class="field-group">
+							<label for="bonus1-slot">Emplacement</label>
+							<div class="select-wrapper">
+								<select id="bonus1-slot" formControlName="slot"
+										[class.invalid]="isBonusInvalid(bonus1, 'slot')">
+									<option value="">Choisir un type de bonus</option>
+									@for (slot of bonusSlots; track slot.value) {
+										<option [value]="slot.value">{{ slot.label }}</option>
+									}
+								</select>
+							</div>
+						</div>
+
+						<div class="field-group">
+							<label for="bonus1-value">Effet affiché</label>
+							<textarea
+								id="bonus1-value"
+								formControlName="value"
+								rows="4"
+								placeholder="Ex. Vision parfaite dans l’obscurité."
+								[class.invalid]="isBonusInvalid(bonus1, 'value')"
+							></textarea>
+						</div>
+					</div>
+
+					<div [formGroup]="bonus2" class="bonus-card optional-bonus">
+						<div class="bonus-card-header">
+							<div>
+								<span class="bonus-number">02</span>
+								<h4>Bonus secondaire</h4>
+							</div>
+							<span class="optional-pill">Facultatif</span>
+						</div>
+
+						<div class="field-group">
+							<label for="bonus2-slot">Emplacement</label>
+							<div class="select-wrapper">
+								<select id="bonus2-slot" formControlName="slot"
+										[class.invalid]="isBonusInvalid(bonus2, 'slot')">
+									<option value="">Aucun second bonus</option>
+									@for (slot of bonusSlots; track slot.value) {
+										<option [value]="slot.value" [disabled]="isSlotTaken(slot.value)">
+											{{ slot.label }}
+										</option>
+									}
+								</select>
+							</div>
+						</div>
+
+						<div class="field-group">
+							<label for="bonus2-value">Effet affiché</label>
+							<textarea
+								id="bonus2-value"
+								formControlName="value"
+								rows="4"
+								placeholder="Laissez vide pour ne pas ajouter de second bonus."
+								[class.invalid]="isBonusInvalid(bonus2, 'value')"
+							></textarea>
+						</div>
+					</div>
+				</div>
+
+				@if (raceForm.errors?.['duplicateBonusSlot']) {
+					<div class="form-error-banner">
+						<span>!</span>
+						Impossible d’utiliser deux fois le même emplacement de bonus.
+					</div>
+				}
+			</section>
+		</div>
+
+		<footer class="race-modal-footer">
+			<button type="button" class="cancel-button" (click)="cancel()">Annuler</button>
+			<button type="submit" class="submit-button" [disabled]="isSubmitting">
+				@if (isSubmitting) {
+					<span class="spinner" aria-hidden="true"></span>
+					Enregistrement…
+				} @else {
+					<span>✦</span>
+					{{ isEditMode ? 'Enregistrer les modifications' : 'Créer la race' }}
+				}
+			</button>
+		</footer>
+	</form>
 </div>

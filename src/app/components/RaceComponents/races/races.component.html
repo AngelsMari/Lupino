@@ -80,7 +80,7 @@
 							</p>
 						}
 
-						@if (race.bonuses?.length) {
+						@if (race.bonuses.length) {
 							<div class="race-bonuses">
 								@for (bonus of race.bonuses; track bonus._id) {
 									<div class="bonus-pill">
@@ -180,7 +180,7 @@
 								</p>
 							}
 
-							@if (race.bonuses?.length) {
+							@if (race.bonuses.length) {
 								<div class="race-bonuses">
 									@for (bonus of race.bonuses; track bonus._id) {
 										<div class="bonus-pill">

@@ -65,13 +65,17 @@ h2 {
 
 .prez-card h1 {
 	font-family: 'Merriweather Sans', sans-serif !important;
-	font-size: clamp(1.3rem, 3vw, 2rem);
+	font-size: clamp(1.3rem, 3vw, 1.8rem);
 	text-transform: uppercase;
+	margin-bottom: 1rem;
 }
 
 .prez-card p {
 	text-align: center;
-	font-size: clamp(1rem, 2.5vw, 1.5rem);
+	font-family: 'Alegreya', serif;
+	font-weight: bold;
+	letter-spacing: 0.1em;
+	font-size: clamp(1rem, 2.5vw, 1.3rem);
 }
 
 /* Tablette / mobile */

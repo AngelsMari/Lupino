@@ -38,6 +38,11 @@
 
 	--ink: #321d14;
 	--muted-ink: #6f5138;
+
+	display: block;
+
+	--muted: #806145;
+	--danger: #a33c2f;
 }
 
 * {
@@ -204,4 +209,23 @@ quill-editor {
 .modal-content form {
 	background: inherit;
 	box-shadow: none;
+}
+
+.modal-dialog.race-modal {
+	max-width: 50vw;
+	width: 50vw;
+}
+
+@media (max-width: 1200px) {
+	.modal-dialog.race-modal {
+		max-width: 70vw;
+		width: 70vw;
+	}
+}
+
+@media (max-width: 768px) {
+	.modal-dialog.race-modal {
+		max-width: 95vw;
+		width: 95vw;
+	}
 }

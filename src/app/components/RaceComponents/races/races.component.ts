@@ -5,14 +5,14 @@ import { Race } from '../../../models/race';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RaceCreateComponent } from '../../modal/race-create/race-create.component';
 import { map, Observable } from 'rxjs';
-import { AsyncPipe, NgClass } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { shareReplay, startWith } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-races',
 	templateUrl: './races.component.html',
 	styleUrl: './races.component.css',
-	imports: [NgClass, AsyncPipe],
+	imports: [AsyncPipe],
 })
 export class RacesComponent {
 	isAdmin$!: Observable<boolean>;
@@ -37,8 +37,12 @@ export class RacesComponent {
 
 	loadRaces() {
 		this.race$ = this.raceService.getRaces();
-		this.commonRaces$ = this.race$.pipe(map((races) => races.filter((race) => race.type === 'commune')));
-		this.exoticRaces$ = this.race$.pipe(map((races) => races.filter((race) => race.type === 'inhabituelle')));
+		this.commonRaces$ = this.race$.pipe(
+			map((races) => races.filter((race) => race.type === 'commune')),
+		);
+		this.exoticRaces$ = this.race$.pipe(
+			map((races) => races.filter((race) => race.type === 'inhabituelle')),
+		);
 	}
 
 	toggleExoticVisibility() {
@@ -54,7 +58,10 @@ export class RacesComponent {
 	}
 
 	openCreateRaceModal(): void {
-		const modalRef = this.modalService.open(RaceCreateComponent);
+		const modalRef = this.modalService.open(RaceCreateComponent, {
+			centered: true,
+			modalDialogClass: 'race-modal',
+		});
 		modalRef.result.then(
 			(result) => {
 				if (result === 'created') {
@@ -68,7 +75,10 @@ export class RacesComponent {
 	}
 
 	openEditRaceModal(race: any) {
-		const modalRef = this.modalService.open(RaceCreateComponent, { centered: true });
+		const modalRef = this.modalService.open(RaceCreateComponent, {
+			centered: true,
+			modalDialogClass: 'race-modal',
+		});
 		modalRef.componentInstance.race = race; // 👈 on passe la race
 		modalRef.closed.subscribe(() => this.loadRaces());
 	}
