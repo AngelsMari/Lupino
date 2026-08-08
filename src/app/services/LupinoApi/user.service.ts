@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 import { environment } from '@environments/environment';
 import { User } from '../../models/user';
-import { UserPublicData } from 'app/models/userpublicdata';
+import { UserPublicData } from '../../models/userPublicData';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {

@@ -1,23 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserPublicData } from 'app/models/userpublicdata';
+import { UserPublicData } from '../../../models/userPublicData';
 import { AuthService } from 'app/services/auth/auth.service';
 import { UserService } from 'app/services/LupinoApi/user.service';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { switchMap, take } from 'rxjs/operators';
+import {
+	FormBuilder,
+	FormGroup,
+	FormsModule,
+	ReactiveFormsModule,
+	Validators,
+} from '@angular/forms';
+import { take } from 'rxjs/operators';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-    selector: 'edit-profil',
-    templateUrl: './edit-profil.component.html',
-    styleUrls: ['./edit-profil.component.css'],
-    imports: [
-        ReactiveFormsModule,
-        FormsModule,
-        AsyncPipe,
-    ],
+	selector: 'edit-profil',
+	templateUrl: './edit-profil.component.html',
+	styleUrls: ['./edit-profil.component.css'],
+	imports: [ReactiveFormsModule, FormsModule, AsyncPipe],
 })
 export class EditProfilComponent implements OnInit {
 	user$: Observable<UserPublicData>;
@@ -99,23 +101,29 @@ export class EditProfilComponent implements OnInit {
 			return;
 		}
 
-		this.authService.changePassword(this.currentPassword, this.newPassword).subscribe((response) => {
-			if (response.result === 'OK') {
-				this.toastr.success('Mot de passe changé avec succès!');
-				this.currentPassword = '';
-				this.newPassword = '';
-				this.confirmPassword = '';
-			} else {
-				this.toastr.error('Erreur lors du changement de mot de passe.');
-				this.currentPassword = '';
-				this.newPassword = '';
-				this.confirmPassword = '';
-			}
-		});
+		this.authService
+			.changePassword(this.currentPassword, this.newPassword)
+			.subscribe((response) => {
+				if (response.result === 'OK') {
+					this.toastr.success('Mot de passe changé avec succès!');
+					this.currentPassword = '';
+					this.newPassword = '';
+					this.confirmPassword = '';
+				} else {
+					this.toastr.error('Erreur lors du changement de mot de passe.');
+					this.currentPassword = '';
+					this.newPassword = '';
+					this.confirmPassword = '';
+				}
+			});
 	}
 
 	deleteAccount(): void {
-		if (confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Attention, tous vos personnages seront supprimés.')) {
+		if (
+			confirm(
+				'Êtes-vous sûr de vouloir supprimer votre compte ? Attention, tous vos personnages seront supprimés.',
+			)
+		) {
 			this.authService.deleteAccount().subscribe((response) => {
 				if (response.result === 'OK') {
 					this.toastr.success('Compte supprimé avec succès!');

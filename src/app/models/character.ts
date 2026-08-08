@@ -1,4 +1,4 @@
-import { UserPublicData } from './userpublicdata';
+import { UserPublicData } from './userPublicData';
 import { BonusSlot } from './race';
 
 export interface BonusSnapshot {

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { Character } from '../../../../../models/character';
-import { UserPublicData } from '../../../../../models/userpublicdata';
+import { UserPublicData } from '../../../../../models/userPublicData';
 
 @Component({
 	selector: 'app-character-header',

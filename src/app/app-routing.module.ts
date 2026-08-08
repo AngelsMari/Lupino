@@ -22,6 +22,7 @@ import { PasswordForgottenComponent } from './components/UserGestion/password-fo
 import { ResetPasswordComponent } from './components/UserGestion/reset-password/reset-password.component';
 import { NoAuthGuard } from './services/auth/noauth.guard';
 import { MJGuard } from './services/auth/mj.guard';
+import { BestiaryList } from './components/BestiaryComponents/bestiary-entry-list/bestiary-list';
 
 const routes: Routes = [
 	{ path: '', component: HomeComponent },
@@ -47,9 +48,10 @@ const routes: Routes = [
 	{ path: 'lore', component: LoreComponent },
 	{ path: 'explorer', component: LoreComponent },
 	{ path: 'profil', component: EditProfilComponent, canActivate: [AuthGuard] },
-	{ path: 'user-list', component: UserListComponent, canActivate: [AdminGuard] },
+	{ path: 'user-bestiary-entry-list', component: UserListComponent, canActivate: [AdminGuard] },
 	{ path: 'forgot-password', component: PasswordForgottenComponent, canActivate: [NoAuthGuard] }, // Redirection pour la page de mot de passe oublié
 	{ path: 'reset-password', component: ResetPasswordComponent, canActivate: [NoAuthGuard] }, // Redirection pour la page de réinitialisation du mot de passe
+	{ path: 'bestiary', component: BestiaryList },
 ];
 
 @NgModule({

@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { UserPublicData } from 'app/models/userpublicdata';
+import { UserPublicData } from '../../../models/userPublicData';
 import { UserService } from 'app/services/LupinoApi/user.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
-	selector: 'app-user-list',
+	selector: 'app-user-bestiary-entry-list',
 	templateUrl: './user-list.component.html',
 	styleUrl: './user-list.component.css',
 })

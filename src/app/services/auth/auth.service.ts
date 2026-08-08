@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from '@environments/environment';
 import { UserService } from '../LupinoApi/user.service';
-import { UserPublicData } from 'app/models/userpublicdata';
+import { UserPublicData } from '../../models/userPublicData';
 
 @Injectable()
 export class AuthService {
@@ -22,36 +22,44 @@ export class AuthService {
 
 	autoLogin(): Promise<void> {
 		return new Promise((resolve) => {
-			this.http.get<UserPublicData>(`${this.apiUrl}/currentUser`, { withCredentials: true }).subscribe({
-				next: (user) => {
-					this.loggedInSubject.next(true);
-					this.userService.setUserData(user); // stocke tout en mémoire centrale
-					resolve();
-				},
-				error: () => {
-					this.loggedInSubject.next(false);
-					this.userService.clearUserData();
-					resolve();
-				},
-			});
+			this.http
+				.get<UserPublicData>(`${this.apiUrl}/currentUser`, { withCredentials: true })
+				.subscribe({
+					next: (user) => {
+						this.loggedInSubject.next(true);
+						this.userService.setUserData(user); // stocke tout en mémoire centrale
+						resolve();
+					},
+					error: () => {
+						this.loggedInSubject.next(false);
+						this.userService.clearUserData();
+						resolve();
+					},
+				});
 		});
 	}
 
 	login(email: string, password: string): Observable<UserPublicData> {
 		const headers = new HttpHeaders({ Accept: 'application/json' });
-		return this.http.post<UserPublicData>(`${this.apiUrl}/login`, { mail: email, password: password }, { headers }).pipe(
-			tap((user) => {
-				if (user) {
-					// Notifier loggedIn
-					this.loggedInSubject.next(true);
-					// Mettre à jour UserService avec les données utilisateur reçues
-					this.userService.setUserData(user);
-				} else {
-					this.loggedInSubject.next(false);
-					this.userService.clearUserData();
-				}
-			}),
-		);
+		return this.http
+			.post<UserPublicData>(
+				`${this.apiUrl}/login`,
+				{ mail: email, password: password },
+				{ headers },
+			)
+			.pipe(
+				tap((user) => {
+					if (user) {
+						// Notifier loggedIn
+						this.loggedInSubject.next(true);
+						// Mettre à jour UserService avec les données utilisateur reçues
+						this.userService.setUserData(user);
+					} else {
+						this.loggedInSubject.next(false);
+						this.userService.clearUserData();
+					}
+				}),
+			);
 	}
 
 	logout(): Observable<any> {
@@ -74,7 +82,11 @@ export class AuthService {
 
 	changePassword(currentPassword: string, newPassword: string): Observable<any> {
 		const headers = new HttpHeaders({ Accept: 'application/json' });
-		return this.http.post<any>(`${this.apiUrl}/change-password`, { currentPassword, newPassword }, { headers });
+		return this.http.post<any>(
+			`${this.apiUrl}/change-password`,
+			{ currentPassword, newPassword },
+			{ headers },
+		);
 	}
 
 	get(id: string): Observable<any> {

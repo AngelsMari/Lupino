@@ -4,85 +4,87 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Campagne } from '../../../models/campagne';
 import { DeleteCharacterModalComponent } from '../../modal/delete-character/delete-character.component';
-import { User } from '../../../models/user';
 import { UserService } from '../../../services/LupinoApi/user.service';
 
 @Component({
-    selector: 'app-campagne',
-    templateUrl: './campagne.component.html',
-    styleUrl: './campagne.component.css',
-    imports: [RouterLink]
+	selector: 'app-campagne',
+	templateUrl: './campagne.component.html',
+	styleUrl: './campagne.component.css',
+	imports: [RouterLink],
 })
 export class CampagneComponent {
-    campagnes: Campagne[] = [];
-    UserId: any;
-    
-    constructor(private campagneService: CampagneService,private modalService: NgbModal,  private router: Router, private route:ActivatedRoute,private userService:UserService) {}
+	campagnes: Campagne[] = [];
+	UserId: any;
 
-    ngOnInit(): void {
-        this.UserId = this.route.snapshot.paramMap.get('id');
-        
-        if (this.UserId) {
-            this.getCampagnes(this.UserId);
-        }else{
-            this.getCampagnes(false);
-        }
+	constructor(
+		private campagneService: CampagneService,
+		private modalService: NgbModal,
+		private router: Router,
+		private route: ActivatedRoute,
+		private userService: UserService,
+	) {}
 
-    }
+	ngOnInit(): void {
+		this.UserId = this.route.snapshot.paramMap.get('id');
 
-    getCampagnes(id:any): void {
-        if (!id){
-            
-            this.campagneService.getCampagnes().subscribe(res => {
-                if (Object(res)["result"] == "ERROR"){                    
-                    if (Object(res)["errorId"] == 0){
-                        //CREATE NEW USER
-                        this.router.navigate(["/profile/new"]);
-                    }
-                }else{
-                    let campagnes = Object(res)["items"][0]["object"];
-                    //filter for public access
-                    this.campagnes = campagnes.filter((campagne:Campagne) => campagne.access == "public");
-                   
-                }
-                
-            });
-        } else {
-            this.campagneService.getCampagnesByUser(id).subscribe(res => {
-                if (Object(res)["result"] == "ERROR"){                    
-                    if (Object(res)["errorId"] == 0){
-                        //CREATE NEW USER
-                        this.router.navigate(["/profile/new"]);
-                    }
-                }else{
-                    this.campagnes = Object(res)["items"][0]["object"];
+		if (this.UserId) {
+			this.getCampagnes(this.UserId);
+		} else {
+			this.getCampagnes(false);
+		}
+	}
 
-                }
-            });
-        }
-    }
-    
-    createNewCampagne() {
-        this.router.navigate(['/create-campagne']);
-    }
+	getCampagnes(id: any): void {
+		if (!id) {
+			this.campagneService.getCampagnes().subscribe((res) => {
+				if (Object(res)['result'] == 'ERROR') {
+					if (Object(res)['errorId'] == 0) {
+						//CREATE NEW USER
+						this.router.navigate(['/profile/new']);
+					}
+				} else {
+					let campagnes = Object(res)['items'][0]['object'];
+					//filter for public access
+					this.campagnes = campagnes.filter(
+						(campagne: Campagne) => campagne.access == 'public',
+					);
+				}
+			});
+		} else {
+			this.campagneService.getCampagnesByUser(id).subscribe((res) => {
+				if (Object(res)['result'] == 'ERROR') {
+					if (Object(res)['errorId'] == 0) {
+						//CREATE NEW USER
+						this.router.navigate(['/profile/new']);
+					}
+				} else {
+					this.campagnes = Object(res)['items'][0]['object'];
+				}
+			});
+		}
+	}
 
-    openDeleteModal(campagne: Campagne) {
-        const modalRef = this.modalService.open(DeleteCharacterModalComponent);
-        modalRef.componentInstance.character = campagne;
-        
-        modalRef.componentInstance.confirmDelete.subscribe(() => {
-            this.deleteCharacter(campagne._id);
-        });
-    }
+	createNewCampagne() {
+		this.router.navigate(['/create-campagne']);
+	}
 
-    deleteCharacter(campagneId: string) {
-        this.campagneService.deleteCampagne(campagneId).subscribe(res => {
-            if (Object(res)["result"] == "ERROR"){                    
-                // Handle error
-            }else{
-                // Refresh the list of characters
-                this.campagnes = Object(res)["items"][0]["object"];
-            }
-        });
-    }
+	openDeleteModal(campagne: Campagne) {
+		const modalRef = this.modalService.open(DeleteCharacterModalComponent);
+		modalRef.componentInstance.character = campagne;
+
+		modalRef.componentInstance.confirmDelete.subscribe(() => {
+			this.deleteCharacter(campagne._id);
+		});
+	}
+
+	deleteCharacter(campagneId: string) {
+		this.campagneService.deleteCampagne(campagneId).subscribe((res) => {
+			if (Object(res)['result'] == 'ERROR') {
+				// Handle error
+			} else {
+				// Refresh the bestiary-entry-list of characters
+				this.campagnes = Object(res)['items'][0]['object'];
+			}
+		});
+	}
 }
