@@ -1,15 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import {
-	BehaviorSubject,
-	combineLatest,
-	filter,
-	map,
-	Observable,
-	shareReplay,
-	switchMap,
-} from 'rxjs';
+import { BehaviorSubject, combineLatest, filter, map, Observable, shareReplay, switchMap, } from 'rxjs';
 
 import { Character } from '../../../models/character';
 import { CharacterService } from '../../../services/LupinoApi/character.service';
@@ -98,6 +90,9 @@ export class CharactersComponent {
 						!isNaN(ageNum) &&
 						ageNum >= filters.ageRange[0] &&
 						ageNum <= filters.ageRange[1];
+
+					const publishedOk = !filters.publishedOnly || character.isPublic;
+
 					const levelOk =
 						character.level >= filters.levelRange[0] &&
 						character.level <= filters.levelRange[1];
@@ -164,7 +159,8 @@ export class CharactersComponent {
 						enduranceOk &&
 						agiOk &&
 						textOk &&
-						raceOk
+						raceOk &&
+						publishedOk
 					);
 				});
 			}),
